@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<jnlp 
+  spec="1.0+" 
+  codebase="$$codebase"
+  href="$$name"> 
+
+  <information> 
+    <title>$$acs_version Third-party Jars Sun</title>
+    <homepage href="http://www.eso.org/projects/alma/AcsWebStart"/>
+
+    <vendor>ESO, Alma Common Software</vendor> 
+    <description>Third-party Libraries shared by Acs applications</description> 
+    <offline-allowed/>
+  </information> 
+
+  <security> 
+    <all-permissions/> 
+  </security> 
+
+
+  <!-- all jars in this jnlp file are signed by the same third-party vendor -->
+
+  <resources> 
+    <j2se version="1.6+"/> 
+
+    <jar href="lib/jhall-2.0_05.jar"                 part="javahelp"/>
+  </resources>
+
+
+  <component-desc>
+     <!-- this jnlp file is a library of jars -->
+  </component-desc>
+
+</jnlp> 
+
+
+
+
+
+
+
+

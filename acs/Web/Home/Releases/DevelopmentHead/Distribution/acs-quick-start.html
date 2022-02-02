@@ -1,0 +1,287 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en"> 
+<html>
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=iso-8859-1">
+<link rel=Edit-Time-Data href="acs-quick-start_files/editdata.mso">
+<title>ACS Quick Start Guide</title>
+<o:SmartTagType namespaceuri="urn:schemas-microsoft-com:office:smarttags"
+ name="City"/> <o:SmartTagType namespaceuri="urn:schemas-microsoft-com:office:smarttags"
+ name="place"/> 
+<style><!--
+.Normal
+	{font-size:12.0pt;
+	font-family:"Times New Roman";}
+.SpellE
+	{}
+.GramE
+	{}
+-->
+</style>
+</head>
+<body bgcolor=#FFFFFF lang=EN-US link=blue vlink=blue class="Normal">
+<h1>ACS Quick Start Guide</h1>
+<p>Install and run <b>ACS </b> on Linux <b>Red Enterprise 4 update 1 (or also 
+  Scientific Linux)</b> in a few easy steps! </p>
+<p><b><i>ACS contains also the ALMA Archive already integrated in the provided 
+  ACSROOT.</i></b></p>
+<h2><b>Requirements</b></h2>
+<h3 >Red Hat Enterprise / Scientific Linux</h3>
+<p >Instructions to install and configure Red Hat Enterprise or Scientific Linux 
+  for usage with ACS are available here:</p>
+<p ><a href="http://almasw.hq.eso.org/almasw/bin/view/ACS/RHEL4InstProcedure">http://almasw.hq.eso.org/almasw/bin/view/ACS/RHEL4InstProcedure</a></p>
+<p >You can also get fom us a ready to install CD with all needed rpm packages 
+  and kikstart configuration.</p>
+<h3 >Red Hat 9</h3>
+<p >The best is to perform a Full Server type installation of the operating system.</p>
+<p >A proper Linux installation procedure can be found in the</p>
+<p ><a
+href="../Docs/Vltsw/VLT-MAN-ESO-17200-2009-3.0.pdf">ESO Common Software Linux 
+  Installation Manual</a></p>
+<p >During the transition from RH 9 to RH Enterprise we will support ACS installation 
+  also on RH 9, using mostly the tools for ACS 4.1.</p>
+<p >If you want to install on a RH 9 machine and if you didn't perform a full 
+  installation, be aware that you must have the following packages installed:</p>
+<p >&nbsp;&nbsp;&nbsp; <span class=SpellE><span
+class=GramE>pdksh</span></span> 5.2.14-13 <br>
+  &nbsp;&nbsp;&nbsp; <span class=SpellE>glibc-devel</span> 2.2.4-13 <br>
+  &nbsp;&nbsp;&nbsp; kernel-source 2.4.7-10 <br>
+  &nbsp;&nbsp;&nbsp; tcl and tk-8.4 <br>
+  &nbsp; (versions as indicated above or higher) </p>
+<p >A RH 9.0 installation from the orginal distribution has to be patched with 
+  at least the following two patches:</p>
+<ul>
+  <li> glibc: rpm &#150;Uvh glib*.rpm (needed: <a href="http://almasw.hq.eso.org/almasw/pub/ACS/RedHat9/glibc-2.3.2-27.9.7.i686.rpm">glibc-2.3.2-27.9.i686.rpm</a> 
+    and <a href="http://almasw.hq.eso.org/almasw/pub/ACS/RedHat9/glibc-common-2.3.2-27.9.7.i386.rpm">glibc-common-2.3.2-27.9.i386.rpm</a>)<br>
+    If you have glibc development packages installed, you need also the following 
+    packages:
+	<ul>
+      <li><a href="http://almasw.hq.eso.org/almasw/pub/ACS/RedHat9/glibc-debug-2.3.2-27.9.7.i386.rpm">glibc-debug-2.3.2-27.9.7.i386.rpm</a></li>
+      <li><a href="http://almasw.hq.eso.org/almasw/pub/ACS/RedHat9/glibc-devel-2.3.2-27.9.7.i386.rpm">glibc-devel-2.3.2-27.9.7.i386.rpm</a></li>
+      <li><a href="http://almasw.hq.eso.org/almasw/pub/ACS/RedHat9/glibc-utils-2.3.2-27.9.7.i386.rpm">glibc-utils-2.3.2-27.9.7.i386.rpm</a></li>
+	</ul>
+  </li>
+  <li> kernel: <a href="http://almasw.hq.eso.org/almasw/pub/ACS/RedHat9/kernel-2.4.20-28.9.i686.rpm">rpm 
+    &#150;ivh kernel-2.4.20-28.9.i686.rpm</a> (needed: kernel-2.4.20-28.9.i686.rpm)</li>
+</ul>
+<p>For more details and to download these patches look at the following wiki discussion:</p>
+<ul>
+  <li><a href="http://almasw.hq.eso.org/almasw/bin/view/ACS/RedHat9">ALMASW.ACS.RedHat9</a></li>
+</ul>
+<p>If some one doesn't want to use patches she/he has to set the environment variable 
+  LD_ASSUME_KERNEL to 2.4.18 (export LD_ASSUME_KERNEL=2.4.18), but without these 
+  patches you might have problems with other applications.</p>
+<p>The package includes a binary installation of gcc 3.4.1 and it is not necessary 
+  to have the compiler pre-installed..</p>
+<h2><b>Create the </b><tt><b><span style='font-size:10.0pt'>/</span></b></tt><st1:City><st1:place><span
+  class=GramE><tt><b><span style='font-size:10.0pt'>alma</span></b></tt></span></st1:place></st1:City><b> 
+  directory</b></h2>
+<p >This directory <b>must</b> exist in order to use the binary distribution of 
+  the GNU tools and tcl/tk contained in the ACS binaries, but it can be a symbolic 
+  link, like <tt><span
+style='font-size:10.0pt'>/</span></tt><st1:City><st1:place><span class=GramE><tt><span
+  style='font-size:10.0pt'>alma</span></tt></span></st1:place></st1:City><tt><span
+style='font-size:10.0pt'> -&gt; /scratch/<span class=SpellE>amchavan</span>/alma/</span></tt>, 
+  but it must be in the root directory and it must point to a directory writable 
+  by you. If you are re-installing the same <span class=SpellE>major.minor</span> 
+  version of ACS, first clean up the old installation or back it up, for example:</p>
+<p >&gt; <span class=SpellE><span
+class=GramE>rm</span></span> -<span class=SpellE>rf</span> /alma/ACS-6.0</p>
+<p><br>
+  You will need approx. <b>1.6<span class=SpellE>GByte</span></b> of disk space. 
+  <br>
+  If you <span class=SpellE>don'y</span> have root privileges you'll need to ask 
+  your <span class=SpellE>sysadmin</span> to create the <tt><span
+style='font-size:10.0pt'>/</span></tt><st1:City><st1:place><span class=GramE><tt><span
+  style='font-size:10.0pt'>alma</span></tt></span></st1:place></st1:City> directory 
+  (or link) for you. </p>
+<h2><b>Retrieve the installation <span class=SpellE>tarball</span></b></h2>
+<p >Download the ACS installation LGPL for (<a href="Linux/ACS.tar.gz">ACS.tar.gz</a>) 
+  or the NO-LGPL + RTOS (requires access password) where you have another <b>1<span
+class=SpellE> GByte</span></b> of available disk space.</p>
+<p >These files contain a corresponding full installation of ACS built with no 
+  debugging options.</p>
+<h2>Install ACS</h2>
+<p >Very easy:</p>
+<table border=0 cellpadding=0> 
+<tr> 
+  <td width=1200 bgcolor="#DDDDDD" class="Normal"> 
+    <p><tt><span style='font-size:10.0pt'>&nbsp;&nbsp; <span
+  class=SpellE>cd</span> /</span></tt> <br>
+      <tt><span style='font-size:10.0pt'>&nbsp;&nbsp; <span
+    class=SpellE> &gt; gtar</span> <span class=SpellE>zxpf</span> &lt;...&gt;/ACS.tar.gz</span></tt></p>
+  </td>
+</tr>
+</table>
+<p><span class=GramE>where</span> &lt;...&gt; is the path to the downloaded installation 
+  file. This will create and populate the <tt><span
+style='font-size:10.0pt'>/alma/ACS-6.0</span></tt>. </p>
+<p><b><i>Note:</i> <br>
+  If you are upgrading a pre-existing ACS installation, do not forget to remove 
+  any INTROOT you might have. You will need to create a new clean INTROOT after 
+  the upgrade.</b></p>
+<blockquote>&nbsp; </blockquote>
+<h2>Set up your ACS developent environment</h2>
+<p >Again quite easy: get the file defining the environment and source it.</p>
+<p><br>
+  <b>Note</b>: you must be using <tt><span style='font-size:10.0pt'>bash</span></tt> 
+  for this step (or convert the bash files into your own preferred shell). </p>
+<table border=0 cellpadding=0> 
+<tr> 
+  <td width=1200 bgcolor="#DDDDDD" class="Normal"> 
+      <p><tt><span style='font-size:10.0pt'>&nbsp;&nbsp; <span
+  class=GramE> &gt; cp</span> -r /alma/ACS-6.0/ACSSW/config/.acs $HOME</span></tt> 
+        <br>
+      <a name=setup></a><tt><span
+    style='font-size:10.0pt'>&nbsp;&nbsp; &gt; . $HOME/.<span
+  class=SpellE>acs/.bash_profile.acs</span></span></tt></p>
+  </td>
+</tr>
+</table>
+<p>You can also include the sourcing in your session startup file, or define an 
+  alias like </p>
+<table border=0 cellpadding=0> 
+<tr> 
+  <td width=1200 bgcolor="#DDDDDD" class="Normal"> 
+    <p><tt><span style='font-size:10.0pt'>&nbsp;&nbsp; <span
+  class=GramE> &gt; alias</span> <span class=SpellE>acssetup</span>=&quot;. $HOME/.<span
+  class=SpellE>acs/.bash_profile.acs</span>&quot;&nbsp;</span></tt></p>
+  </td>
+</tr>
+</table>
+
+<h2>Verify your ACS installation</h2>
+<p >You can now perform a number of steps to verify if the installation was successfully 
+  completed. The steps include starting a number of services and two interactive 
+  clients; if all goes well, you should see no error messages in the console logs.</p>
+<ul type=disc>
+  <li style='     '>Make sure your <tt><span
+     style='font-size:10.0pt'>DISPLAY</span></tt> variable is correctly set.</li>
+  <li style='     '>Open a terminal window, <a
+     href="#setup">source your ACS profile</a>, and launch the</li>
+</ul>
+<table border=0 cellpadding=0> 
+<tr> 
+  <td width=1200 bgcolor="#DDDDDD" class="Normal"> 
+    <p><tt><span style='font-size:10.0pt'>&nbsp;&nbsp; <span
+  class=SpellE> &gt; acsStart</span></span></tt></p>
+  </td>
+</tr>
+</table>
+
+<p ><span class=GramE>command</span>. </p>
+<ul type=disc>
+  <li style='     '>Open another terminal window, <a href="#setup">source your 
+    ACS profile</a> again, and launch the following sequence of commands.</li>
+</ul>
+<table border=0 cellpadding=0> 
+<tr> 
+  <td width=1200 bgcolor="#DDDDDD" class="Normal"> 
+    <p><tt><span style='font-size:10.0pt'>&nbsp;&nbsp; &gt; acsStartContainer 
+      -cpp bilboContainer</span> &amp;</tt> <br>
+      <tt><span style='font-size:10.0pt'>&nbsp;&nbsp; <span
+    class=SpellE> &gt; objexp</span> &amp;</span></tt> <br>
+      <tt><span style='font-size:10.0pt'>&nbsp;&nbsp; <span
+    class=SpellE>&gt; acsStartJava alma.acsabeans.examples.PSPanel.PSPanel </span> 
+      &amp;</span></tt></p>
+  </td>
+</tr>
+</table>
+
+<p >The two last lines launch interactive applications you can play with.</p>
+<h2>Shutdown ACS</h2>
+<ul type=disc>
+  <li style='     '>Exit the two interactive applications.</li>
+  <li style='     '>Launch the following command from the <i>second</i> terminal 
+    window to shutdown the whole ACS.</li>
+</ul>
+<table border=0 cellpadding=0> 
+<tr> 
+  <td width=1200 bgcolor="#DDDDDD" class="Normal"> 
+    <p><tt><span style='font-size:10.0pt'>&nbsp;&nbsp; <span
+  class=SpellE> &gt; acsStop</span></span></tt> <br>
+  </td>
+</tr>
+</table>
+
+<p>Note that some exceptions may be generated upon shutdown, like <br>
+  <tt><span style='font-size:10.0pt'>2003-02-20T16:53:42.503 (7905|1024) EXCEPTION, 
+  (<span class=SpellE>maci:<span class=GramE>:ManagerImpl</span>::unbind</span>) 
+  Unable to unbind object...</span></tt> <br>
+  Such exceptions may or may not be a problem; the above example shows a non-critical 
+  error. </p>
+<h2>Download ACS sources</h2>
+<p >This binary distribution does not contain sources.</p>
+<p><br>
+  Sources can be extracted from CVS or downloaded from the CD directory <span
+class=SpellE>strucure</span>. <br>
+  The file <a href="Linux/ACSsources.tar.gz"><span
+class=SpellE>ACSsources.tar.gz</span></a> (35Mb) contains the sources. </p>
+<h2><a NAME="NO-LGPL-UPG"></a>Upgrade from LGPL to NO-LGPL</h2>
+<p> The public binary distribution is <b>LGPL.</b> Binary NO-LGPL distributions 
+  are available only internally.<br>
+  If you want to upgrade or simply build the <b>NO-LGPL</b> tools, download the 
+  ACS NO-LGPL sources from the full installation, NO-LGPL directory tree (using 
+  proper login and PWD):</p>
+<p><a href="http://www.eso.org/%7Ealmamgr/AlmaAcs/Releases/DevelopmentHead/Distribution/Linux-NO-LGPL/ACSsources.tar.gz">http://www.eso.org/~almamgr/AlmaAcs/Releases/DevelopmentHead/Distribution/Linux-NO-LGPL/ACSsources.tar.gz</a></p>
+<p>and issue the following commands:</p>
+<table border=0 cellpadding=0> 
+<tr> 
+  <td width=1200 bgcolor="#DDDDDD" class="Normal"> 
+    <p>&gt; gtar -xzf ACSsources.tar.gz<br>
+      &gt; cd ACS<br>
+      &gt; make MODULES=&quot;NO-LGPL/sla NO-LGPL/cfitsio NO-LGPL/fftw&quot; checkModuleTree 
+      update<br>
+  </td>
+</tr>
+</table>
+
+<p>If you want also to build the modules to support real time linux, add also 
+  the modules NO-LGPL/rtos/rtdevio and NO-LGPL/rtos/rtlog to the list:</p>
+<table border=0 cellpadding=0> 
+<tr> 
+    <td width=1200 bgcolor="#DDDDDD" class="Normal"> 
+      <p> &gt; make MODULES=&quot;NO-LGPL/sla NO-LGPL/cfitsio NO-LGPL/fftw NO-LGPL/rtos/lkm 
+        NO-LGPL/rtos/rtlog NO-LGPL/rtos/rtdevio NO-LGPL/rtos/rtTest&quot; checkModuleTree 
+        update<br>
+      
+    </td>
+</tr>
+</table>
+<p>For more details about RTOS installation and issues look at the &quot;<a href="http://almasw.hq.eso.org/almasw/bin/view/ACS/FAQRTAI">ACS 
+  RTAI FAQs</a>&quot; ACS FAQ.</p>
+<h2>If you are upgrading a machine that uses DHCP</h2>
+<p>If you are upgrading a machine that uses DHCP and is configured to use the 
+  acsDHCPBoot script, check your /etc/rc.d/init.d file and update there the path 
+  to the acsDHCPBoot file for the new ACS version.</p>
+<p>For more details look at the &quot;<a href="http://almasw.hq.eso.org/almasw/bin/view/ACS/FAQLinuxSetupDHCP">How 
+  do I setup DHCP</a>&quot; ACS FAQ and at the acsDHCPBoot man page.</p>
+<div align=center style='text-align:center'> 
+  <hr size=2 width="100%" align=center>
+</div>
+<table border=0 cellspacing=0 cellpadding=0 width=624> 
+<tr> 
+  <td colspan=3 class="Normal">&nbsp; </td>
+</tr>
+<tr> 
+  <td class="Normal"> 
+    <div align=center style='text-align:center'> 
+      <hr size=1 width="100%" align=center>
+    </div>
+  </td>
+  <td class="Normal"> 
+    <p><span style='font-size:10.0pt'><a
+  href="mailto:gchiozzi@eso.org?subject=Page:tcs_sw/index.html">Send comments 
+      to <tt>&lt;Gianluca Chiozzi gchiozzi@eso.org&gt;</tt></a><u1:p></u1:p></span></p>
+    <p><span style='font-size:10.0pt'><br>
+        <!-- hhmts start -->
+        Last modified: 2005-11-29,&nbsp;<span class=SpellE><span
+  class=spelle>G.Chiozzi</span></span></span><u1:p></u1:p></p>
+  </td>
+  <td class="Normal"><span style='font-size:12.0pt;
+  font-family:&quot;Times New Roman&quot;;
+  '><u1:p></u1:p></span> </td>
+</tr>
+</table>
+
+</body>
+</html>

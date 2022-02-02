@@ -1,0 +1,126 @@
+#*******************************************************************************
+# E.S.O. - ACS project
+#
+# "@(#) $Id: Makefile.Linux-NO-LGPL,v 1.26 2011/10/25 07:23:18 hsommer Exp $"
+#
+#*******************************************************************************
+include ../Makefile.conf
+
+#
+# Decide the name of the binary tar file
+# This allows to generate different tar files for different platforms.
+# We now simply allow to have a RH 9 file
+#
+ACS_TAR_GZ:=Unknown
+
+REDHAT_RELEASE := $(shell cat /etc/redhat-release)
+
+#
+# By default tries to build a distribution with RTOS
+#
+ACS_RTOS:=TRUE
+
+#
+# Basic binary dirs, always distributed
+# Note that RTI gets distributed separately
+#
+ACS_BINARY_DIRS:=   $(PREF)/ACSSW \
+                    $(PREF)/acsdata \
+                    $(PREF)/ant \
+                    $(PREF)/JacORB \
+                    $(PREF)/mico \
+                    $(PREF)/Python \
+                    $(PREF)/TAO \
+                    $(PREF)/DDS \
+                    $(PREF)/tcltk \
+                    $(PREF)/Eclipse \
+                    $(PREF)/Eclipse4 \
+                    $(PREF)/boost
+
+#
+# RH-9 distribution for ACS 6.0 includes
+# gnu tools, tcltk and java, but not RTAI
+#
+ifeq ("$(REDHAT_RELEASE)","Red Hat Linux release 9 (Shrike)")
+   ACS_RTOS:=FALSE
+   ACS_TAR_GZ:=ACS-NO-LGPL-RH9.tar.gz
+   ACS_BINARY_DIRS:=   $(ACS_BINARY_DIRS) \
+                       $(PREF)/gnu \
+                       $(PREF)/java
+endif
+
+ifeq ("$(REDHAT_RELEASE)","Red Hat Enterprise Linux WS release 4 (Nahant Update 1)")
+   ACS_TAR_GZ:=ACS-NO-LGPL.tar.gz
+   ACS_BINARY_DIRS:=   $(ACS_BINARY_DIRS) \
+                       $(PREF)/rtai  $(PREF)/rtlinux
+endif
+
+ifeq ("$(ACS_TAR_GZ)","Unknown")
+   REDHAT_RELEASE:=Unknown release: $(REDHAT_RELEASE). Behaving as RH Enterprise
+   ACS_TAR_GZ:=ACS-NO-LGPL.tar.gz
+   ACS_BINARY_DIRS:=   $(ACS_BINARY_DIRS) \
+                       $(PREF)/rtai  $(PREF)/rtlinux
+endif
+
+STARTUPDIR = $(shell pwd)
+
+LINKS= gtar gunzip gzip INSTALL INSTALL.tar.gz PRODUCTS README FOOTER.html
+
+all: Linux-ACS-NO-LGPL Linux-ACSsources-NO-LGPL Linux-links
+	@echo "... done!"
+
+build: Build-All
+
+clean: clean_links
+	@rm -f ACS*.tar.gz *~
+	@echo "... done!"
+
+#
+# checks for the existence of the file slalib.h to find out if
+# this is or not an LGPL installation
+#
+Linux-ACS-NO-LGPL: check-vx
+	@echo "Building tar file $(ACS_TAR_GZ) NO-LGPL + RTOS=$(ACS_RTOS)"
+	@echo "Release: $(REDHAT_RELEASE)"
+	@echo "File   : $(ACS_TAR_GZ)"
+	@acsdataClean -all
+	@cd $(SOURCE); \
+         if [ ! -f $(PREF)/ACSSW/include/slalib.h ]; then \
+			echo ERROR: This is not an NO-LGPL ACS installation! ;\
+			echo        ACS Linux distributions are built from an NO-LGPL + RTOS installation! ;\
+                        exit 2 ;\
+         fi; \
+         if [ "$(ACS_RTOS)" == "TRUE" ]; then \
+            if [ ! -h $(PREF)/rtai ]; then \
+			echo ERROR: This is not an NO-LGPL + RTOS ACS installation! ;\
+			echo        ACS Linux distributions are built from an NO-LGPL + RTOS installation! ;\
+                        exit 2 ;\
+            fi; \
+         fi; \
+         gtar -czf $(STARTUPDIR)/$(ACS_TAR_GZ) \
+                 $(ACS_BINARY_DIRS); 
+
+Linux-ACSsources-NO-LGPL:
+	@echo "Building tar file ACSsources.tar.gz with ACS sources (NO-LGPL)"
+	@echo "   ACS tag is: $(ACSTAG)"
+	@rm -rf ACS
+	@cvs -Q co -r $(ACSTAG) ACS/Makefile 
+	@cd ACS; make cvs-get-no-lgpl;
+	@echo $(ACSTAG) >ACS/ACS_TAG
+	@gtar --exclude="CVS" -czf ACSsources.tar.gz ACS
+	@rm -rf ACS
+
+Linux-links: $(LINKS)
+
+LINKS_MASTER = \
+	$(foreach ff, $(LINKS, $(DEST_MASTER)/$(ff))
+$(LINKS) : $(LINK_MASTER)
+	@if [ ! -h $@ ]; then \
+           echo "== Linking: $(DEST_MASTER)/$@ to $@"; \
+           ln -s $(DEST_MASTER)/$@ $@; \
+        fi
+
+clean_links:
+	@rm -f $(LINKS)
+
+# __oOo__

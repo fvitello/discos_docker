@@ -1,0 +1,41 @@
+
+rather important
+----------------
+
+###
+when arena is rebooted, tomcat doesn't automatically start.
+also, our webapplications do not automatically get started by tomcat.
+this is not a viable solution in the long run.
+
+
+"nice to have"
+--------------
+
+###
+i realize that the length of jnlp files reported by the server logic is (reproducible for some of
+the jnlp files) always 6 bytes larger than the actual files. this makes a strict http-client assume the
+input stream is broken. with the javaws plugin this doesn't matter since it is lenient enough to deal
+with this case, but wget falls into this trap. there's something wrong in the state of denmark.
+
+examples for checking:
+a) direct link
+wget "http://www.eso.org/projects/alma/AcsWebStart/CommandCenter.jnlp" -O CommandCenter.wget --debug
+b) through the GetFileServlet:
+wget "http://www.eso.org/projects/alma/AcsWebStart/jnlp.html?file=AvailabilityTest.jnlp&host=localhost&acsinstance=0" -O AvailabilityTest.wget --debug
+
+
+###
+about the variable-expansion in jnlp-files:
+the fact that names of variables must not be a prefix of any other variable is a 
+wonderful source of potential bugs. change the implementation.
+a) an idea is to use a different syntax: $${hostname} instead of $$hostname.
+   problem is sun's jnlp-servlet uses the $$name syntax, so we'd have two different
+   notations for variables
+b) by clever sorting: expand long variables first, so $$name_serving and $$name wouldn't clash
+
+
+
+
+
+
+

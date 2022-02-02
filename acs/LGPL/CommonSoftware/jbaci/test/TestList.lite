@@ -1,0 +1,58 @@
+#*******************************************************************************
+#  ALMA - Atacama Large Millimiter Array
+#  (c) European Southern Observatory, 2002
+#  Copyright by ESO (in the framework of the ALMA collaboration),
+#  All rights reserved
+#
+#  This library is free software; you can redistribute it and/or
+#  modify it under the terms of the GNU Lesser General Public
+#  License as published by the Free Software Foundation; either
+#  version 2.1 of the License, or (at your option) any later version.
+#
+#  This library is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+#  Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public
+#  License along with this library; if not, write to the Free Software
+#  Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+#  MA 02111-1307  USA
+#
+# "@(#) $Id: TestList.lite,v 1.5 2009/05/04 14:16:41 msekoran Exp $"
+#
+# TestList
+#
+# who       when      what
+# --------  --------  ----------------------------------------------
+# 
+# This is all need to run.
+SOURCE jbaciTATEnvironment
+PROLOGUE jbaciTATPrologue
+#----------
+1 TEST01 "acsutilTATTestRunner dispatchActionTest" 
+2 TEST02 "acsutilTATTestRunner PropertyDoubleTest"
+3 TEST03 "acsutilTATTestRunner BuildingTest"
+4 TEST04 "acsutilTATTestRunner PropertyPrimTest"
+5 TEST05 "acsutilTATTestRunner PropertySeqTest"
+6 TEST06 "acsutilTATTestRunner EnumTest"
+#----------
+7 "registerDevice" "acsutilTATTestRunner mcTestRegisterDevice MONITOR_COLLECTOR_TEST"
+8 "registerDeviceWithMultipleSerial" "acsutilTATTestRunner mcTestRegisterDeviceWithMultipleSerial MONITOR_COLLECTOR_TEST"
+9 "DeviceWithSeqAndMultipleSerial" "acsutilTATTestRunner mcTestDeviceWithSeqAndMultipleSerial MONITOR_COLLECTOR_TEST"
+10 "MCtestComponent"  "acsutilTATTestRunner  mcTestComponent MONITOR_COLLECTOR_TEST"
+11 "MCtestPropertiesComponent"  "acsutilTATTestRunner  mcTestPropertiesComponent MONITOR_COLLECTOR_TEST"
+12 "MCtestDynamicEnable"  "acsutilTATTestRunner  mcTestDynEnable MONITOR_COLLECTOR_TEST"
+13 "MCtestDynamicSuppress"  "acsutilTATTestRunner  mcTestDynSuppress MONITOR_COLLECTOR_TEST"
+14 "MCtestDynamicInterval"  "acsutilTATTestRunner  mcTestDynInterval MONITOR_COLLECTOR_TEST"
+15 "MCtestDynamicSuppressAndEnable"  "acsutilTATTestRunner  mcTestDynSupEn MONITOR_COLLECTOR_TEST"
+#16 "MCtestManualPublish"  "acsutilTATTestRunner  mcTestManualPublish MONITOR_COLLECTOR_TEST"
+#17 "MCtestManualPublishOnSuppressed"  "acsutilTATTestRunner mcTestManualPublishOnSuppressed MONITOR_COLLECTOR_TEST"
+#18 "MCtestArchiveDelta"         "acsutilTATTestRunner mcTestArchiveDelta MONITOR_COLLECTOR_TEST"
+#19 "MCtestArchiveDeltaPercent"  "acsutilTATTestRunner mcTestArchiveDeltaPercent MONITOR_COLLECTOR_TEST"
+20 "MCtestAlarmsComponent"  "acsutilTATTestRunner  mcTestAlarmsComponent MONITOR_COLLECTOR_TEST"
+21 "registerNonCollocatedDevice" "acsutilTATTestRunner mcTestRegisterNonCollocatedDevice MONITOR_COLLECTOR_TEST"
+22 "MCtestCyclicBuffer"  "acsutilTATTestRunner  mcTestCyclicBuffer MONITOR_COLLECTOR_TEST"
+23 AlarmTest "acsutilTATTestRunner AlarmTest"
+
+EPILOGUE acsutilTATEpilogue 

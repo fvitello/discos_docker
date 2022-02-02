@@ -1,0 +1,3 @@
+cd $HOME
+rm -rf .cvspass .esd_auth .ssh .Xauthority
+echo "Make sure to also delete ~almadev/.cvspass and from other accounts, INTROOT, /diska/alma_tmp/ stuff and so on."

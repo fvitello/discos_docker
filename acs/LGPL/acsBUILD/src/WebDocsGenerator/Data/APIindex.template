@@ -1,0 +1,37 @@
+<HTML>
+        <HEAD>
+                <TITLE>ACS %ACS_TAG% API</TITLE>
+        </HEAD>
+
+        <BODY>
+                <H1>ACS %ACS_TAG% API documentation</H1>
+
+                <p>Automatically-generated API Documentation
+                <br>In this section you'll links to the most recent sets of automatically generated
+                documentation for APIs ACS provides. This is in the form of Doxygen pages for
+                IDL, C++, and Java while pydoc is the favored format for Python sources.
+
+                <ul>
+                        <li>&nbsp; <a href="idl/index.html"> IDL online documentation</a> - This
+                        is the online documentation for the ACS IDL files. It has been produced
+                        with Doxygen from the actual IDL files. </li>
+                        <li>&nbsp; <a href="cpp/index.html">C++ Framework and API online documentation</a> -&nbsp;</li>
+                        <li>&nbsp; <a href="javadoc/index.html">Java Framework and API online documentation</a> -
+                        This is the online documentation for the Java Framework
+                        and API. It has been produced with javadoc from the actual code. </li>
+                        <li>&nbsp; <a href="py/index.html">Python Framework and API online  documentation</a> -
+                        This is the online documentation for the PythonFramework
+                        and API. It has been produced with pydoc from the actual code.</li>
+                        <li>&nbsp; <a href="schemas/index.html">XML Schema files</a> -
+                        This is the online documentation for the ACS CDB schema files.
+                        It has been produced with xsddoc from the actual code.</li>
+                        <li>&nbsp; <a href="errors/index.html">Error definitions</A> -
+                        This is the online documentation for the errors defined in ACS.
+                        It has been produced with ACSErrorChecker from the actual code.</li>
+                        <li>&nbsp; <a href="man3/index.html">Man pages</A> -
+                        This is the documentation from man(3) pages.
+                        It has been produced with groff from the man3 pages.</li>
+                </ul>
+        </BODY>
+</HTML>
+

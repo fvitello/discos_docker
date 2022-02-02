@@ -1,0 +1,18 @@
+module test {
+    module listenendpoints {
+        module echo_corbaloc {
+            interface EchoMessage {
+
+                void ping();
+
+                void force_ONE();
+
+                string echo_simple();
+
+                string echo_string( in string msg );
+
+                wstring echo_wide( in wstring msg );
+            };
+        };
+    };
+};

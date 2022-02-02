@@ -1,0 +1,225 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>ALMA Common Software</title>
+  
+  <link rel="StyleSheet" href="Css/acs.css" type="text/css" media="screen">
+  <script language="Javascript" src="Scripts/acs.js" type="text/javascript"></script><!--==========================================================================================-->
+</head>
+<body class="Normal" style="background-color: rgb(255, 255, 255);" lang="EN-US" link="#0000ff" vlink="#800080">
+<!--==========================================================================================--> <!--=======================================================================-->
+<h2><a name="ACSSoftwareReleases" id="ACSSoftwareReleases"></a>ACS Software Releases</h2>
+<p>ACS 0.0, released in September 2000 was essentially a concept 
+  demonstration prototype. With the support of some components taken from the 
+  VLT Control Software it has been used to develop a prototype control system 
+  for the 12m Kitt Peak antenna. This was successfully tested in December 2000. 
+  ACS 1.0, released in September 2001, is the first "production release".</p>
+<p>Initially our development cycle consisted of incremental releases with one major release every year, plus a couple of intermediate 
+  releases during that year. The numbering of each release consisted of 2 numbers: the major release followed by the minor release.</p>
+<p>The yearly major releases often contained some backward incompatible changes. 
+   The minor releases were backward compatible for compilation unless some feature request or bug fix required an incompatible change.
+   Even releases that don't required code changes usually bring about some porting effort, e.g. because some log output that gets evaluated in the modular tests may change and requires an update of the reference files.</p>
+<p>When the construction phase of the telescope terminated and the operation started the development cycle has been changed to several, 4 in average, incremental releases every year</p>
+<p>Starting with ACS 6.0.4, for every release of ACS we maintain a branch to fix problems that would block work at the OSF. </p>
+<p>ACS 12.3 has been the last release produced with a name containing the major and minor release numbers: a new naming schema has been introduced to be consistent with all the other ALMA subsystems.
+   This naming schema consists of the year plus an incremental number like for example ACS 2014.2.
+<p>ACS follows a release branch schema i.e. a branch is created for each new release whose name resembles the name of the release i.e. 2014-02-ACS-B.</p>
+<p>From version 10, ACS is distributed through the ESO ftp server, <a href="ftp://ftp.eso.org">ftp.eso.org</a>: contact us to obtain the username and password.
+<br>The ftp server is divided in two main areas: <b>public</b> for the LGPL distribution and <b>restricted</b> for the NO-LGPL distribution used internally by ALMA and that contains tools and libraries that cannot be freely redistributed.</p>
+<p></p>
+ 
+<h3>Last official ACS release ACS 2014.2 (23/05/2014): </h3>
+<ul>
+	<li>Online documentation
+	<li>Release notes
+	<li>Supported platforms
+	<ul>
+      <li> Linux RH Enterprise 5 Update 5, Scientific Linux 5 Update 5 (32 and 64 bits)</li>
+      <li> Linux RH Enterprise 6 Update 5, Scientific Linux 6 Update 5 (32 and 64 bits)</li>
+      <li>RTAI 3.7.1 is supported on RH Enterprise and Scientific Linux 5.5 (32bits only)</li>
+      <li> ACS for VxWorks is not distributed in this release, but support is available upon request</li>
+    </ul>
+</ul>
+
+<h3>Previous ACS releases</h3> 
+<p></p>
+<ul>
+  <li> <a href="Releases/ACS_8_2/Distribution/index.html">ACS 8.2</a> is the latest official release.<br>
+      Official release: ACS 8.2.0 (2010-06-28)<br>
+      Online Documentation is available <a href="Releases/ACS_8_2/Docs/index.html">here</a>. 
+    <br>
+    Supported platforms are: 
+    <ul>
+      <li> Linux RH Enterprise 5 Update 3, Scientific Linux 5 Update 3</li>
+      <li>RTAI 3.7.1 is supported on RH Enterprise and Scientific Linux
+	  5.3 </li>
+      <li> ACS for VxWorks is not distributed in this release, but support is
+	  available upon request.<br>
+      </li>
+    </ul>
+  </li>
+  <li> <a href="http://www.eso.org/projects/alma/AcsWebStart/latest/index.html">AcsWebStart</a>: NOT YET PORTED.... <br>
+    ACS Pure-Java applications can be executed on any machine supporting Java Web Start technology.<br>
+Java Web Start allows automatic installation and upgrades from the Web in a very user friendly way.<br>
+In particular it is possible to execute on any PC ACS clients like Administrator Client or Object Explorer agains any ACS running on another host.<br>
+Any pure-Java ACS application can be deployed using web start. The <a href="http://www.eso.org/%7Emschilli/webstart-ot/">OT prototype</a> is one example.</li>
+</ul>
+<p><strong>Previous releases</strong>:</p>
+<ul>
+  <li> <a href="Releases/ACS_8_1/Distribution/index.html">ACS 8.1</a> <br>
+    See download page for more recent upgrades/patches.<br>
+    Online Documentation is available <a href="Releases/ACS_8_1/Distribution/index.html">here</a>. <br>
+    Supported platforms are:
+    <ul>
+      <li> Linux RH Enterprise 5 Update 3, Scientific Linux 5 Update 3</li>
+      <li>RTAI 3.7.1 is supported on RH Enterprise and Scientific Linux 5.3 </li>
+      <li> ACS for VxWorks is not distributed in this release, but support is available upon request</li>
+    </ul>
+  </li>
+</ul>
+<ul>
+  <li> <a href="Releases/ACS_8_0/Distribution/index.html">ACS 8.0</a><br>
+    Because of operational requirements with the ALMA OSF and of major problems with RH 5.2 and the RTOS versions, this
+    release was actually done in two parts:
+      <ul>
+	<li>Official release for RH 4.4: ACS 8.0.0 2008-12-18
+	<li>Official release for RH 5.3: ACS 8.0.0 2009-08-05
+      </ul>
+      See download page for more recent upgrades/patches.<br>
+      Online Documentation is available <a href="Releases/ACS_8_0/Docs/index.html">here</a>. 
+    <br>
+    Supported platforms are: 
+    <ul>
+      <li> Linux RH Enterprise 5 Update 3, Scientific Linux 5 Update 3</li>
+      <li> Linux RH Enterprise 4 Update 4, Scientific Linux 4 Update 4</li>
+      <li>RTAI 3.3 is supported on RH Enterprise and Scientific Linux
+	  4.4 </li>
+      <li>RTAI 3.7.1 is supported on RH Enterprise and Scientific Linux
+	  5.3 </li>
+      <li> ACS for VxWorks is not distributed in this release, but support is
+	  available upon request.<br>
+      </li>
+    </ul>
+  </li>
+  <li><a href="ftp://ftp.eso.org/projects/acs/Releases/ACS-7_0_2/">ACS 7.0</a> (moved to FTP server) <br>
+Official release: ACS 7.0.2 2008-07-28.<br>
+
+Supported platforms are:
+<ul>
+  <li> Linux RH Enterprise 4 Update 4, Scientific Linux 4 Update 4</li>
+  <li>RTAI 3.3 is supported on RH Enterprise and Scientific Linux</li>
+  <li> VxWorks is not supported in this release, as discussed with the users (who are outside of Alma).</li>
+  <li>For non-realtime work, ACS 7.0.2 can be compiled and run with RH 5.2. (RH 5.2 is officially not supported, but we've tried it successfully in preparation for the planned porting in ACS 8.0.)<br>
+  </li>
+</ul>
+  </li>
+  <li> <a href="ftp://ftp.eso.org/projects/acs/Releases/ACS-6_0_4/">ACS 6.0</a> (moved to FTP server) <br>
+    Official release: ACS 6.0.4 2007-07-16.<br>
+    Supported platforms are: 
+    <ul>
+      <li> Linux RH Enterprise 4 Update 1, Scientific Linux 4 Update 1, </li>
+      <li>RTAI 3.3 is supported on RH Enterprise and Scientific Linux</li>
+      <li> VxWorks 5.5 is supported on RH Enterprise and Scientific Linux, but 
+      as low priority since not used any more by ALM</li>
+    </ul>
+  </li>
+</ul>
+
+<ul>
+  <li> <a href="ftp://ftp.eso.org/projects/acs/Backup/ACS/ACS_5_0/Distribution/index.html">ACS 5.0</a> (moved to FTP server) <br>
+    Official release: ACS 5.0.5 2006-09-26.<br>
+    See download page for more recent upgrades/patches.<br>
+    Online Documentation is available <a href="ftp://ftp.eso.org/projects/acs/Backup/ACS/ACS_5_0/Distribution/index.html">here</a>. 
+    <br>
+    Supported platforms are: 
+    <ul>
+      <li> Linux RH Enterprise 4 Update 1, Scientific Linux 4 Update 1, </li>
+      <li>Linux RH 9 will be supported for limited time to make easier the transition.<br>
+        No VxWorks and/or RTAI are supported on RH 9</li>
+      <li>RTAI 3.3 is supported on RH Enterprise and Scientific Linux,
+      RTAI 3.1 on RH 9</li>
+      <li> VxWorks 5.5 is supported on RH Enterprise and Scientific Linux, but 
+          as low priority since not used any more by ALMA<br>
+      </li>
+    </ul>
+  </li>
+  <li><a href="Releases/ACS_4_1/Distribution/index.html">ACS 4.1</a><br>
+    Official release: ACS 4.1.4 2005-11-07.<br>
+    See download page for more recent upgrades/patches.<br>
+    Supported platforms are Linux RH 9, Linux RH 9 + VxWorks5.5, Solaris 2.8 + 
+    VxWorks5.5, tested but not supported on RH Enterprise 3.0.3 (with some minor 
+    problems).<br>
+    Download not available online. Ask if you need it.<br>
+  </li>
+  <li> ACS 4.0<br>
+    Official release: ACS 4.0.2 2005-02-06.<br>
+    See download page for more recent upgrades/patches.<br>
+    Supported platforms are Linux RH 9, RH 7.2/7.3 Solaris 2.8 + VxWorks5.5.<br>
+    Download not available online. Ask if you need it.<br>
+  </li>
+  <li>ACS 3.1.<br>
+    Official release: 2004-05-07. <br>
+    See download page for more recent upgrades/patches. <br>
+    Supported platforms are Linux RH 9, RH 7.2/7.3 Solaris 2.8 + VxWorks5.5. <br>
+    Download not available online. Ask if you need it.<br>
+  </li>
+  <li> ACS 3.0<br>
+    Official release: 2003-11-15. <br>
+    Supported platforms are Linux RH 7.2 and 7.3, Solaris 2.8 + VxWorks5.5. <br>
+    Download not available online. Ask if you need it.<br>
+  </li>
+  <li> ACS 2.1<br>
+    Official release: 2003-06-09. <br>
+    Supported platforms are Linux RH 7.2 and 7.3, Solaris 2.8 + VxWorks5.5. <br>
+    Download not available online. Ask if you need it.<br>
+  </li>
+  <li> ACS 2.0<br>
+    Official release: 2002-12-09. See download page for more recent upgrades/patches. 
+    <br>
+    This is the third official production release of ACS (restricted access). 
+    <br>
+    Supported platforms are Linux RH 7.2 (but has been tested on RH 7.3), Solaris 
+    2.8 + VxWorks5.4. <br>
+    Download not available online. Ask if you need it.<br>
+    . <br>
+  </li>
+  <li> ACS 1.1 - (2002-04-16)<br>
+    This is the second official production release of ACS (restricted access). 
+    <br>
+    It contains essentially bug fixes and the implementation of essential missing 
+    feature that complete the ACS 1.x baseline. <br>
+    Supported platforms are Linux RH 7.2, Solaris 2.8 + VxWorks5.4. <br>
+    Download not available online. Ask if you need it.<br>
+  </li>
+  <li> ACS 1.0 - ACS First production release (2001-09-27)<br>
+    This is the first official production release of ACS. <br>
+    Download not available online. Ask if you need it.<br>
+  </li>
+  <li> ACS 0.0 -&nbsp;Kitt Peak Upgrade (2001-05-29)<br>
+    This directory structure contains instruction and software to upgrade ACS 
+    0.0 to the level reached after the Kitt Peak 2000 ACS demonstration test and 
+    including all fixes and extensions done up to the 29<sup>th</sup> of May 2001. 
+    <br>
+    This is the version currently supported for the development of the TICS (Test 
+    Interferomenter) development, until ACS 1.0 will be released. <br>
+    The procedure also includes instructions to build and install the whole Kitt 
+    Peak TCS software. <br>
+    The installation procedure retrieves all the new software modules directly 
+    from the CMM archive <br>
+    Download not available online. Ask if you need it.&nbsp; </li>
+  <li> ACS 0.0 - ACS Prototype (2000-11-15)<br>
+    This is the first official release of ACS. It is actually a prototype, used 
+    for the development of the Kitt Peak 2000 ACS demonstration test. The directory 
+    structure contains installation manual and all documentation available for 
+    the prototype.<br>
+    Download not available online. Ask if you need it.<br>
+  </li>
+</ul>
+<!--==========================================================================================-->
+<center>
+<hr align="left" width="100%"> <a class="navig" href="http://www.eso.org/">ESO</a> | <a class="navig" href="http://www.eso.org/projects/alma/develop/acs">ALMA Common Software</a> | <a class="navig" href="mailto:gchiozzi@eso.org?subject=Page:ACS%20Website%20Suggestions">Contact
+Us</a>
+<br>
+  <em>Modified on Thursday, 29-Nov-2005</em> 
+</center>
+
+</body>
+</html>

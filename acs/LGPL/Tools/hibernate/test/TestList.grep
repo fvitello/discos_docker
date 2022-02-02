@@ -1,0 +1,5 @@
+instantiating session factory with properties
+^1 - ,.*}$
+\[acsStartJava\]
+^. - [jJ]ava
+Delaying starting

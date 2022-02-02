@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry excluding="dummyentities/|unpacked_jars/" kind="src" path="test"/>
+	<classpathentry kind="var" path="ACSROOT/lib/endorsed/xercesImpl.jar"/>
+	<classpathentry kind="var" path="ACSROOT/lib/xmljbind.jar"/>
+	<classpathentry kind="var" path="ACSROOT/lib/junit-dep-4.10.jar"/>
+	<classpathentry kind="var" path="ACSROOT/lib/acscomponent.jar"/>
+	<classpathentry kind="var" path="ACSROOT/lib/comphelpgen.jar"/>
+	<classpathentry kind="var" path="ACSROOT/lib/jcont.jar"/>
+	<classpathentry kind="var" path="ACSROOT/lib/castor.jar"/>
+	<classpathentry kind="var" path="JACORB_HOME/lib/idl.jar" sourcepath="/JACORB_HOME/src"/>
+	<classpathentry kind="var" path="ACSROOT/lib/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/xmltest.jar" sourcepath="lib/xmltest.jar"/>
+	<classpathentry kind="var" path="ACSROOT/lib/acscommon.jar"/>
+	<classpathentry kind="lib" path="lib/dummyentities.jar"/>
+	<classpathentry kind="lib" path="lib/fakexmlentity.jar"/>
+	<classpathentry kind="lib" path="lib/xmltest_dep.jar"/>
+	<classpathentry kind="output" path="object/eclipseOut"/>
+</classpath>

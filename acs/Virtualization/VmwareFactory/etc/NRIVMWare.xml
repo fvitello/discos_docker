@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<NRIVM>
+<machines>
+       <host 
+        name="rhel4-acs6" 
+        config="/vmware/ACS-6.0/RHEL4/RHEL4.vmx" 
+        os="Linux" 
+        username="vltuser8"
+        protocol="rsh" 
+        base="/acs_build/NRI/ALMA/" 
+        destination="/home/web/sqa/docs/alma/snapshotVMrhel4-acs6"
+        test="on" 
+        instrument="off" />
+       <host 
+        name="sl4-acs6" 
+        config="/vmware/ACS-6.0/SL4/SL4.vmx" 
+        os="Linux" 
+        username="vltuser8"
+        protocol="rsh" 
+        base="/acs_build/NRI/ALMA/" 
+        destination="/home/web/sqa/docs/alma/snapshotVMsl4-acs6"
+        test="on" 
+        instrument="off" />
+
+</machines>
+
+<subsystems>
+       <subsy name="ACS"
+        user="vltuser8"
+        repository="/project2/CVS"
+        version="HEAD"
+        retrieve="on"
+        test="on"
+        notify="off"
+        notifyTest="off"
+	excludees="ACS/LGPL/Kit/acs:ACS/Web/AcsWebStart:ACS/LGPL/Kit/acstempl:ACS/LGPL/Kit/doc:ACS/LGPL/Kit/vlt:AACS/LGPL/Tools/doxygen:ACS/LGPL/Tools/emacs:ACS/LGPL/Tools/expat:ACS/LGPL/Tools/extjars:ACS/LGPL/Tools/extpy:ACS/LGPL/Tools/loki:ACS/LGPL/Tools/tat:ACS/NO-LGPL/fftw:ACS/LGPL/acsBUILD:ACS/NO-LGPL/cfitsio:ACS/NO-LGPL/sla"   />
+<!--        <subsy name="EXEC"
+        user="vltuser8"
+        repository="/project2/CVS"
+        version="ACS-5_0_4_LASER_PATCH"
+        retrieve="off"
+        test="on"
+        notify="off"
+        notifyTest="off"
+   		excludees="" instrument="off" valgrind="off" />
+-->
+</subsystems>   
+</NRIVM>

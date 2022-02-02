@@ -1,0 +1,118 @@
+#! /bin/sh
+#************************************************************************
+#   NAME
+#   AcsCleanup - Removes/cleanup directories left around by nightly builds
+# 
+#   SYNOPSIS
+#   AcsCleanup
+# 
+#   DESCRIPTION
+#   Removes/cleanup all directories left around by ACS and ARCHIVE 
+#   nightly builds in:
+#   - /diska/alma_tmp
+#   - $ACSROOT/..
+#
+#   Only directories postfixed by a PID are removed, not directories
+#   with a tag or more complex names postfix.
+#   (the directories are selected using a regular expression assuming
+#   that the standard name is postfixed by a "." and only digits.
+#   The toll should be put in a cron job and executed at least once a week.
+#   Probably the best is on Thursday night.
+#
+#   FILES
+#
+#   ENVIRONMENT
+#
+#   RETURN VALUES
+#
+#   CAUTIONS
+#
+#   EXAMPLES
+#
+#   SEE ALSO
+#
+#   BUGS     
+#
+#------------------------------------------------------------------------
+#
+
+# signal trap (if any)
+
+#ACTION="echo"
+ACTION="rm -rf"
+
+################################
+# Initial minimal sanity check #
+################################
+
+if [ X"$ACSROOT" = X ]
+then
+    echo "ERROR - ACSROOT undefined. Cannot continue!"
+    exit -1
+fi
+
+echo ACSROOT: $ACSROOT
+
+###########################
+# ACS Build directories
+###########################
+CLEANUP_DIR=/diska/alma_tmp
+if [ !  -d $CLEANUP_DIR ]
+then
+        echo "ERROR: $CLEANUP_DIR does not exist. Not a standard machine"
+        echo "Installation aborted"
+	exit 88
+fi
+
+cd $CLEANUP_DIR
+echo "===> Cleanup ACS build directoryies in $PWD!"
+ToBeDeleted=`ls | egrep -E "ACS\.[0-9]+$"`
+for DeleteMe in $ToBeDeleted
+do
+	echo Going to delete $DeleteMe
+	$ACTION  $DeleteMe
+done
+#
+# ARCHIVE Build directories
+#
+ToBeDeleted=`ls | egrep -E "ARCHIVE\.[0-9]+$"`
+for DeleteMe in $ToBeDeleted
+do
+	echo Going to delete $DeleteMe
+	$ACTION  $DeleteMe
+done
+
+##########################
+# ACSROOT and acsdata
+##########################
+CLEANUP_DIR=$ACSROOT/..
+if [ !  -d $CLEANUP_DIR ]
+then
+        echo "ERROR: $CLEANUP_DIR does not exist. Not a standard machine"
+        echo "Installation aborted"
+	exit 88
+fi
+
+cd $CLEANUP_DIR
+
+echo "===> Cleanup ACSROOT directoryies in $PWD !"
+ToBeDeleted=`ls | egrep -E "ACSSW\.[0-9]+$"`
+for DeleteMe in $ToBeDeleted
+do
+	echo Going to delete $DeleteMe
+	$ACTION  $DeleteMe
+done
+
+#
+# ARCHIVE Build directories 
+#
+ToBeDeleted=`ls | egrep -E "acsdata\.[0-9]+$"`
+for DeleteMe in $ToBeDeleted
+do
+	echo Going to delete $DeleteMe
+	$ACTION  $DeleteMe
+done
+
+#
+# ___oOo___
+

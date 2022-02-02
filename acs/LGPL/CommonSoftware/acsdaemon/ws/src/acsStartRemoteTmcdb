@@ -1,0 +1,7 @@
+#!/bin/bash
+
+acsStartJava -endorsed -Dcdb_rdb.acsOnly=true \
+-Dcdb_rdb.plugins.configuration=alma.archive.database.helpers.ArchiveHibernateWDALConfigurationPlugin \
+alma.acs.tmcdb.utils.AcsStartRemote 
+
+

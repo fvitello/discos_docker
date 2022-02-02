@@ -1,0 +1,12 @@
+#! /bin/sh
+# This script repeats the same command 
+# as many times as requested.
+# using a csh function that is not available in bash
+REPETITIONS=$1
+shift
+
+echo Repeating $REPETITIONS times the command: $*
+
+csh -c "repeat $REPETITIONS $* "
+
+# _oOo_

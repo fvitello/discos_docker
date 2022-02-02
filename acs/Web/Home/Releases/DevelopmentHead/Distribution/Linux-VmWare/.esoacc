@@ -1,0 +1,16 @@
+
+<Files *>
+
+Deny from all 
+Allow from 134.171.12.178
+
+AuthType Basic
+AuthUserFile /home/gchiozzi/.webauth/.acspasswd
+AuthName "ACS User Area"
+require user alma-sw-common
+
+Satisfy any
+
+</Files>
+
+

@@ -1,0 +1,7 @@
+#---- Default Abeans Configuration ----
+#Thu Feb 24 19:51:18 GMT+01:00 2000
+Simulator.debug=true
+optional.debug=true
+required.allConnectors=ACS
+optional.timeout=30
+required.connectorType=ACS

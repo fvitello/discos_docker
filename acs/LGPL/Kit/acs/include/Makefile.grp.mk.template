@@ -1,0 +1,6 @@
+MAKEID:=acs
+GRP_NAME:=$(notdir $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST))))))
+GRP_PATH:=$(PWD)
+MAKEDIRTMP:=$(if $(wildcard ../include/InclusiveMakefile.mk),..,$(shell searchFile include/InclusiveMakefile.mk))
+$(if $(filter $(MAKEDIRTMP),#error#),,$(eval include $(MAKEDIRTMP)/include/InclusiveMakefile.mk))
+$(eval $(call genGroup,$(GRP_NAME),$(GRP_PATH)))

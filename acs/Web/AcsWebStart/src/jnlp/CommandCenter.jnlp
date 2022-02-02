@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<jnlp 
+  spec="1.0+" 
+  codebase="$$codebase"
+  href="CommandCenter.jnlp"> 
+  
+  <information> 
+    <title>$$acs_version Command Center</title> 
+    <homepage href="http://www.eso.org/projects/alma/AcsWebStart"/>
+	 
+    <vendor>ESO, Alma Common Software</vendor> 
+    <description>Start up, manage, and shut down Acs installations</description>
+    <offline-allowed/>
+    <icon href="pictures/alma-icon.jpg"/>
+    <icon href="pictures/antennas-splash.jpg" kind="splash"/>
+ </information>
+  
+  <security> 
+    <all-permissions/> 
+  </security> 
+  
+  <resources> 
+    <j2se version="1.6+"/> 
+    <jar href="lib/acscommandcenter.jar"/>
+
+    <jar href="lib/jacorb.jar"/>
+    <jar href="lib/commons-logging.jar"/> 
+    <jar href="lib/jACSCommon.jar"/> 
+    <jar href="lib/jManager.jar"/> 
+    <jar href="lib/XmlComponent.jar"/> 
+    <jar href="lib/acsdaemon.jar"/> 
+    <jar href="lib/acsdaemonErrType.jar"/> 
+    <jar href="lib/ACSErrTypeCommon.jar"/>
+    <jar href="lib/AcsCommandCenterEntities.jar"/> 
+    <jar href="lib/j2ssh-core-0.2.6.jar"/> 
+    <jar href="lib/jnlp.jar"/> 
+    <jar href="lib/jta.jar"/> 
+    <jar href="lib/AcsCommandCenterHelp.jar"/>
+
+    <extension href="./Shared_Acs.jnlp">
+       <ext-download ext-part="ACS"/>
+    </extension>
+    
+    <extension href="./Shared_Sun.jnlp">
+       <ext-download ext-part="javahelp"/>
+    </extension>
+
+    <property name="org.omg.CORBA.ORBClass"           value="org.jacorb.orb.ORB"/> 
+    <property name="org.omg.CORBA.ORBSingletonClass"  value="org.jacorb.orb.ORBSingleton"/> 
+
+    <property name="ACS.tmp" value="./"/> 
+  </resources>
+
+  <application-desc main-class="alma.acs.commandcenter.CommandCenter">
+  </application-desc> 
+</jnlp> 
+
+
+
+
+
+
+
+
+

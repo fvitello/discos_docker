@@ -1,0 +1,1251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Components  xmlns="urn:schemas-cosylab-com:Components:1.0"
+       xmlns:cdb="urn:schemas-cosylab-com:CDB:1.0" 
+       xmlns:baci="urn:schemas-cosylab-com:BACI:1.0" 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<!-- SIMPLE JAVA COMPONENTS-->
+      <e Name="TESTJAVASIMPLE1"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="javaTestContainer" ImplLang="java" />
+      <e Name="TESTJAVASIMPLE2"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="javaTestContainer" ImplLang="java" />
+      <e Name="TESTJAVASIMPLE3"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="javaTestContainer" ImplLang="java" />
+      <e Name="TESTJAVASIMPLE4"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="javaTestContainer" ImplLang="java" />
+      <e Name="TESTJAVASIMPLE5"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="javaTestContainer" ImplLang="java" />
+      <e Name="TESTJAVASIMPLE6"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="javaTestContainer" ImplLang="java" />
+      <e Name="TESTJAVASIMPLE7"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="javaTestContainer" ImplLang="java" />
+      <e Name="TESTJAVASIMPLE8"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="javaTestContainer" ImplLang="java" />
+      <e Name="TESTJAVASIMPLE9"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="javaTestContainer" ImplLang="java" />
+      <e Name="TESTJAVASIMPLE10"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="javaTestContainer" ImplLang="java" />
+<!-- 11 - 20 -->
+      <e Name="TESTJAVASIMPLE11"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="javaTestContainer" ImplLang="java" />
+      <e Name="TESTJAVASIMPLE12"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="javaTestContainer" ImplLang="java" />
+      <e Name="TESTJAVASIMPLE13"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="javaTestContainer" ImplLang="java" />
+      <e Name="TESTJAVASIMPLE14"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="javaTestContainer" ImplLang="java" />
+      <e Name="TESTJAVASIMPLE15"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="javaTestContainer" ImplLang="java" />
+      <e Name="TESTJAVASIMPLE16"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="javaTestContainer" ImplLang="java" />
+      <e Name="TESTJAVASIMPLE17"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="javaTestContainer" ImplLang="java" />
+      <e Name="TESTJAVASIMPLE18"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="javaTestContainer" ImplLang="java" />
+      <e Name="TESTJAVASIMPLE19"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="javaTestContainer" ImplLang="java" />
+      <e Name="TESTJAVASIMPLE20"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="javaTestContainer" ImplLang="java" />
+<!-- 21 - 30 -->
+      <e Name="TESTJAVASIMPLE21"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="javaTestContainer" ImplLang="java" />
+      <e Name="TESTJAVASIMPLE22"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="javaTestContainer" ImplLang="java" />
+      <e Name="TESTJAVASIMPLE23"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="javaTestContainer" ImplLang="java" />
+      <e Name="TESTJAVASIMPLE24"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="javaTestContainer" ImplLang="java" />
+      <e Name="TESTJAVASIMPLE25"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="javaTestContainer" ImplLang="java" />
+      <e Name="TESTJAVASIMPLE26"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="javaTestContainer" ImplLang="java" />
+      <e Name="TESTJAVASIMPLE27"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="javaTestContainer" ImplLang="java" />
+      <e Name="TESTJAVASIMPLE28"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="javaTestContainer" ImplLang="java" />
+      <e Name="TESTJAVASIMPLE29"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="javaTestContainer" ImplLang="java" />
+      <e Name="TESTJAVASIMPLE30"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="javaTestContainer" ImplLang="java" />
+<!-- 31 - 40 -->
+      <e Name="TESTJAVASIMPLE31"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="javaTestContainer" ImplLang="java" />
+      <e Name="TESTJAVASIMPLE32"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="javaTestContainer" ImplLang="java" />
+      <e Name="TESTJAVASIMPLE33"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="javaTestContainer" ImplLang="java" />
+      <e Name="TESTJAVASIMPLE34"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="javaTestContainer" ImplLang="java" />
+      <e Name="TESTJAVASIMPLE35"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="javaTestContainer" ImplLang="java" />
+      <e Name="TESTJAVASIMPLE36"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="javaTestContainer" ImplLang="java" />
+      <e Name="TESTJAVASIMPLE37"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="javaTestContainer" ImplLang="java" />
+      <e Name="TESTJAVASIMPLE38"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="javaTestContainer" ImplLang="java" />
+      <e Name="TESTJAVASIMPLE39"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="javaTestContainer" ImplLang="java" />
+      <e Name="TESTJAVASIMPLE40"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="javaTestContainer" ImplLang="java" />
+<!-- 41 - 50 -->
+      <e Name="TESTJAVASIMPLE41"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="javaTestContainer" ImplLang="java" />
+      <e Name="TESTJAVASIMPLE42"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="javaTestContainer" ImplLang="java" />
+      <e Name="TESTJAVASIMPLE43"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="javaTestContainer" ImplLang="java" />
+      <e Name="TESTJAVASIMPLE44"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="javaTestContainer" ImplLang="java" />
+      <e Name="TESTJAVASIMPLE45"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="javaTestContainer" ImplLang="java" />
+      <e Name="TESTJAVASIMPLE46"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="javaTestContainer" ImplLang="java" />
+      <e Name="TESTJAVASIMPLE47"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="javaTestContainer" ImplLang="java" />
+      <e Name="TESTJAVASIMPLE48"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="javaTestContainer" ImplLang="java" />
+      <e Name="TESTJAVASIMPLE49"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="javaTestContainer" ImplLang="java" />
+      <e Name="TESTJAVASIMPLE50"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="javaTestContainer" ImplLang="java" />
+<!-- SIMPLE CPP COMPONENTS-->
+       
+      <e Name="TESTCPPSIMPLE1"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPSIMPLE2"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPSIMPLE3"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPSIMPLE4"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPSIMPLE5"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPSIMPLE6"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPSIMPLE7"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPSIMPLE8"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPSIMPLE9"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPSIMPLE10"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+<!-- 11 - 20 -->
+      <e Name="TESTCPPSIMPLE11"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPSIMPLE12"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPSIMPLE13"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPSIMPLE14"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPSIMPLE15"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPSIMPLE16"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPSIMPLE17"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPSIMPLE18"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPSIMPLE19"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPSIMPLE20"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+<!-- 21 - 30 -->
+      <e Name="TESTCPPSIMPLE21"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPSIMPLE22"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPSIMPLE23"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPSIMPLE24"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPSIMPLE25"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPSIMPLE26"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPSIMPLE27"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPSIMPLE28"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPSIMPLE29"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPSIMPLE30"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+<!-- 31 - 40 -->
+      <e Name="TESTCPPSIMPLE31"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPSIMPLE32"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPSIMPLE33"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPSIMPLE34"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPSIMPLE35"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPSIMPLE36"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPSIMPLE37"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPSIMPLE38"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPSIMPLE39"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPSIMPLE40"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+<!-- 41 - 50 -->
+      <e Name="TESTCPPSIMPLE41"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPSIMPLE42"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPSIMPLE43"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPSIMPLE44"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPSIMPLE45"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPSIMPLE46"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPSIMPLE47"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPSIMPLE48"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPSIMPLE49"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPSIMPLE50"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+<!-- CHARACTERISTIC CPP COMPONENTS-->
+       
+      <e Name="TESTCPPCHAR1"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPCHAR2"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPCHAR3"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPCHAR4"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPCHAR5"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPCHAR6"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPCHAR7"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPCHAR8"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPCHAR9"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPCHAR10"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+<!-- 11 - 20 -->
+      <e Name="TESTCPPCHAR11"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPCHAR12"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPCHAR13"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPCHAR14"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPCHAR15"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPCHAR16"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPCHAR17"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPCHAR18"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPCHAR19"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPCHAR20"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+<!-- 21 - 30 -->
+      <e Name="TESTCPPCHAR21"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPCHAR22"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPCHAR23"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPCHAR24"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPCHAR25"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPCHAR26"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPCHAR27"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPCHAR28"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPCHAR29"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPCHAR30"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+<!-- 31 - 40 -->
+      <e Name="TESTCPPCHAR31"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPCHAR32"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPCHAR33"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPCHAR34"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPCHAR35"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPCHAR36"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPCHAR37"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPCHAR38"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPCHAR39"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPCHAR40"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+<!-- 41 - 50 -->
+      <e Name="TESTCPPCHAR41"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPCHAR42"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPCHAR43"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPCHAR44"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPCHAR45"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPCHAR46"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPCHAR47"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPCHAR48"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPCHAR49"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+      <e Name="TESTCPPCHAR50"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="cppTestContainer" ImplLang="cpp" />
+
+<!--AUTO START CPP COMPONENTS --> 
+      <e Name="TESTAUTOCPP1"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartCppTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPP2"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartCppTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPP3"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartCppTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPP4"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartCppTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPP5"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartCppTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPP6"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartCppTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPP7"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartCppTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPP8"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartCppTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPP9"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartCppTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPP10"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartCppTestContainer" Autostart="true"  ImplLang="cpp" />
+<!-- 11 - 20 -->
+      <e Name="TESTAUTOCPP11"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartCppTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPP12"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartCppTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPP13"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartCppTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPP14"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartCppTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPP15"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartCppTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPP16"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartCppTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPP17"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartCppTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPP18"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartCppTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPP19"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartCppTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPP20"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartCppTestContainer" Autostart="true"  ImplLang="cpp" />
+<!-- 21 - 30 -->
+      <e Name="TESTAUTOCPP21"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartCppTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPP22"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartCppTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPP23"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartCppTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPP24"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartCppTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPP25"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartCppTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPP26"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartCppTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPP27"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartCppTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPP28"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartCppTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPP29"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartCppTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPP30"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartCppTestContainer" Autostart="true"  ImplLang="cpp" />
+<!-- 31 - 40 -->
+      <e Name="TESTAUTOCPP31"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartCppTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPP32"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartCppTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPP33"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartCppTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPP34"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartCppTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPP35"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartCppTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPP36"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartCppTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPP37"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartCppTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPP38"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartCppTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPP39"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartCppTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPP40"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartCppTestContainer" Autostart="true"  ImplLang="cpp" />
+<!-- 41 - 50 -->
+      <e Name="TESTAUTOCPP41"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartCppTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPP42"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartCppTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPP43"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartCppTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPP44"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartCppTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPP45"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartCppTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPP46"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartCppTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPP47"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartCppTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPP48"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartCppTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPP49"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartCppTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPP50"    Code="lifeCycleTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartCppTestContainer" Autostart="true"  ImplLang="cpp" />
+
+<!--AUTO START CHAR CPP COMPONENTS --> 
+      <e Name="TESTAUTOCPPCHAR1"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartCppCharTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPPCHAR2"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartCppCharTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPPCHAR3"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartCppCharTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPPCHAR4"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartCppCharTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPPCHAR5"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartCppCharTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPPCHAR6"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartCppCharTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPPCHAR7"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartCppCharTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPPCHAR8"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartCppCharTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPPCHAR9"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartCppCharTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPPCHAR10"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartCppCharTestContainer" Autostart="true"  ImplLang="cpp" />
+<!-- 11 - 20 -->
+      <e Name="TESTAUTOCPPCHAR11"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartCppCharTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPPCHAR12"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartCppCharTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPPCHAR13"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartCppCharTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPPCHAR14"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartCppCharTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPPCHAR15"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartCppCharTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPPCHAR16"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartCppCharTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPPCHAR17"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartCppCharTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPPCHAR18"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartCppCharTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPPCHAR19"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartCppCharTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPPCHAR20"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartCppCharTestContainer" Autostart="true"  ImplLang="cpp" />
+<!-- 21 - 30 -->
+      <e Name="TESTAUTOCPPCHAR21"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartCppCharTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPPCHAR22"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartCppCharTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPPCHAR23"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartCppCharTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPPCHAR24"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartCppCharTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPPCHAR25"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartCppCharTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPPCHAR26"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartCppCharTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPPCHAR27"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartCppCharTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPPCHAR28"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartCppCharTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPPCHAR29"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartCppCharTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPPCHAR30"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartCppCharTestContainer" Autostart="true"  ImplLang="cpp" />
+<!-- 31 - 40 -->
+      <e Name="TESTAUTOCPPCHAR31"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartCppCharTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPPCHAR32"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartCppCharTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPPCHAR33"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartCppCharTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPPCHAR34"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartCppCharTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPPCHAR35"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartCppCharTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPPCHAR36"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartCppCharTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPPCHAR37"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartCppCharTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPPCHAR38"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartCppCharTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPPCHAR39"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartCppCharTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPPCHAR40"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartCppCharTestContainer" Autostart="true"  ImplLang="cpp" />
+<!-- 41 - 50 -->
+      <e Name="TESTAUTOCPPCHAR41"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartCppCharTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPPCHAR42"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartCppCharTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPPCHAR43"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartCppCharTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPPCHAR44"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartCppCharTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPPCHAR45"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartCppCharTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPPCHAR46"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartCppCharTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPPCHAR47"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartCppCharTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPPCHAR48"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartCppCharTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPPCHAR49"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartCppCharTestContainer" Autostart="true"  ImplLang="cpp" />
+      <e Name="TESTAUTOCPPCHAR50"    Code="lifeCycleCharTestImpl"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartCppCharTestContainer" Autostart="true"  ImplLang="cpp" />
+<!-- AUTOSTART SIMPLE JAVA COMPONENTS-->
+      <e Name="TESTAUTOJAVA1"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartJavaTestContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVA2"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartJavaTestContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVA3"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartJavaTestContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVA4"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartJavaTestContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVA5"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartJavaTestContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVA6"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartJavaTestContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVA7"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartJavaTestContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVA8"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartJavaTestContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVA9"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartJavaTestContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVA10"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartJavaTestContainer" Autostart="true"  ImplLang="java" />
+<!-- 11 - 20 -->
+      <e Name="TESTAUTOJAVA11"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartJavaTestContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVA12"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartJavaTestContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVA13"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartJavaTestContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVA14"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartJavaTestContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVA15"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartJavaTestContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVA16"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartJavaTestContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVA17"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartJavaTestContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVA18"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartJavaTestContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVA19"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartJavaTestContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVA20"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartJavaTestContainer" Autostart="true"  ImplLang="java" />
+<!-- 21 - 30 -->
+      <e Name="TESTAUTOJAVA21"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartJavaTestContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVA22"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartJavaTestContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVA23"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartJavaTestContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVA24"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartJavaTestContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVA25"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartJavaTestContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVA26"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartJavaTestContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVA27"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartJavaTestContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVA28"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartJavaTestContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVA29"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartJavaTestContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVA30"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartJavaTestContainer" Autostart="true"  ImplLang="java" />
+<!-- 31 - 40 -->
+      <e Name="TESTAUTOJAVA31"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartJavaTestContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVA32"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartJavaTestContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVA33"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartJavaTestContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVA34"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartJavaTestContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVA35"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartJavaTestContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVA36"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartJavaTestContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVA37"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartJavaTestContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVA38"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartJavaTestContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVA39"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartJavaTestContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVA40"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartJavaTestContainer" Autostart="true"  ImplLang="java" />
+<!-- 41 - 50 -->
+      <e Name="TESTAUTOJAVA41"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartJavaTestContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVA42"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartJavaTestContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVA43"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartJavaTestContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVA44"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartJavaTestContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVA45"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartJavaTestContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVA46"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartJavaTestContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVA47"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartJavaTestContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVA48"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartJavaTestContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVA49"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartJavaTestContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVA50"    Code="alma.lifecycleTest.TestLifeCycleCompImpl.TestLifeCycleCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartJavaTestContainer" Autostart="true"  ImplLang="java" />
+<!-- AUTOSTART CHAR JAVA COMPONENTS-->
+      <e Name="TESTAUTOJAVACHAR1"    Code="alma.lifecycleTest.TestLifeCycleCharCompImpl.TestLifeCycleCharCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartJavaTestCharContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVACHAR2"    Code="alma.lifecycleTest.TestLifeCycleCharCompImpl.TestLifeCycleCharCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartJavaTestCharContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVACHAR3"    Code="alma.lifecycleTest.TestLifeCycleCharCompImpl.TestLifeCycleCharCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartJavaTestCharContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVACHAR4"    Code="alma.lifecycleTest.TestLifeCycleCharCompImpl.TestLifeCycleCharCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartJavaTestCharContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVACHAR5"    Code="alma.lifecycleTest.TestLifeCycleCharCompImpl.TestLifeCycleCharCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartJavaTestCharContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVACHAR6"    Code="alma.lifecycleTest.TestLifeCycleCharCompImpl.TestLifeCycleCharCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartJavaTestCharContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVACHAR7"    Code="alma.lifecycleTest.TestLifeCycleCharCompImpl.TestLifeCycleCharCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartJavaTestCharContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVACHAR8"    Code="alma.lifecycleTest.TestLifeCycleCharCompImpl.TestLifeCycleCharCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartJavaTestCharContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVACHAR9"    Code="alma.lifecycleTest.TestLifeCycleCharCompImpl.TestLifeCycleCharCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartJavaTestCharContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVACHAR10"    Code="alma.lifecycleTest.TestLifeCycleCharCompImpl.TestLifeCycleCharCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartJavaTestCharContainer" Autostart="true"  ImplLang="java" />
+<!-- 11 - 20 -->
+      <e Name="TESTAUTOJAVACHAR11"    Code="alma.lifecycleTest.TestLifeCycleCharCompImpl.TestLifeCycleCharCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartJavaTestCharContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVACHAR12"    Code="alma.lifecycleTest.TestLifeCycleCharCompImpl.TestLifeCycleCharCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartJavaTestCharContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVACHAR13"    Code="alma.lifecycleTest.TestLifeCycleCharCompImpl.TestLifeCycleCharCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartJavaTestCharContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVACHAR14"    Code="alma.lifecycleTest.TestLifeCycleCharCompImpl.TestLifeCycleCharCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartJavaTestCharContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVACHAR15"    Code="alma.lifecycleTest.TestLifeCycleCharCompImpl.TestLifeCycleCharCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartJavaTestCharContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVACHAR16"    Code="alma.lifecycleTest.TestLifeCycleCharCompImpl.TestLifeCycleCharCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartJavaTestCharContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVACHAR17"    Code="alma.lifecycleTest.TestLifeCycleCharCompImpl.TestLifeCycleCharCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartJavaTestCharContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVACHAR18"    Code="alma.lifecycleTest.TestLifeCycleCharCompImpl.TestLifeCycleCharCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartJavaTestCharContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVACHAR19"    Code="alma.lifecycleTest.TestLifeCycleCharCompImpl.TestLifeCycleCharCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartJavaTestCharContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVACHAR20"    Code="alma.lifecycleTest.TestLifeCycleCharCompImpl.TestLifeCycleCharCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartJavaTestCharContainer" Autostart="true"  ImplLang="java" />
+<!-- 21 - 30 -->
+      <e Name="TESTAUTOJAVACHAR21"    Code="alma.lifecycleTest.TestLifeCycleCharCompImpl.TestLifeCycleCharCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartJavaTestCharContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVACHAR22"    Code="alma.lifecycleTest.TestLifeCycleCharCompImpl.TestLifeCycleCharCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartJavaTestCharContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVACHAR23"    Code="alma.lifecycleTest.TestLifeCycleCharCompImpl.TestLifeCycleCharCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartJavaTestCharContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVACHAR24"    Code="alma.lifecycleTest.TestLifeCycleCharCompImpl.TestLifeCycleCharCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartJavaTestCharContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVACHAR25"    Code="alma.lifecycleTest.TestLifeCycleCharCompImpl.TestLifeCycleCharCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartJavaTestCharContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVACHAR26"    Code="alma.lifecycleTest.TestLifeCycleCharCompImpl.TestLifeCycleCharCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartJavaTestCharContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVACHAR27"    Code="alma.lifecycleTest.TestLifeCycleCharCompImpl.TestLifeCycleCharCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartJavaTestCharContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVACHAR28"    Code="alma.lifecycleTest.TestLifeCycleCharCompImpl.TestLifeCycleCharCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartJavaTestCharContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVACHAR29"    Code="alma.lifecycleTest.TestLifeCycleCharCompImpl.TestLifeCycleCharCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartJavaTestCharContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVACHAR30"    Code="alma.lifecycleTest.TestLifeCycleCharCompImpl.TestLifeCycleCharCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartJavaTestCharContainer" Autostart="true"  ImplLang="java" />
+<!-- 31 - 40 -->
+      <e Name="TESTAUTOJAVACHAR31"    Code="alma.lifecycleTest.TestLifeCycleCharCompImpl.TestLifeCycleCharCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartJavaTestCharContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVACHAR32"    Code="alma.lifecycleTest.TestLifeCycleCharCompImpl.TestLifeCycleCharCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartJavaTestCharContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVACHAR33"    Code="alma.lifecycleTest.TestLifeCycleCharCompImpl.TestLifeCycleCharCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartJavaTestCharContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVACHAR34"    Code="alma.lifecycleTest.TestLifeCycleCharCompImpl.TestLifeCycleCharCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartJavaTestCharContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVACHAR35"    Code="alma.lifecycleTest.TestLifeCycleCharCompImpl.TestLifeCycleCharCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartJavaTestCharContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVACHAR36"    Code="alma.lifecycleTest.TestLifeCycleCharCompImpl.TestLifeCycleCharCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartJavaTestCharContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVACHAR37"    Code="alma.lifecycleTest.TestLifeCycleCharCompImpl.TestLifeCycleCharCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartJavaTestCharContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVACHAR38"    Code="alma.lifecycleTest.TestLifeCycleCharCompImpl.TestLifeCycleCharCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartJavaTestCharContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVACHAR39"    Code="alma.lifecycleTest.TestLifeCycleCharCompImpl.TestLifeCycleCharCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartJavaTestCharContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVACHAR40"    Code="alma.lifecycleTest.TestLifeCycleCharCompImpl.TestLifeCycleCharCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartJavaTestCharContainer" Autostart="true"  ImplLang="java" />
+<!-- 41 - 50 -->
+      <e Name="TESTAUTOJAVACHAR41"    Code="alma.lifecycleTest.TestLifeCycleCharCompImpl.TestLifeCycleCharCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartJavaTestCharContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVACHAR42"    Code="alma.lifecycleTest.TestLifeCycleCharCompImpl.TestLifeCycleCharCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartJavaTestCharContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVACHAR43"    Code="alma.lifecycleTest.TestLifeCycleCharCompImpl.TestLifeCycleCharCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartJavaTestCharContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVACHAR44"    Code="alma.lifecycleTest.TestLifeCycleCharCompImpl.TestLifeCycleCharCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartJavaTestCharContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVACHAR45"    Code="alma.lifecycleTest.TestLifeCycleCharCompImpl.TestLifeCycleCharCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartJavaTestCharContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVACHAR46"    Code="alma.lifecycleTest.TestLifeCycleCharCompImpl.TestLifeCycleCharCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartJavaTestCharContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVACHAR47"    Code="alma.lifecycleTest.TestLifeCycleCharCompImpl.TestLifeCycleCharCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartJavaTestCharContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVACHAR48"    Code="alma.lifecycleTest.TestLifeCycleCharCompImpl.TestLifeCycleCharCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartJavaTestCharContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVACHAR49"    Code="alma.lifecycleTest.TestLifeCycleCharCompImpl.TestLifeCycleCharCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartJavaTestCharContainer" Autostart="true"  ImplLang="java" />
+      <e Name="TESTAUTOJAVACHAR50"    Code="alma.lifecycleTest.TestLifeCycleCharCompImpl.TestLifeCycleCharCompHelper"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleCharComp:1.0"
+                            Container="autostartJavaTestCharContainer" Autostart="true"  ImplLang="java" />
+<!-- AUTOSTART SIMPLE PYTHON COMPONENTS-->
+      <e Name="TESTAUTOPY1"    Code="lifecycleTestImpl.LifeCycleTest"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartPyTestContainer" Autostart="true"  ImplLang="py" />
+      <e Name="TESTAUTOPY2"    Code="lifecycleTestImpl.LifeCycleTest"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartPyTestContainer" Autostart="true"  ImplLang="py" />
+      <e Name="TESTAUTOPY3"    Code="lifecycleTestImpl.LifeCycleTest"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartPyTestContainer" Autostart="true"  ImplLang="py" />
+      <e Name="TESTAUTOPY4"    Code="lifecycleTestImpl.LifeCycleTest"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartPyTestContainer" Autostart="true"  ImplLang="py" />
+      <e Name="TESTAUTOPY5"    Code="lifecycleTestImpl.LifeCycleTest"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartPyTestContainer" Autostart="true"  ImplLang="py" />
+      <e Name="TESTAUTOPY6"    Code="lifecycleTestImpl.LifeCycleTest"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartPyTestContainer" Autostart="true"  ImplLang="py" />
+      <e Name="TESTAUTOPY7"    Code="lifecycleTestImpl.LifeCycleTest"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartPyTestContainer" Autostart="true"  ImplLang="py" />
+      <e Name="TESTAUTOPY8"    Code="lifecycleTestImpl.LifeCycleTest"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartPyTestContainer" Autostart="true"  ImplLang="py" />
+      <e Name="TESTAUTOPY9"    Code="lifecycleTestImpl.LifeCycleTest"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartPyTestContainer" Autostart="true"  ImplLang="py" />
+      <e Name="TESTAUTOPY10"    Code="lifecycleTestImpl.LifeCycleTest"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartPyTestContainer" Autostart="true"  ImplLang="py" />
+<!-- 11 - 20 -->
+      <e Name="TESTAUTOPY11"    Code="lifecycleTestImpl.LifeCycleTest"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartPyTestContainer" Autostart="true"  ImplLang="py" />
+      <e Name="TESTAUTOPY12"    Code="lifecycleTestImpl.LifeCycleTest"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartPyTestContainer" Autostart="true"  ImplLang="py" />
+      <e Name="TESTAUTOPY13"    Code="lifecycleTestImpl.LifeCycleTest"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartPyTestContainer" Autostart="true"  ImplLang="py" />
+      <e Name="TESTAUTOPY14"    Code="lifecycleTestImpl.LifeCycleTest"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartPyTestContainer" Autostart="true"  ImplLang="py" />
+      <e Name="TESTAUTOPY15"    Code="lifecycleTestImpl.LifeCycleTest"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartPyTestContainer" Autostart="true"  ImplLang="py" />
+      <e Name="TESTAUTOPY16"    Code="lifecycleTestImpl.LifeCycleTest"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartPyTestContainer" Autostart="true"  ImplLang="py" />
+      <e Name="TESTAUTOPY17"    Code="lifecycleTestImpl.LifeCycleTest"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartPyTestContainer" Autostart="true"  ImplLang="py" />
+      <e Name="TESTAUTOPY18"    Code="lifecycleTestImpl.LifeCycleTest"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartPyTestContainer" Autostart="true"  ImplLang="py" />
+      <e Name="TESTAUTOPY19"    Code="lifecycleTestImpl.LifeCycleTest"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartPyTestContainer" Autostart="true"  ImplLang="py" />
+      <e Name="TESTAUTOPY20"    Code="lifecycleTestImpl.LifeCycleTest"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartPyTestContainer" Autostart="true"  ImplLang="py" />
+<!-- 21 - 30 -->
+      <e Name="TESTAUTOPY21"    Code="lifecycleTestImpl.LifeCycleTest"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartPyTestContainer" Autostart="true"  ImplLang="py" />
+      <e Name="TESTAUTOPY22"    Code="lifecycleTestImpl.LifeCycleTest"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartPyTestContainer" Autostart="true"  ImplLang="py" />
+      <e Name="TESTAUTOPY23"    Code="lifecycleTestImpl.LifeCycleTest"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartPyTestContainer" Autostart="true"  ImplLang="py" />
+      <e Name="TESTAUTOPY24"    Code="lifecycleTestImpl.LifeCycleTest"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartPyTestContainer" Autostart="true"  ImplLang="py" />
+      <e Name="TESTAUTOPY25"    Code="lifecycleTestImpl.LifeCycleTest"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartPyTestContainer" Autostart="true"  ImplLang="py" />
+      <e Name="TESTAUTOPY26"    Code="lifecycleTestImpl.LifeCycleTest"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartPyTestContainer" Autostart="true"  ImplLang="py" />
+      <e Name="TESTAUTOPY27"    Code="lifecycleTestImpl.LifeCycleTest"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartPyTestContainer" Autostart="true"  ImplLang="py" />
+      <e Name="TESTAUTOPY28"    Code="lifecycleTestImpl.LifeCycleTest"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartPyTestContainer" Autostart="true"  ImplLang="py" />
+      <e Name="TESTAUTOPY29"    Code="lifecycleTestImpl.LifeCycleTest"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartPyTestContainer" Autostart="true"  ImplLang="py" />
+      <e Name="TESTAUTOPY30"    Code="lifecycleTestImpl.LifeCycleTest"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartPyTestContainer" Autostart="true"  ImplLang="py" />
+<!-- 31 - 40 -->
+      <e Name="TESTAUTOPY31"    Code="lifecycleTestImpl.LifeCycleTest"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartPyTestContainer" Autostart="true"  ImplLang="py" />
+      <e Name="TESTAUTOPY32"    Code="lifecycleTestImpl.LifeCycleTest"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartPyTestContainer" Autostart="true"  ImplLang="py" />
+      <e Name="TESTAUTOPY33"    Code="lifecycleTestImpl.LifeCycleTest"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartPyTestContainer" Autostart="true"  ImplLang="py" />
+      <e Name="TESTAUTOPY34"    Code="lifecycleTestImpl.LifeCycleTest"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartPyTestContainer" Autostart="true"  ImplLang="py" />
+      <e Name="TESTAUTOPY35"    Code="lifecycleTestImpl.LifeCycleTest"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartPyTestContainer" Autostart="true"  ImplLang="py" />
+      <e Name="TESTAUTOPY36"    Code="lifecycleTestImpl.LifeCycleTest"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartPyTestContainer" Autostart="true"  ImplLang="py" />
+      <e Name="TESTAUTOPY37"    Code="lifecycleTestImpl.LifeCycleTest"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartPyTestContainer" Autostart="true"  ImplLang="py" />
+      <e Name="TESTAUTOPY38"    Code="lifecycleTestImpl.LifeCycleTest"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartPyTestContainer" Autostart="true"  ImplLang="py" />
+      <e Name="TESTAUTOPY39"    Code="lifecycleTestImpl.LifeCycleTest"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartPyTestContainer" Autostart="true"  ImplLang="py" />
+      <e Name="TESTAUTOPY40"    Code="lifecycleTestImpl.LifeCycleTest"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartPyTestContainer" Autostart="true"  ImplLang="py" />
+<!-- 41 - 50 -->
+      <e Name="TESTAUTOPY41"    Code="lifecycleTestImpl.LifeCycleTest"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartPyTestContainer" Autostart="true"  ImplLang="py" />
+      <e Name="TESTAUTOPY42"    Code="lifecycleTestImpl.LifeCycleTest"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartPyTestContainer" Autostart="true"  ImplLang="py" />
+      <e Name="TESTAUTOPY43"    Code="lifecycleTestImpl.LifeCycleTest"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartPyTestContainer" Autostart="true"  ImplLang="py" />
+      <e Name="TESTAUTOPY44"    Code="lifecycleTestImpl.LifeCycleTest"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartPyTestContainer" Autostart="true"  ImplLang="py" />
+      <e Name="TESTAUTOPY45"    Code="lifecycleTestImpl.LifeCycleTest"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartPyTestContainer" Autostart="true"  ImplLang="py" />
+      <e Name="TESTAUTOPY46"    Code="lifecycleTestImpl.LifeCycleTest"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartPyTestContainer" Autostart="true"  ImplLang="py" />
+      <e Name="TESTAUTOPY47"    Code="lifecycleTestImpl.LifeCycleTest"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartPyTestContainer" Autostart="true"  ImplLang="py" />
+      <e Name="TESTAUTOPY48"    Code="lifecycleTestImpl.LifeCycleTest"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartPyTestContainer" Autostart="true"  ImplLang="py" />
+      <e Name="TESTAUTOPY49"    Code="lifecycleTestImpl.LifeCycleTest"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartPyTestContainer" Autostart="true"  ImplLang="py" />
+      <e Name="TESTAUTOPY50"    Code="lifecycleTestImpl.LifeCycleTest"
+		             		Type="IDL:alma/lifecycleTest/TestLifeCycleComp:1.0"
+                            Container="autostartPyTestContainer" Autostart="true"  ImplLang="py" />
+</Components>
+

@@ -1,0 +1,7 @@
+msc (Dec 2007):
+
+the jhall-2.0_02.jar contained in ACS7.0.0 is signed with a
+certificate from Sun that has expired.
+i'm therefore using a newer version of the version which is valid
+through 2009.
+

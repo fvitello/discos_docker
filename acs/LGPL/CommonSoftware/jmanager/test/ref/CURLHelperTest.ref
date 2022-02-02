@@ -1,0 +1,16 @@
+1 -  -- alma.acs.testsupport.tat.NoDotJUnitRunner com.cosylab.acs.maci.test.CURLHelperTest
+1 - curl://nrao
+1 - curl:///MOUNT1
+1 - curl:///MOUNT1
+1 - curl://user@cosylab.com:1208/MOUNT1/SUBDO
+1 - curl:///BUILDING1/FRONTDOOR
+1 - curl:///BUILDING1:FRONTDOOR
+1 - curl:///BUILDING1/FRONTDOOR/HANDLE
+1 - curl:///BUILDING1:FRONTDOOR:HANDLE
+1 - curl:///BUILDING1/FRONTDOOR/HANDLE
+1 - curl:///BUILDING1:FRONTDOOR:HANDLE
+1 - curl://nrao/BUILDING1/FRONTDOOR/HANDLE
+1 - 
+1 - 
+1 - OK (1 test)
+1 - 

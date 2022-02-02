@@ -1,0 +1,429 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+
+  <title>Acs 8.0 Web Start</title>
+  
+  
+  <script type="text/javascript">
+
+
+
+/**
+ * User-friendliness method
+ */
+function fillAdvancedFromStandard () {
+	form = document.forms["standardForm"];
+	
+	host = form.elements["host"].value;
+	inst = form.elements["acsinstance"].value;
+	
+	fillAdvanced (host, inst);
+}
+
+
+/**
+ * Helper for the above
+ */
+function fillAdvanced (host, inst) {
+	form = document.forms["advancedForm"];
+	
+	form.elements["manager_host"]             .value = host;
+	form.elements["naming_service_host"]      .value = host;
+	form.elements["interface_repository_host"].value = host;
+	form.elements["dal_host"]                 .value = host;
+
+	form.elements["manager_port"]             .value = 3000 + inst*100 + 0;
+	form.elements["naming_service_port"]      .value = 3000 + inst*100 + 1;
+	form.elements["interface_repository_port"].value = 3000 + inst*100 + 4;
+	form.elements["dal_port"]                 .value = 3000 + inst*100 + 12;
+}
+
+
+
+PROMPT_PROJECTNAME="You haven't specified a Project name.\n"+
+                   "Specify one now, or cancel this dialog to not use a Project name."
+
+
+/**
+ * Checks content of Standard form before submission
+ */
+function checkStandard () {
+	form = document.forms["standardForm"];
+	
+	if (form.elements["projectname"].value == "") {
+		n1 = form.elements["host"].value;
+		n2 = form.elements["acsinstance"].value;
+		suggestion = n1+" - "+n2;
+		promptForField (PROMPT_PROJECTNAME, suggestion, form.elements["projectname"]);
+	}
+	
+	return true;
+}
+
+
+/**
+ * Checks content of Advanced form before submission
+ */
+function checkAdvanced () {
+	form = document.forms["advancedForm"];
+
+	if (form.elements["projectname"].value == "") {
+		n1 = form.elements["manager_host"].value;
+		n2 = form.elements["manager_port"].value;
+		suggestion = n1+" - "+n2;
+		promptForField (PROMPT_PROJECTNAME, suggestion, form.elements["projectname"]);
+	}
+
+	return true;
+}
+
+/**
+ * Helper for the check methods above
+ */
+function promptForField (message, suggestion, field) {
+	val = field.value;
+	if (val == "") {
+		res = prompt (message, suggestion);
+		if (res != null) {
+			field.value = res;
+		}
+	}
+}
+
+
+
+	</script>
+
+  <style type="text/css">
+
+select {width:255px; font-size:9pt;}
+input {width:125; font-size:9pt;}
+
+h2 {font-weight:bold; font-style:italic; background-color:gainsboro;}
+h3 {font-weight:bold; font-style:italic; background-color:whitesmoke;}
+.h3-section {padding-left:60px}
+
+  </style>
+</head>
+
+
+<body>
+
+
+<!-- 
+<p>
+<img src="pictures/icon-under-construction.gif" alt="currently being updated" />
+<big><big><big><big>Under construction...</big></big></big></big>
+</p>
+<hr>
+-->
+
+<br>
+<h1 align="center"> <i>Acs 8.0 Web Start </i><superscript>*</superscript></h1>
+<br>
+
+<p>Acs Java Applications can be installed on any machine supporting Java Web Start technology.</p>
+
+<p>When an application is selected, all necessary libraries and configuration 
+  files are automatically downloaded (or updated if already installed and a new 
+  version is available on the web server). The examples below are purely java 
+  based and can run on any machine. They are provided to demonstrate the capabilities 
+  of Web Start deployment. Real Acs applications to be deployed using Web Start 
+  are being developed and a prominent example is the ALMA Observing Tool which uses
+  Web Start to conduct its user tests.
+
+<p>In order to prepare an application for Web Start deployment, it is necessary 
+  to put all necessary files on a web server and prepare the proper configuration 
+  files. An example of this is the very same module that contains the page you 
+  are reading. It can be found in the ACS/Web/AcsWebStart CVS module in the ACS 
+  tree. We have put together a little
+  <a href="/projects/alma/develop/acs/OnlineDocs/WebStart/HowTo--JavaWebStart.html">How-To</a>
+  on how to prepare an application to be deployed via Java Web Start. </p>
+
+<p>
+&nbsp;
+</p>
+
+
+<!-- === footnote === -->
+<p>
+<b>*</b> may differ from standard Acs Release: see <a href="release_notes.html" target="_blank">details</a>  
+</p>
+
+
+<!-- ================================================================== -->
+<h2>Prerequisites</h2>
+
+
+<h4> You need to have <i>Java 6</i> installed </h4>
+
+<i>Java 6</i> is often synonymously called <i>Java 1.6</i> or <i>J2SE 1.6</i> which refers to its internal version number.
+Check your java version on the command-line. It should read something like this:
+</p>
+<pre>
+&gt; java -version
+java version "1.6.0_02"
+Java(TM) SE Runtime Environment (build 1.6.0_02-b05)
+Java HotSpot(TM) Client VM (build 1.6.0_02-b05, mixed mode, sharing)
+</pre>
+
+An output like this (with the <i>1.6.x</i>) means you have Java 6 installed, and this means you have the Java Web Start technology installed, too.
+
+
+<p>
+&nbsp;
+</p>
+
+
+<h4>Your Java Web Start needs to be working</h4>
+
+To try out whether your Java Web Start works, go to 
+<a href="http://java.sun.com/javase/technologies/desktop/javawebstart/demos.html">Sun's Web Start Demo Page</a>
+and try to run one of the demo applications. On Sun's pages you find troubleshooting documentation
+in case it doesn't work - in that case simply (re)installing Java may be the easy solution.
+</p>
+
+<br>
+<br>
+
+<p><b>First Time Users</b>: When you use Acs Web Start for the first time, it will download a quite
+   big amount of shared resources (in the order of 30 MB) to your host. This is only happening the
+   first time, and subsequent usage will not download much and thus be much faster. <br>
+   Also, when you use Acs Web Start for the first time, you will be warned that the application's
+   digital signature is invalid (along the lines of "The security certificate was issued by a company
+   that is not trusted"). This is due to the non-official certificate we are currently using to
+   authenticate our applications. Be not worried (though in general you should be!) and run the
+   application anyhow. In that warning dialog, you might also check "Always trust content from this
+   publisher". Otherwise, you will be asked the same question each time you run any of the Acs
+   Web Start applications. </p>
+
+
+<p>
+&nbsp;
+</p>
+
+<!-- ================================================================== -->
+<h2> Applications</h2>
+
+
+<p>The main purpose of this page is to start Acs Java Clients (like Object Explorer, 
+  Cdb Browser) easily on any machine, without having to install the whole Acs and with 
+  automatic updates whenever a new version is available. If you want other clients 
+  added to this list, please contact the Acs development team. </p>
+<p>
+When you below select and start a client, it will be run on your local machine.
+Most of the clients are meant to connect to an Acs Suite (Services, Manager, Containers).
+The Acs Suite can be running on any host - as long as it is reachable from your local machine.
+</p>
+
+<p>In the <i>Standard</i> form below, you simply select the client to run, and specify
+	the host and the instance where Acs is running.
+	The <i>Advanced</i> variant allows you to specify the hosts and ports of the single
+	Acs servants separately. This is only of interest in special cases.
+</p>
+
+<p>&nbsp;</p>
+
+
+<!-- ================ standard form ==================== -->
+
+<div class="h3-section">
+<h3>Standard</h3>
+<form name="standardForm" action="jnlp.html" method="get" onsubmit="return checkStandard()">
+   <!--
+	<input type="hidden" name="homepage"  value="http://www.eso.org/projects/alma/AcsWebStart" />
+   -->
+
+   <table>
+   <tr>
+		<td>For convenience, you can reset the data to default values:</td>
+		<td><input value="Default values" type="reset"> </td>
+	</tr>
+	</table>
+
+<p>&nbsp;</p>
+  <table>
+    <tbody>
+    <tr>
+      <td>Tool</td>
+      <td> 
+        <select name="file">
+        <option value="ObjectExplorer.jnlp">Object Explorer</option>
+        <option value="CdbBrowser.jnlp">Cdb Browser</option>
+        <option value="CommandCenter.jnlp">Acs Command Center</option>
+        <option value="LoggingClient.jnlp">JLog</option>
+        </select>
+      </td>
+    </tr>
+	<tr>
+      <td>Instance</td>
+      <td> 
+        <select name="acsinstance">
+        <option selected="selected" value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>Host</td>
+      <td> 
+        <input name="host" value="localhost">
+      </td>
+    </tr>
+    <tr>
+      <td>Project name *</td>
+      <td> 
+        <input name="projectname" value="" type="text">
+      </td>
+    </tr>
+    </tbody> 
+  </table>
+  <p>  
+	<input value="Start" type="submit">
+  </p>
+	
+</form>
+</div>
+<p>&nbsp;</p>
+
+
+<!-- ================ advanced form ==================== -->
+
+<div class="h3-section">
+<h3>Advanced</h3>
+
+
+<form name="advancedForm" action="jnlp.html" method="get" onsubmit="return checkAdvanced()">
+
+   <table>
+   <tr>
+		<td>For convenience, you can reset the data to default values:</td>
+		<td><input value="Default values" type="reset"> </td>
+	</tr><tr>
+		<td>Or you can fill in values from the Standard section above: </td>
+		<td><input value="Fill from above" onclick="fillAdvancedFromStandard()" type="button"> <i>(requires Javascript enabled)</i></td>
+	</tr>
+	</table>
+	
+<p>&nbsp;</p>
+  <table>
+    <tbody>
+      <tr>
+ 
+      <td>Tool</td>
+      <td colspan="2">
+        
+        <select name="file">
+        <option value="ObjectExplorer.jnlp">Object Explorer</option>
+        <option value="CdbBrowser.jnlp">Cdb Browser</option>
+        <option value="CommandCenter.jnlp">Acs Command Center</option>
+        <option value="LoggingClient.jnlp">JLog</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+ 
+      <td>against Manager on ...</td>
+      <td>
+        <input name="manager_host" value="localhost" type="text">
+      </td>
+      <td>
+        <input name="manager_port" value="3000" type="text">
+      </td>
+    </tr>
+    <tr>
+ 
+      <td>against NameService on ...</td>
+      <td>
+        <input name="naming_service_host" value="localhost" type="text">
+      </td>
+      <td>
+        <input name="naming_service_port" value="3001" type="text">
+      </td>
+    </tr>
+    <tr>
+ 
+      <td>against Interface Repository on ...</td>
+      <td>
+        <input name="interface_repository_host" value="localhost" type="text">
+      </td>
+      <td>
+        <input name="interface_repository_port" value="3004" type="text">
+      </td>
+    </tr>
+    <tr>
+ 
+      <td>against CDB DAL on ...</td>
+      <td>
+        <input name="dal_host" value="localhost" type="text">
+      </td>
+      <td>
+        <input name="dal_port" value="3012" type="text">
+      </td>
+    </tr>
+    <tr>
+        <td>Project name *</td>
+    <td>
+      <input name="projectname" value="" type="text">
+    </td>
+    </tr>
+  
+    </tbody>
+  </table>
+  
+<p><input value="Start" type="submit"></p>
+</form>
+</div>
+
+<p>&nbsp;</p>
+
+
+
+<!-- === footnote === -->
+<p>
+<b>*</b> Project name is the name you want to give to this combination of values. 
+    It will be stored in your <a href="./player.jnlp">Cache Viewer</a>, so 
+    that you can run it directly from there (or even from a shortcut on your
+    desktop) without having to re-specify the values already entered now.
+    We recommend using a short but meaningful project name like
+    e.g. "STE - 5" if your combination of values refers to Acs Instance 5 on the STE.
+</p>
+
+<!-- ================================================================== -->
+<h2> Miscellaneous</h2>
+
+<p>&nbsp;</p>
+
+<div class="h3-section">
+<h3> <a>Other Web Start Versions</a> </h3>
+
+Acs Web Start versions are also available by version number. Older
+versions are kept for reference. This is useful if you create
+your own webstart application that uses Acs Web Start as a library.
+See the <a href="../choice.html">version list</a>.
+</div>
+<p>&nbsp;</p>
+
+  
+<div class="h3-section">
+<h3> <a>Cache Viewer</a> </h3>
+
+Configure your <a href="./player.jnlp">Cache Viewer</a> to see log messages, run already downloaded applications,
+create desktop-links to run applications, and more.
+</div>
+<p>&nbsp;</p>
+
+
+<p>&nbsp;</p>
+
+</body>
+</html>

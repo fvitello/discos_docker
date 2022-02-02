@@ -1,0 +1,347 @@
+<!DOCTYPE doctype PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<meta name="generator" content="HTML Tidy for Linux/x86 (vers 1st September 2004), see www.w3.org">
+<title>ALMA Common Software</title>
+<link rel="StyleSheet" href="Css/acs.css" type="text/css" media="screen">
+<script language="Javascript" src="Scripts/acs.js" type="text/javascript">
+  </script>
+<!--==========================================================================================-->
+</head>
+<body class="Normal" style="background-color: rgb(255, 255, 255);" lang="EN-US" link="#0000ff" vlink="#800080">
+<!--Main part is here-->
+<center>
+  <p align="left">&nbsp;</p>
+  <h1><b><i>ACS 9.0 Documentation</i></b></h1>
+</center>
+<h2><a name="top"></a>Table Of Contents</h2>
+<ul>
+  <li><a href="#IntroductoryDocuments">Introductory Documents Intended Primarily 
+    for ACS/ALMA Newbies</a><br>
+  </li>
+  <li><a href="#SpecificationDocuments">Specification Documents</a></li>
+  <li><a href="#APIDocumentation">Auto-generated API Documentation</a><br>
+  </li>
+  <li><a href="#Tutorials">Tutorials for Seasoned Developers Using ACS Application 
+    Programming Interfaces</a><br>
+  </li>
+  <li><a href="#UserManuals">Manuals for ACS End-users</a><br>
+  </li>
+  <li><a href="#CvsMirror">CVS Mirror</a></li>
+  <li><a href="#CodeExamples">ACS Code Examples</a></li>
+  <li><a href="#DevelopmentTools">Development Tools</a></li>
+  <li><a href="#VLTSW">Very Large Telescope Software Documents</a></li>
+  <li><a href="#3rdPartyLibraries">3rd Party Libraries</a><br>
+  </li>
+</ul>
+<hr style="width: 100%; height: 2px;">
+<h2><a name="IntroductoryDocuments"></a>Introductory Documents<br>
+</h2>
+<a href="ACS-Overview.pdf">ACS Overview</a>&nbsp; - read this to get an idea of 
+what is provided by ACS and how to use it. <br>
+<br>
+<a href="ACS-Installation-Manual.pdf">ACS Installation Manual</a> &#8211; this 
+document <span style="font-weight: bold;">provides detailed installation instructions</span>. 
+Lighter and shorter installation documentation is provided in the README file 
+in the root directory of the distribution. This applies in particular to the LGPL 
+distribution of ACS.<br>
+<br>
+<a href="http://almasw.hq.eso.org/almasw/bin/view/ACS/ReleaseNotes">ACS Release 
+Notes</a> - always read this before any installation to see the latest changes. 
+This document is kept in the ACS wiki and updated with each major and minor releases 
+of ACS. <br>
+<br>
+<a href="ACSCookbook/index.html">ACS Cookbook</a> - this should be <span style="font-weight: bold;">the 
+first stop for ALMA software engineers</span> wishing to learn how to use a specific 
+ACS feature described in the ACS Architecture document. For any topic described 
+in the ACS Cookbook, there will be a number of links referencing other ACS tutorials, 
+manuals, etc. If a subject you would like explained and it is not in this document, 
+please contact us so that we may add it.<br>
+<br>
+<!--=======================================================================-->
+<a href="ACS-Roadmap.pdf"> ACS Roadmap</a> - basic document <span style="font-weight: bold;">designed 
+to help new ALMA software developers</span> understand exactly what ACS is and 
+provides.<br>
+<br>
+<a href="IntGuidelines.pdf">ALMA Software Development Tools and Integration Procedures</a> 
+<b>- Every newcomer to ALMA and ACS should read this document.</b><br>
+This document, produced by the Integration and Testing team, gives an overview 
+on the standards and tools that have been adopted and procedures and methodologies 
+to be followed by the developers within the ALMA SW group.<br>
+The document provides information about: 
+<ul>
+  <li>Directory structures for modules and subsystems </li>
+  <li>Testing using the TAT tool </li>
+  <li>Makefile and coding standards </li>
+  <li>ALMA integration procedures and software releases </li>
+  <li>Problem reporting</li>
+</ul>
+<a href="http://almasw.hq.eso.org/almasw/bin/view/ACS/AcsFAQ">ACS Frequently Asked 
+Questions</a> - contains the answers to questions the ACS development team gets 
+asked often.<br>
+<br>
+<br>
+<a href="ACSArchitecture/Help/Glossary.html">Glossary, Abbreviations and Acronyms</a> <br>
+<br>
+<p> </p>
+<!--=======================================================================-->
+<hr align="left" width="100%">
+<h2><a name="SpecificationDocuments"></a>Specification Documents </h2>
+<p> Specification and architecture documents for ACS describe the internal design 
+  of ACS and are probably not very interesting to the casual ACS user or developer. 
+  These documents are not written specifically for the current ACS release, but 
+  describe how ACS should and/or will be. In other words, only some of the features 
+  in these documents have already been implemented. </p>
+<ul type="disc">
+  <li> <a href="ACSArchitecture.pdf">ACS Architecture (pdf, 700Kb)</a><br>
+    This is the essential document to get an overview of the whole target architecture 
+    for ACS.<br>
+    The ACS Architecture information is also available as: 
+    <ul>
+      <li> <a href="ACSArchitecture/UML/Html/index.html">UML Model (HTML browsable 
+        format)</a><br>
+        A complete UML Model of the system is kept under Rational Rose. This documentation 
+        has been generated using the Rational Rose Web Publisher. </li>
+      <li> <a href="ACSArchitecture/Project/Features-toc.html">HTML browsable 
+        pages </a>&nbsp;&nbsp; (a printable version is available <a href="ACSArchitecture.pdf">here</a>) 
+      </li>
+    </ul>
+  </li>
+  <li> <a href="ACS_Basic_Control_Interface_Specification.pdf">Basic Control Interface 
+    Specification - BACI (pdf, 144Kb)</a> </li>
+  <li> <a href="ACS_Supported_BACI_Types.pdf">Supported BACI Types (pdf, 430Kb)</a> 
+  </li>
+  <li> <a href="ACS_Error_System.pdf">Error System (pdf, 58Kb)</a> <b><br>
+    </b> The <a href="ARCUSErrorHandling.pdf">ARCUS Error Handling for Business 
+    Information Systems</a> document describes the Error System concepts and Design 
+    Patterns used in ACS. This document is integral part of the ACS Error System 
+    documentation<b><br>
+    </b> </li>
+  <li> <a href="Logging_and_Archiving.pdf">Logging and Archiving (pdf, 490Kb)</a> 
+  </li>
+  <li> <a href="AlarmSystem.pdf">Alarm System (pdf)</a> Software
+      Architecture and HowTo manual
+  </li>
+  <li> <a href="Management_and_Access_Control_Interface_Specification.pdf">Management 
+    and Access Control Interface Specification - MACI (pdf, 134Kb)</a> </li>
+  <li> <a href="ACS_Sampling_System.pdf">Sampling System, Design Description and 
+    User Manual (pdf, 130Kb)&nbsp; </a></li>
+  <li><a href="ACS_Technical_Requirements.pdf">ACS 
+    Technical Requirements</a><br>
+  </li>
+  <li><a href="ACSArchitecture/Project/ACS-ESOCCS-toc.html">Comparison between 
+    ACS and ESO common software</a></li>
+</ul>
+<div>
+  <!--=======================================================================-->
+  <hr align="left" width="100%">
+  <h2><a name="APIDocumentation"></a>Automatically-generated API Documentation</h2>
+  In this section you'll links to the most recent sets of automatically generated 
+  documentation for APIs ACS provides. This is in the form of Doxygen pages for 
+  IDL, C++, and Java while pydoc is the favored format for Python sources. 
+  <ul>
+    <li>&nbsp; <a href="ACS_docs/idl/index.html"> IDL online documentation</a> - This 
+      is the online documentation for the ACS IDL files. It has been produced 
+      with Doxygen from the actual IDL files. </li>
+    <li>&nbsp; <a href="ACS_docs/cpp/index.html">C++ Framework and API online 
+      documentation</a> -&nbsp;<br>
+    </li>
+    <li>&nbsp; <a href="ACS_docs/java/index.html">Java Framework and API online 
+      documentation</a> - This is the online documentation for the Java Framework 
+      and API. It has been produced with Doxygen from the actual code. </li>
+    <li>&nbsp; <a href="ACS_docs/py/index.html">Python Framework and API online 
+      documentation</a> - This is the online documentation for the PythonFramework 
+      and API. It has been produced with pydoc from the actual code.</li>
+    <li>&nbsp; <a href="ACS_docs/schemas/index.html">XML Schema files</a> - This 
+	  is the online documentation for the ACS CDB schema files. 
+	  It has been produced with xsddoc from the actual code.</li>
+   <li>&nbsp; <a href="ACS_docs/errors/ACS.html">Error definitions</A> - This is
+          the online documentation for the errors defined in ACS.
+          It has been produced with ACSErrorChecker from the actual code.</li>
+  </ul>
+  <b>WARNING: These are very big documents and Netscape or MS Internet Explorer 
+  can take a long time to display the main tree on slow or low-memory PCs. In 
+  particular there seem to be problems with Netscape 7.1</b>.<br>
+  <hr style="width: 100%; height: 2px;">
+  <h2><a name="Tutorials"></a> Tutorials </h2>
+  <p> This section contains introductory tutorial to ACS code development for 
+    the most important ACS components. Reference 
+    manuals are available in html format, look further down in this page.&nbsp; 
+  </p>
+</div>
+<ul type="disc">
+  <li> <a href="BACI_Device_Server_Programming_Tutorial.pdf">C++ Component/Container 
+    Framework Tutorial - (pdf)</a> </li>
+  <li> <a href="ACS_JAVA_Component_Tutorial.pdf">Java Component/Container Framework 
+    Tutorial - (pdf)</a> </li>
+  <li> <a href="ACSPython.pdf">Python Component/Container Framework Tutorial - 
+    (pdf)</a> </li>
+  <li> <a href="Notification_Channel_Module_Software_Design.pdf">Notification 
+    Channel Design - Design, User's Manual and Tutorial (pdf)</a> </li>
+  <li> <a href="ACSTime.pdf">ACS Time System - (pdf)</a> </li>
+  <li> <a href="ACS_Bulk_Data_Transfer.pdf">Bulk Data Transfer - Design, User's 
+    Manual and Tutorial - (pdf)</a> </li>
+</ul>
+<!--=======================================================================-->
+<hr align="left" width="100%">
+<div> 
+  <div> 
+    <h2><a name="UserManuals"></a> User Manuals </h2>
+    <p> This section contains information and user manuals for the some ACS components 
+      and tools. </p>
+  </div>
+  <ul type="disc">
+    <li> <a href="ACSCommandCenter/Acs_Command_Center_-_User_Guide.html">Command 
+      Center - User's Manual (html)</a> </li>
+    <li> <a href="ACSComponentSim.pdf">Component Simulator - User's Manual (pdf)</a> 
+    </li>
+    <li> <a href="ConfigurationDatabase.pdf">Configuration Database User&#8217;s 
+      Manual - (pdf, 450Kb)</a> </li>
+    <li> <a href="CDB_Browser_Users_Manual.pdf">Configuration Database Browser 
+      User's Manual (pdf, 137Kb)</a> </li>
+    <li> <a href="Object_Explorer.pdf">Object Explorer - User's Manual (pdf, 176Kb)</a> 
+    </li>
+    <li> <a href="Logging_Client.pdf">Logging Client - User's Manual (pdf, 400Kb)</a> 
+    </li>
+ </ul>
+  <ul>
+    <li> <a href="ACS_Benchmarking.pdf">ACS Benchmarking Suite - User's Manual 
+      (pdf)</a> </li>
+  </ul>
+  <ul>
+    <li><a href="WebStart/HowTo--JavaWebStart.html">Prepare code to be installed 
+      and run using Java WebStart (html)</a></li>
+  </ul>
+  <!--=======================================================================-->
+  <div>
+    <hr align="left" width="100%">
+    <h2><a name="CvsMirror"></a> CVS Mirror</h2>
+  </div>
+  <ul>
+    <li> <a href="http://websqa.hq.eso.org/bin/viewcvs.cgi/ACS/#dirlist">Link 
+      to the WinCVS mirror </a><br>
+      Here you get access to the complete read-only CVS mirror or the ACS LGPL 
+      code.<br>
+      Useful for browsing the code.<br>
+      Other sections of the documentation and, in general, of the ACS web, link 
+      to code in this CVS server.</li>
+  </ul>
+<hr align="left" width="100%">
+  <h2><a name="CodeExamples"></a> ACS Code Examples </h2>
+</div>
+<ul>
+  <li> <a href="acsexmpl/ws/doc/html/index.html">Documentation on ACS C++ Examples</a> 
+  </li>
+  <li> <a href="jcontexmpl/doc/html/index.html">Documentation on ACS Java Examples</a> 
+  </li>
+</ul>
+<!--=======================================================================-->
+<!--=======================================================================-->
+<!--=======================================================================-->
+<hr align="left" width="100%">
+<div> 
+  <h2><a name="DevelopmentTools"></a> Development tools </h2>
+  <p> This section contain information about the documentation of development 
+    tools distributed with ACS. Such tools are mostly responsibility of the SE 
+    and I&amp;T groups and their documentation is therefore not directly part 
+    of the ACS Documentation tree. </p>
+</div>
+<ul><li>
+    <div class="Section1"> 
+      <div> <b>ACS Makefile</b><br>
+        For documentation about the ACS Makefile see: </div>
+    </div>
+    <ul>
+      <li>Type the command<br>
+        <b>&gt; man acsMakefile</b><br>
+        This command provides the most complete documentation </li>
+      <li><a href="http://www.eso.org/projects/alma/develop/alma-se/reference/MakefileSupport.html">MakefileSupport 
+        page in ALMA SE web site<br>
+        </a> This is the page where the whole acsMakefile documentation will be 
+        migrated<br>
+        It contains now just the latest additions. </li>
+      <li> <a href="http://almasw.hq.eso.org/almasw/bin/view/SE/MakefileDoc">ALMA 
+        SE Wiki Makefile Documentation</a><br>
+        This is the place that will contain the technical description of how the 
+        Makefile works internally. Under construction now. </li>
+    </ul>
+  </li>
+  <li> 
+    <div class="Section1"> 
+      <div> <b>Tool for Automated Testing (TAT)</b><br>
+        For documentation about the TAT see: </div>
+    </div>
+    <ul>
+      <li>Type the command<br>
+        <b>&gt; man tat</b><br>
+        This command provides the most complete documentation </li>
+      <li>Section 9 of <a href="IntGuidelines.pdf">ALMA Software Development Tools 
+        and Integration Procedures</a> </li>
+    </ul>
+  </li>
+</ul>
+<!--=======================================================================-->
+<hr align="left" width="100%">
+<h2><a name="VLTSW"></a> Very Large Telescope Software Documents </h2>
+<p> This section contains manuals and documentation for tools that, although part 
+  of the ESO VLT Common Software, are distributed as integral part of ACS in some 
+  distributions. </p>
+<ul type="disc">
+  <li> <a href="Vltsw/VLT-MAN-ESO-17210-0855-3.0.pdf">Environments Common Configuration, 
+    User Manual (vcc) - VLT-MAN-ESO-17210-0855 v.3.0 (pdf 477Kb)</a> </li>
+  <li> <a href="Vltsw/VLT-MAN-ESO-17200-0642-1.14.pdf">VLT Common Software, Installation 
+    Manual - VLT-MAN-ESO-17200-0642 v.2.04 (pdf 139Kb)</a> </li>
+  <li> <a href="Vltsw/VLT-MAN-ESO-17200-2009-3.0.pdf">Linux Installation Manual 
+    - VLT-MAN-ESO-17200-2009 v.3.0 (pdf 170Kb)</a> </li>
+  <li> <a href="Vltsw/VLT-MAN-ESO-17200-2238-1.3.pdf">Combined OS (HP and Sun) 
+    Installation Manual - VLT-MAN-ESO-17200-2238 v.1.3(pdf 39Kb)</a> </li>
+  <li> <a href="Vltsw/VLT-MAN-ESO-17200-0780-1.3.pdf">Configuration Management 
+    Module, User Manual (CMM) - VLT-MAN-ESO-17200-0780 v.1.3 (pdf 101Kb)</a> </li>
+</ul>
+<div> The complete documentation kit for the ESO VLT Common Software can be found 
+  at the following URL: </div>
+<ul type="disc">
+  <li> <a href="http://www.eso.org/projects/vlt/sw-dev/wwwdoc/JAN2006/dockit.html">VLT 
+    Common Software Documentation Kit (JAN2006)</a> </li>
+</ul>
+<!--=======================================================================-->
+<hr align="left" width="100%">
+<div> 
+  <h2><a name="3rdPartyLibraries"></a>3rd Party Libraries<br>
+  </h2>
+</div>
+<ul type="disc">
+  <li><a href="rlinks.html">Documentation on non-ACS Software that is used by 
+    ACS or distributed with ACS.</a></li>
+</ul>
+<!--=======================================================================-->
+<hr align="left" width="100%">
+<div> 
+  <h2><a name="3rdPartyLibraries"></a>Other documents<br>
+  </h2>
+</div>
+<ul type="disc">
+  <li>The <a href="http://www.eso.org/projects/alma/develop/alma-se/">ALMA Computing 
+    Group Software Engineering&nbsp; page</a> contains a lot of imformation about 
+    SE practices, coding standards and the development environment and tools used 
+    in the ALMA project, like the ACSMakefile extension. </li>
+</ul>
+<!--=======================================================================-->
+<hr align="left" width="100%">
+<div style="text-align: center;"> 
+  <p> [<a href="changeLog.txt">Change Log</a>]<br>
+    <br>
+  </p>
+</div>
+<hr align="left" width="100%">
+<center>
+  <a class="navig" href="http://www.eso.org/">ESO</a> | <a class="navig" href="http://www.eso.org/%7Ealmamgr">Home</a> 
+  | <a class="navig" href="mailto:gchiozzi@eso.org?subject=ACSWebpage">Contact 
+  Us</a> 
+</center>
+<br>
+<br>
+<em>Modified on July 8, 2010</em><br>
+<br>
+</body>
+</html>

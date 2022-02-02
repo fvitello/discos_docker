@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+
+<project name="bug360" default="compile" basedir=".">
+
+    <import file="../common/common-interop.xml" />
+
+    <target name="jacorb_server" depends="compile">
+        <run-java classname="test.interop.bug360.Server" argline="${build.dir}/ior.ior" />
+    </target>
+
+    <target name="jacorb_client" depends="compile">
+        <run-java classname="test.interop.bug360.Client" argline="${build.dir}/ior.ior" />
+    </target>
+
+</project>

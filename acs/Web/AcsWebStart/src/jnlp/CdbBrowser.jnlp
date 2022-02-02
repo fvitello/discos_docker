@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<jnlp 
+  spec="1.0+" 
+  codebase="$$codebase"> 
+  
+  <information> 
+    <title>$$acs_version Cdb Browser ($$projectname)</title>
+    <homepage href="http://www.eso.org/projects/alma/AcsWebStart"/>
+	 
+    <vendor>ESO, Alma Common Software</vendor> 
+    <description>CDB Browser</description> 
+    <offline-allowed/>
+    <icon href="pictures/alma-icon.jpg"/>
+    <icon href="pictures/antennas-splash.jpg" kind="splash"/>
+ </information> 
+  
+  <security> 
+    <all-permissions/> 
+  </security> 
+  
+  <resources> 
+    <j2se version="1.6+"/> 
+
+    <jar href="lib/CDBBrowser.jar"/> 
+    <jar href="lib/cdbDAL.jar"/> 
+    <jar href="lib/CDB.jar"/>
+    <jar href="lib/cdbjDAL.jar"/> 
+
+    <extension href="./Shared_Acs.jnlp">
+      <ext-download ext-part="ACS"/>
+    </extension>
+
+    <property name="org.omg.CORBA.ORBClass"           value="org.jacorb.orb.ORB"/> 
+    <property name="org.omg.CORBA.ORBSingletonClass"  value="org.jacorb.orb.ORBSingleton"/> 
+  </resources>
+
+  <application-desc main-class="com.cosylab.cdb.browser.Browser">
+    <argument>-d</argument>
+    <argument>corbaloc::$$dal_host:$$dal_port/CDB</argument>
+  </application-desc> 
+</jnlp> 
+
+
+
+
+

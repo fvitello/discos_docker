@@ -1,0 +1,44 @@
+#! /bin/sh
+. acsstartupConstants
+. acsstartupAcsInstance
+. acsstartupLogging.sh
+
+#*******************************************************************************
+# ALMA - Atacama Large Millimiter Array
+# (c) National Research Council of Canada, 2009 
+# 
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License, or (at your option) any later version.
+# 
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+# 
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307  USA
+#
+#*******************************************************************************
+
+# CONTROL containers need the fortran library preloaded.
+#
+# This script was initially called acsStartContainerWithCASA but it has been
+# renamed when CASA dependencies have been removed from the online software
+# (see ICT-3102 and ICT-2290)
+ACS_LOG_COMMAND $@
+
+ARCH=`uname -i`
+REL=$(lsb_release -r |awk '{print $2}')
+if [[ $REL == 6.* ]]; then
+    export LD_PRELOAD=libgfortran.so.3
+else
+    export LD_PRELOAD=libgfortran.so.1
+fi
+# Start the container in the CASA environment
+acsStartContainer "$@"
+
+#
+# ___oOo___

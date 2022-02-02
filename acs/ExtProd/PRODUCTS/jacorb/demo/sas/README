@@ -1,0 +1,15 @@
+        What is it good for?
+        --------------------
+
+The purpose of this demo is to show the use of the Secure Attribute
+Service (SAS).
+
+There are two versions of the demo; one a simple version that passes credentials,
+a second that requires a valid Kerberos configuration. For the second, a valid
+principal, username, and password must be passed.
+
+To compile and run
+   mvn install
+
+To run the Kerberos demo
+   mvn install -Pkerberos-demo -Dprincipal=xxx@XXX.COM -Dusername=xxx -Dpassword=xxx

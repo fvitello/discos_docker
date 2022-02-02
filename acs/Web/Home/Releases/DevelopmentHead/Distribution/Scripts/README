@@ -1,0 +1,211 @@
+#*******************************************************************************
+# E.S.O. - ACS project
+#
+#         	ACS INSTALLATION PROCEDURE
+#
+# "@(#) $Id: README,v 1.7 2005/07/28 12:17:34 gchiozzi Exp $"
+#
+#*******************************************************************************
+
+
+Summary: 
+0) Introduction
+1) Supported platforms
+2) Where to retrieve the software ACS 
+3) Space required
+4) Prerequisites
+5) Tools installation
+6) Environment
+7) ACS libraries compilation and installation
+8) Test the software
+
+
+0) Introduction
+ACS 4.1 is distributed with the following set of files: 
+- README: this file
+- ACSsources.tar.gz: ACS source tree to be compiled
+- ACS.tar.gz: binaries for Linux of the following tools:
+	gnu tools (not gcc) and tcltk tools
+	java 1.4.2
+	ACE/TAO 5.4.2/1.4.2
+	Python 2.3 omniORB 4.0.3 and omnipython 2.3
+	Ant 1.6.0
+	JacORB 1.4.1
+	mico 2.3.11
+	Tomcat
+	Aips++
+	other general purpose tools, like tat (for testing), doc and 
+	doxygen for documentation handling etc.
+  You can choose whether to install them from our distribution or not. 
+  If you choose to install gnu and tcltk tools you have to install them 
+  under /alma/ACS-4.1; if you do not install tcltk and gnu, the installation 
+  directory can be whatever, but be reminded that ACS 4.1 is based on gcc 3.3 
+  and tcl/tk 8.4; other configurations are not supported. 
+- gtar  gunzip  gzip  
+- directory INSTALL which contains: 
+  0_InstallACS (the installation script)
+  .acs: a subdirectory with some files to configure the environment, namely:
+     - 	.bash_profile.acs: in this file all the necessary environment variables
+       	are defined;
+     -  emacs, emacs.local, xresources.emacs: settings for emacs
+  If you download the INSTALL directory from the Web, you will
+  not be able to see the .acs directory in the web browser ("dot
+  file"). Download and unpack the INSTALL.tar.gz file instead or
+  follow the links at the end of the directory listing in the web browser.
+  
+1) Supported platforms
+ACS 4.1 is provided for Linux Red Hat 9.
+
+2) Where to retrieve the software ACS 4.1
+To install ACS 4.1, download the files with the tar files and the installation 
+script from the following location: 
+
+http://www.eso.org/projects/alma/develop/acs/Releases/ACS_4_1/Distribution/index.html
+
+For any doubt/access problem contact gchiozzi@eso.org
+
+3) Space required
+- The distribution content is ~400MB (Linux) and ~470MB (Sun). 
+- The directory where everything gets installed will 
+  need ~2.0GB (~2.6GB on SUN)
+- The ACS sources which will be compiled are by default downloaded 
+  under the home directory of the installation user, under the directory 
+  called ACS. They are about 50MB.
+IMPORTANT: During compilation, the ACS sources can increase up to 800MB!
+
+4) Prerequisites
+- The best is to perform a Full Server type installation of the 
+  operative system. 
+  If you didn't perform a full installation, be aware that you must have 
+  the following packages installed:
+	pdksh 5.2.14-13
+	glibc-dlevel 2.2.4-13
+	kernel-headers 2.4.7-10
+  	(versions as indicated above or higher)
+	tcl/tk 8.4 (for Python modules)
+- A RH 9.0 installation from the orginal distribution has 
+  to be patched with at least the following two patches:
+  - glibc: rpm -Uvh glib*.rpm 
+    (needed: glibc-2.3.2-27.9.i686.rpm and glibc-common-2.3.2-27.9.i386.rpm)
+  - kernel: rpm -ivh kernel-2.4.20-28.9.i686.rpm (needed: kernel-2.4.20-28.9.i686.rpm)
+  For more detials and to download these patches look at the following wiki discussion:
+    http://almasw.hq.eso.org/almasw/bin/view/ACS/RedHat9
+  If some one doesn't want to use patches she/he has to set the
+  environment variable LD_ASSUME_KERNEL to 2.4.18 
+  (export LD_ASSUME_KERNEL=2.4.18), but without these patches you
+  might have problems with other applications.
+- The gcc 3.3 compiler is part of the installation.
+- The default location is /alma/ACS-4.1. 
+  Note that, if you change the default location, the gnu and tcltk binaries won't 
+  work, because they contain some hard-coded path. In this case you will 
+  have to rely upon your own gnu and tcltk stuff.
+  Before starting, check that the installation user has write permission 
+  on that directory! it could happen that the installation directory is created 
+  as root and then another user will build the ACS libraries there. 
+  For example: 
+	let's suppose that the installation directory is /alma/ACS-4.1;
+	typically, root will have to create /alma:
+		root> mkdir /alma
+	after that run the following, as root: 
+		root> chown almamgr:alma /alma
+	Then, almamgr will be able to create whatever subdirectory under /alma;
+	The same should be done for any other installation user you may want 
+	to use.
+	Give not only write permission but also the ownership at the 
+	installation user of the files under the installation directory. 
+
+5) Tools installation
+In what follows, we call <CDFILES> the location where you downloaded 
+the ACS 4.1 distribution and <INSTALL_DIR> the directory where you want to install 
+the software. 
+
+To begin the installation, you should run the installation script 
+that can be found under the directory INSTALL in the ACS 4.1 distribution passing 
+two arguments: <CDFILES> and <INSTALL_DIR>; so just run the command 
+(please, supply the absolute paths):
+
+$ <CDFILES>/INSTALL/0_InstallACS <CDFILES> <INSTALL_DIR>
+
+For example: you downloaded the distribution in /home/almamgr/ACS_4_1-Linux-CD
+and you want to install the release under /alma/ACS-4.1. 
+So you should run: 
+
+$ /home/almamgr/ACS_4_1-Linux-CD/INSTALL/0_InstallACS /home/almamgr/ACS_4_1-Linux-CD /alma/ACS-4.1
+
+
+The script is interactive, just follow the indication on the screen.
+
+
+6) Environment
+To perform the build of the ACS libraries, you need to set up the environment. 
+All the needed environment variables are collected in the file 
+$HOME/.acs/.bash_profile.acs 
+that gets installed under the home directory of the user who is performing 
+the installation. As you can see, this user needs to use bash as 
+interactive shell (or to convert the settings performed by .bash.profile.acs 
+into its own interactive shell.)
+Then before starting any operation with ACS 4.1 
+he needs to source the file $HOME/.acs/.bash_profile.acs. 
+Just use the command: 
+. $HOME/.acs/.bash_profile.acs
+(you can also put it in the $HOME/.bash_profile to have it always at 
+log in... it's your choice)
+Basically, you don't have to edit the $HOME/.acs/.bash_profile.acs file, 
+unless you are familiar with the ACS software and know what to change 
+for your particular purposes.
+Another case when it might be useful to have a look at the file 
+is when you don't want to install certain tools like java, python, 
+omni stuff or ACE/TAO from our distribution. 
+If you want to use your own installation of 1 or more of those tools, 
+change the related environment variables accordingly (like, for example, 
+JAVA_HOME, PYTHONPATH, ACE_ROOT etc.)
+Particular case for gnu and tcltk tools: if you use your own installation 
+of those tools, once you can access them because you have the PATH and 
+LD_LIBRARY_PATH correctly set you DON"T need to modify the variable
+GNU_ROOT and TCLTK_ROOT
+Note that they have to be defined, just keep the default definition 
+you find in the .bash_profile.acs file.
+
+If you have other users in your system who need to access ACS, 
+they will have to source the same file with the environment variables. 
+For convenience, a copy of the .acs directory can also be found under 
+$ACSROOT/config/.acs. 
+Please, inform your users about the path to the ACSROOT (they don't have 
+yet the ACSROOT variable in the environment!) so that they can source 
+the .bash_profile.acs
+
+
+
+7) ACS libraries compilation and installation
+Warning: if you are installing an ACSROOT, unset the INTROOT before 
+starting!!!
+By default ACS is built with full debugging information (-G compiler
+option) and optimization.
+If you want to compile ACS without debugging information and no 
+optimization just set:
+
+$ export OPTIMIZE=0
+
+at this point before starting the actual build.
+This will save a lot of disk space and would improve both build and
+run time performance on machines with little memory (less than 512Mb).
+
+Once the environment is set up, to build the ACS libraries run 
+the following commands: 
+
+$ cd $HOME/ACS
+
+$ make build_clean
+(this command will automatically run 'make clean' also after every 
+'make' so that a lot of disk space can be saved)
+or
+$ make build 
+(the clean is not done)
+
+Have a look at the log and error files under 
+$HOME/ACS/build.log
+
+8) Test the software
+To test the installation, see the ACS Quick Start Guide:
+      
+    http://www.eso.org/projects/alma/develop/acs/Releases/ACS_4_1/Distribution/acs-quick-start.html

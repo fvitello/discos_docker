@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema targetNamespace="urn:schemas-cosylab-com:EventConverter:1.0"
+           xmlns="urn:schemas-cosylab-com:EventConverter:1.0"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:baci="urn:schemas-cosylab-com:BACI:1.0" elementFormDefault="qualified"
+           attributeFormDefault="unqualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+    <xs:element name="EventConverter">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="RedisConn" maxOccurs="1" minOccurs="1">
+                    <xs:complexType>
+                        <xs:attribute name="host" type="xs:string"/>
+                        <xs:attribute name="port" type="xs:positiveInteger"/>
+                    </xs:complexType>
+                </xs:element>
+
+                <xs:element name="PubSub" maxOccurs="1" minOccurs="1">
+                  <xs:complexType>
+                    <xs:sequence>
+                      <xs:element name="Channel" maxOccurs="unbounded">
+                        <xs:complexType>
+                          <xs:sequence>
+                            <xs:element name="EventType" maxOccurs="unbounded">
+                              <xs:complexType>
+                                <xs:attribute name="type" type="xs:string" use="required"/>
+                              </xs:complexType>
+                            </xs:element>
+                          </xs:sequence>
+                          <xs:attribute name="name" type="xs:string" use="required"/>
+                        </xs:complexType>
+                      </xs:element>
+                    </xs:sequence>
+                  </xs:complexType>
+                </xs:element>
+
+                <xs:element name="ReliableSubscribers" maxOccurs="1" minOccurs="1">
+                  <xs:complexType>
+                    <xs:sequence>
+                      <xs:element name="Subscriber" maxOccurs="unbounded">
+                        <xs:complexType>
+                          <xs:sequence>
+                            <xs:element name="Channel" maxOccurs="unbounded">
+                                <xs:complexType>
+                                  <xs:sequence>
+                                      <xs:element name="EventType" maxOccurs="unbounded">
+                                        <xs:complexType>
+                                          <xs:attribute name="type" type="xs:string" use="required"/>
+                                      </xs:complexType>
+                                    </xs:element>
+                                  </xs:sequence>
+                                  <xs:attribute name="name" type="xs:string" use="required"/>
+                                </xs:complexType>
+                            </xs:element>
+                          </xs:sequence>
+                          <xs:attribute name="name" type="xs:string" use="required"/>
+                          <xs:attribute name="queueLimit" type="xs:integer" use="optional"/>
+                        </xs:complexType>
+                      </xs:element>
+                    </xs:sequence>
+                  </xs:complexType>
+                </xs:element>
+
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>

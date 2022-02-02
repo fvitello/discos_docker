@@ -1,0 +1,80 @@
+How to use this stuff
+
+Preliminary condition: set the CVSROOT and execute the login into the CVS 
+server (just to make it simpler!)
+
+The "Distribution" area has been concerned to prepare the "CD" directory 
+structure containing the ACS tools and ACS software and installation scripts 
+for a determined ACS release, on both Sun and Linux platforms. 
+
+You should retrieve "ACS/Web/Home/Releases/DevelopmentHead/Distribution" 
+from CVS on a reference machine where 
+the ACS release has been integrated, better as almamgr.
+
+First of all, edit the Distribution/Makefile.conf and set properly: 
+- the ACS_VERSION (actually the ACS release) you are preparing 
+- the ACSTAG for retrieving the released ACS software from CVS
+- SOURCE and PREF in order to have the right location $(SOURCE)$(PREF) where 
+  the ACS tools are on the reference machine, usually /alma/ACS-n.n, so 
+  for example for ACS 6.0: 
+  SOURCE=/
+  PREF=alma/ACS-6.0
+- PARENT_DEST, the area where you want to create the distribution
+  structure. 
+  By default: is $(PWD)
+- ACSBUILDDIR, the place where ACS distributions can be built from
+  sources into binaries. The sources would be extracted here and
+  built, if requested.
+  Should be a local disk to make the build faster
+  By default: /diska/alma_tmp (standard build area on ESO machines)
+
+Please, don't change the other settings in Distribution/Makefile.conf, 
+unless you have special reasons.
+
+Then execute the following:
+ 1 - Go on a RH-E (or SL or RH-9) Linux machine with ACS LGPL and give   make -k distribution
+ 2 - Go on a RH-E (or SL) Linux machine and give                 make -k NO-LGPL=1 distribution
+          this requires an RTAI, no VxWorks installation
+ 3 - Go on a RH-E (or SL) Linux machine with VxWorks and give    make -k  NO-LGPL=1 VX-WORKS=1 distribution
+          this requires an RTAI + VxWorks installation
+ 4 - Build the documentation tar on any Linux machine    make docs                             
+
+If you want to build the binaries from a fresh CVS checkout at the
+same time, use the target:   
+      build_distribution 
+instead of 
+      distribution
+I.e.:
+ 1 - Go on a RH-E (or SL or RH-9) Linux machine with ACS LGPL and give   make -k build_distribution
+ 2 - Go on a RH-E (or SL) Linux machine and give                 make -k NO-LGPL=1 build_distribution
+          this requires an RTAI, no VxWorks installation
+ 3 - Go on a RH-E (or SL) Linux machine with VxWorks and give    make -k NO-LGPL=1 VX-WORKS=1 build_distribution
+          this requires an RTAI + VxWorks installation
+ 4 - Build the documentation tar on any Linux machine    make docs                             
+
+=== IMPORTANT: NO-LGPL/RTAI/VX-WORKS constraints.
+
+Notice that the VX-WORKS=1 flag is used to double check if you want to
+build a VX-WORKS distribution or not.
+The Makefile will refuse to prepare a distribution on a Linux machine
+configured for VxWorks if VX-WORKS=1 is not specified, and the other
+way around.
+
+A machine configured for VX-WORKS includes the following directories:
+    /alma/ACS-x.y/CCSLite
+    /alma/ACS-x.y/vw5.5
+
+If you REALLY NEED to generate a distribution without VxWorks
+on a machine configred like this, you HAVE to make a full build
+and before that you have to move out of the way the two directories,
+logout and login again:
+
+  > cd /alma/ACS-6.0; mv CCSLite CCSLite.bak; mv vw5.5 vw5.5.bak
+  > logout
+  > login
+  > make -k NO-LGPL=1 build_distribution
+
+This is because, if CCSLite exists, VLTROOT would be set to
+/alma/ACS-x.y/CCSLite and some files would be installed there instead
+of /alma/ACS-x.y/ACSSW, making the ACSROOT incomplete.
+

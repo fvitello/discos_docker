@@ -1,0 +1,97 @@
+
+In this chapter  we explain how to obtain and  install JacORB, and give
+an overview of the package contents.
+
+\section{Downloading JacORB}
+
+JacORB can be downloaded as a source or binary distribution in a g-zipped
+tar--archive or zip--archive format from the JacORB home page at
+\href{http://www.jacorb.org}{http://www.jacorb.org}. It is also available from
+Maven Central (See \ref{ch:mvn}). To install JacORB, first unzip and untar (or
+simply unzip) the archive somewhere.  This will result in a new directory {\tt
+\JacORBDir}.
+
+\section{Installation}
+\label{Sec_installation}
+
+\subsection{Requirements}
+
+JacORB requires JDK 1.6 or above properly installed on your machine. To build
+JacORB and run the tests Maven (\href{https://maven.apache.org}{https://maven.apache.org})
+ is required (tested with 3.0.x).
+
+\subsection{Procedure}
+\begin{itemize}
+\item No further steps are required if using the binary download of JacORB.
+\item To configure a jacorb.properties file (using the etc/jacorb\_properties.template) see \ref{ch:configuration}.
+\item If using a source download, to rebuild JacORB completely see~\ref{sec:building}.
+\end{itemize}
+
+For SSL, you need an implementation of the SSL protocol. We currently support
+Oracle's JSSE Reference implementation included in the JDK.
+
+\subsection{Libraries}
+Once JacORB is installed, the bin directory should contain the scripts used to assist in
+running JacORB applications (see \ref{runningExampleApp} and \ref{appRunningEndorsed}).
+The lib directory contains the JacORB libraries and third party libraries required by the ORB
+and services (See below). JacORB libraries have been split as follows:
+
+\begin{itemize}
+\item jacorb.jar          - containing the ORB, IMR, IR and NamingService
+\item jacorb-omgapi.jar   - containing the core OMG API stubs.
+\item jacorb-services.jar - containing all other services (e.g. Notification, DDS, Collection etc).
+\item idl.jar             - containing the IDL compiler.
+\end{itemize}
+
+\subsection{Dependencies}
+
+JacORB depends upon the following third party software
+\begin{itemize}
+\item Simple Logging Facade For Java (SLF4J Version 1.7.6)
+\end{itemize}
+
+Note that the services may depend upon further third party libraries.
+
+\subsection{Building JacORB}
+\label{sec:building}
+
+JacORB may be built via Maven using standard commands (i.e. {\tt mvn clean install}). Note that the install
+phase must be executed so subsequent module builds find the results of preceeding modules. The project may be
+imported into Eclipse or IntelliJ using standard import commands.
+
+\subsubsection{Importing into Eclipse}
+\begin{itemize}
+\item Prior to importing it is recommended to build JacORB first (e.g. {\tt mvn install -DskipTests=true}
+\item The JacORB Core and Regression Test module utilises Endorsed Directories to build within the maven-compiler-plugin. In Eclipse, the JBoss Tools Endorsed Libraries Plugin must be installed for this to work.
+\item It is possible further m2e connectors (e.g. build-helper) must also be installed.
+\end{itemize}
+
+\subsubsection{Building JacORB Demos (Optional)}
+To build the JacORB demos within the demo directory Maven pom file(s) have been supplied. Run "mvn install" in the respective demo directories.
+
+\subsubsection{Building JBoss Service for the Notification Service (Optional)}
+In order to build the JBoss service (jboss-cosnotification.sar in the lib
+directory), the paths to JBOSS\_HOME for the
+\href{http://www.jboss.org/jbossas}{JBoss Application Server} and MX4J\_HOME
+for the \href{http://mx4j.sourceforge.net}{MX4J implementation}
+ of the Java Management Extensions (JMX) have to be specified for the ant build
+process. There are two possible alternatives for this task.
+\begin{itemize}
+\item Set the paths in the environment variables named JBOSS\_HOME and MX4J\_HOME respectively.
+\item Call ant with the additional parameters {\tt -Djboss.home=<path-to-jboss-installation> -Dmx4j.home=<path-to-mx4j-installation>}
+\end{itemize}
+
+
+\section{Versioning}
+There are a variety of ways of determining the version of JacORB that is being used.
+\begin{itemize}
+\item The configuration option {\tt jacorb.orb.print\_version} may be used to output the version to the logfile when JacORB is running
+\item The IDL compiler '-v' will output the version of the compiler/JacORB.
+\item The command {\tt jaco org.jacorb.util.Version} may be run to output the current version and build date.
+\item The command {\tt jaco org.jacorb.util.Diagnostic} may be run to output useful environmental information as well as the JacORB version.
+\end{itemize}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../ProgrammingGuide"
+%%% End:

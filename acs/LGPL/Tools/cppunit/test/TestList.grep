@@ -1,0 +1,20 @@
+^\s*\t*make
+^\s*\t*Making
+^\s*\t*if
+^\s*\t*g\+\+
+^\s*\t*creating
+^\s*\t*then
+^\s*\t*else
+^\s*\t*fi
+^\s*\t*/bin/sh
+^\s*\t*c++
+^\s*\t*mkdir
+^\s*\t*\-c \-o
+^\s*\t*mv
+In file included from assertion_traitsTest.cpp
+assertion_traitsTest.cpp:
+assertion_traitsTest.cpp:
+CPPUNIT_NS::assertion_traits<char\*>::toString
+../../include/cppunit/TestAssert.h:
+(actual)
+\^

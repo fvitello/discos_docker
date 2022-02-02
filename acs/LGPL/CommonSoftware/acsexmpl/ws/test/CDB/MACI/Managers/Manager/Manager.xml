@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<!--
+   - History:
+   -   Wed Apr 26 14:43:29 UTC 2006 modified by jDAL
+-->
+<Manager xmlns:cdb="urn:schemas-cosylab-com:CDB:1.0"
+         xmlns="urn:schemas-cosylab-com:Manager:1.0"
+         xmlns:baci="urn:schemas-cosylab-com:BACI:1.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	>
+	
+	<Startup>
+	      <cdb:e string="AMSSEQ1"/>
+              <cdb:e string="MOUNT1"/>
+	      <cdb:e string="FRIDGE1"/>
+              <cdb:e string="TOWER1/FRONTDOOR"/>
+	</Startup>
+	<ServiceComponents>
+		<cdb:e string="Log"/>
+		<cdb:e string="LogFactory"/>
+		<cdb:e string="NotifyEventChannelFactory"/>
+		<cdb:e string="InterfaceRepository"/>
+		<cdb:e string="CDB"/>
+		<cdb:e string="ACSLogSvc"/>
+		<cdb:e string="PDB"/>
+	</ServiceComponents>
+	
+	<LoggingConfig
+		dispatchPacketSize="0" />
+
+</Manager>
+

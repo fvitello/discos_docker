@@ -1,0 +1,50 @@
+#! /bin/bash
+#*******************************************************************************
+# ALMA - Atacama Large Millimiter Array
+# (c) European Southern Observatory, 2002
+# Copyright by ESO (in the framework of the ALMA collaboration),
+# and Cosylab 2002, All rights reserved
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+# MA 02111-1307  USA
+#
+
+export ACS_TMP=../test/tmp
+export ACS_INSTANCE=`cat $ACS_TMP/acs_instance`
+
+echo " Initial test" 
+acsutilTATTestRunner acsStartJava alma.acs.testsupport.tat.NoDotJUnitRunner alma.containerTests.contHandleTest.ContainerHandleTest
+
+echo " Kill all the containers"
+CONT_PORTS=`cat $ACS_TMP/ACS_INSTANCE.$ACS_INSTANCE/USED_CONTAINER_PORTS | cut -d \  -f 2`
+for PORT in $CONT_PORTS
+do
+  PID=`netstat -t -p -e -e -n -a 2> /dev/null | grep "LISTEN" | grep ":$PORT" | awk '{ printf("%s\n", $9) }' | cut -d / -f 1`
+  kill -9 $PID
+done
+
+#cat $ACS_TMP/ACS_INSTANCE.$ACS_INSTANCE/pids/*Container_PID | xargs -L 1 pkill -9 -P
+
+echo " Test on killed containers"
+acsutilTATTestRunner acsStartJava alma.acs.testsupport.tat.NoDotJUnitRunner alma.containerTests.contHandleTest.ContainerHandleTest
+
+echo " Restarting test containers"
+##export JAVA_OPTIONS="-Djacorb.log.loggerFactory=alma.acs.logging.adapters.JacORBLoggerFactory"
+acsutilAwaitContainerStart -java frodoContainer > /dev/null
+acsutilAwaitContainerStart -py gandalfContainer > /dev/null
+acsutilAwaitContainerStart -cpp bilboContainer > /dev/null
+
+echo " Final test on restarted containers" 
+acsutilTATTestRunner acsStartJava alma.acs.testsupport.tat.NoDotJUnitRunner alma.containerTests.contHandleTest.ContainerHandleTest

@@ -1,0 +1,18 @@
+1 - getTimeStamp reports correct ACS timestamp for a known value ... ok
+1 - TimeUtil.duration2py handles long values correctly ... ok
+1 - TimeUtil.duration2py handles negative values correctly ... ok
+1 - TimeUtil.duration2py handles 0 value correctly ... ok
+1 - TimeUtil.epoch2py handles ACS epoch correctly ... ok
+1 - TimeUtil.epoch2py handles long values correctly ... ok
+1 - TimeUtil.epoch2py handles negative values correctly ... ok
+1 - TimeUtil.epoch2py handles Python epoch correctly ... ok
+1 - TimeUtil.py2duration handles negative values correctly ... ok
+1 - TimeUtil.py2duration handles 0 value correctly ... ok
+1 - TimeUtil.py2epoch handles ACS epoch correctly ... ok
+1 - TimeUtil.py2epoch handles Python epoch correctly ... ok
+1 - TimeUtil.py2epoch handles negative values correctly ... ok
+1 - 
+1 - ----------------------------------------------------------------------
+1 - Ran xx tests in x.xxxs
+1 - 
+1 - OK

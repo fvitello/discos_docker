@@ -1,0 +1,2 @@
+# Replace a CVS ID almamgr with the hsommer
+find . -name Root -exec acsReplace almamgr hsommer {} \;

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<jnlp 
+  spec="1.0+" 
+  codebase="$$codebase"> 
+  
+  <information> 
+    <title>$$acs_version JLog ($$projectname)</title>
+    <homepage href="http://www.eso.org/projects/alma/AcsWebStart"/>
+	 
+    <vendor>ESO, Alma Common Software</vendor> 
+    <description>Logging Client</description> 
+    <offline-allowed/>
+    <icon href="pictures/alma-icon.jpg"/>
+    <icon href="pictures/antennas-splash.jpg" kind="splash"/>
+ </information> 
+  
+  <security> 
+    <all-permissions/> 
+  </security> 
+  
+  <resources> 
+    <j2se version="1.6+"/> 
+
+    <jar href="lib/lc.jar"/>
+    <jar href="lib/lcEngine.jar"/>
+    <jar href="lib/acsContainerServices.jar"/>
+    <jar href="lib/jdom.jar"/>
+    
+    
+    <extension href="./Shared_Acs.jnlp">
+	 <ext-download ext-part="ACS"/>
+    </extension>
+
+    <property name="org.omg.CORBA.ORBClass"           value="org.jacorb.orb.ORB"/> 
+    <property name="org.omg.CORBA.ORBSingletonClass"  value="org.jacorb.orb.ORBSingleton"/> 
+
+    <property name="ACS.manager" value="corbaloc::$$manager_host:$$manager_port/Manager"/> 
+    <property name="ACS.tmp" value="./"/> 
+    <property name="abeans.remotelogging" value="si.ijs.anka.abeans.pluggable.ACS.RemoteLoggerImpl"/> 
+
+  </resources>
+
+  <application-desc main-class="alma.acs.logging.dialogs.main.LogFrame">
+  </application-desc> 
+</jnlp> 
+
+
+
+

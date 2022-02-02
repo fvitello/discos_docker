@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+  targetNamespace="urn:schemas-cosylab-com:LogStoreClass:1.0"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns="urn:schemas-cosylab-com:LogStoreClass:1.0"
+  xmlns:cdb="urn:schemas-cosylab-com:CDB:1.0">
+  <xs:import namespace="urn:schemas-cosylab-com:CDB:1.0" schemaLocation="CDB.xsd"/>
+  
+  <xs:complexType name="LogStoreClass">
+	<xs:attribute name="logFileDir" type="xs:string" use="required" />
+	<xs:attribute name="ngasDir" type="xs:string" use="optional" default="/tmp/NGAS"/>
+	<xs:attribute name="maxNumberLogFiles" type="xs:integer" use="optional" default="20"/>
+	<xs:attribute name="MaxLogFileSize" type="xs:integer" use="optional" default="100000000"/>
+
+        <xs:attribute name="archiveLogFilesInNGAS" type="xs:string" use="optional" default="false"/>
+        <xs:attribute name="ngasCommand" type="xs:string" use="optional" default=" "/>
+
+	<xs:attribute name="Archive_level" type="xs:integer" use="optional" default="0"/>
+	<xs:attribute name="logsPerSecond" type="xs:integer" use="optional" default="0"/>
+
+        <xs:attribute name="logsPerInterval" type="xs:integer" use="optional" default="30000"/>
+        <xs:attribute name="logIntervalSize" type="xs:integer" use="optional" default="10000"/>
+        <xs:attribute name="logPeakToleranceInterval" type="xs:integer" use="optional" default="0"/>
+
+
+        <xs:attribute name="amqp_enabled" type="xs:string" use="optional"/>
+        <xs:attribute name="amqp_user" type="xs:string" use="optional" default="alma"/>
+        <xs:attribute name="amqp_password" type="xs:string" use="optional" default="guest"/>
+        <xs:attribute name="amqp_host" type="xs:string" use="optional" default="ariadne.osf.alma.cl"/>
+        <xs:attribute name="amqp_routingkey" type="xs:string" use="optional" default="setToLocation"/>
+        
+        <xs:attribute name="kafka_enabled" type="xs:string" use="optional"/>
+      
+        <!-- check these at https://kafka.apache.org/documentation/#producerconfigs -->
+        <xs:attribute name="kafka_acks" type="xs:string" use="optional" default="all"/>
+        <xs:attribute name="kafka_bootstrap.servers" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_buffer.memory" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_compression.type" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_retries" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_ssl.key.password" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_ssl.keystore.location" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_ssl.keystore.password" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_ssl.truststore.location" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_ssl.truststore.password" type="xs:string" use="optional" default=""/>
+<!--
+        <xs:attribute name="kafka_batch.size" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_client.dns.lookup" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_client.id" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_connections.max.idle.ms" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_delivery.timeout.ms" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_linger.ms" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_max.block.ms" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_max.request.size" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_partitioner.class" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_receive.buffer.bytes" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_request.timeout.ms" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_sasl.client.callback.handler.class" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_sasl.jaas.config" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_sasl.kerberos.service.name" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_sasl.login.callback.handler.class" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_sasl.login.class" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_sasl.mechanism" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_security.protocol" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_send.buffer.bytes" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_ssl.enabled.protocols" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_ssl.keystore.type" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_ssl.protocol" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_ssl.provider" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_ssl.truststore.type" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_enable.idempotence" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_interceptor.classes" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_max.in.flight.requests.per.connection" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_metadata.max.age.ms" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_metric.reporters" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_metrics.num.samples" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_metrics.recording.level" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_metrics.sample.window.ms" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_reconnect.backoff.max.ms" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_reconnect.backoff.ms" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_retry.backoff.ms" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_sasl.kerberos.kinit.cmd" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_sasl.kerberos.min.time.before.relogin" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_sasl.kerberos.ticket.renew.jitter" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_sasl.kerberos.ticket.renew.window.factor" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_sasl.login.refresh.buffer.seconds" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_sasl.login.refresh.min.period.seconds" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_sasl.login.refresh.window.factor" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_sasl.login.refresh.window.jitter" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_ssl.cipher.suites" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_ssl.endpoint.identification.algorithm" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_ssl.keymanager.algorithm" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_ssl.secure.random.implementation" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_ssl.trustmanager.algorithm" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_transaction.timeout.ms" type="xs:string" use="optional" default=""/>
+        <xs:attribute name="kafka_transactional.id" type="xs:string" use="optional" default=""/>
+-->
+  </xs:complexType>
+  
+  <xs:element name="LogStoreClass" type="LogStoreClass"/>
+
+
+</xs:schema>

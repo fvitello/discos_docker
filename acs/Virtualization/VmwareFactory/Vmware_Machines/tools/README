@@ -1,0 +1,22 @@
+This directory contains tools to configure the VmWare virtual machines
+in a standard way and to remove sensitive information before preparing
+the machines for distribution.
+It also contains generic useful utilities for the almamgr account.
+
+accountCleanup   - utility to remove sensisitve files 
+                   before distribution
+accountUpdate    - utility to restore sensitive files 
+AcsCleanup       - cleanup standard build directories to save space
+AcsNightlyBuild  - complete ACS nightly build
+AcsUpdateTe4     - updates ACS files on the te4 file server
+almamgr2gchiozzi - replaces CVS ids to allow gchiozzi to edit and archive
+crontab.txt      - template of crontab for nightly builds
+cvsid2cvsid      - replaces between any two CVS ids
+repeatCommand    - repeat the same comment as many times as requested
+setTestEnv       - source this in your shell to get environment
+                   settings for tests
+
+ssh              - directory containing ssh configuration files
+                   for allowing almamgr and other user accounts to
+                   ssh to root without password.
+                   See accountUpdate.

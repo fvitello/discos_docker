@@ -1,0 +1,14 @@
+####################################################
+#
+# Simple script to be SOURCED in the shell
+# so that environment can see the current Module
+# for manual test, as TAT would do it.
+#
+####################################################
+
+echo "Adding module directories for test like ../lib/python/site-packages. All but ../lib/python/site-packages are done in TAT"
+export PYTHONPATH=../lib/python/site-packages:$PYTHONPATH
+export PATH=../bin:$PATH
+export LD_LIBRARY_PATH=../lib:$LD_LIBRARY_PATH
+export IDL_PATH="-I../idl $IDL_PATH"
+echo "Done!"

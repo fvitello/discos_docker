@@ -1,0 +1,387 @@
+#! /bin/sh
+
+#*******************************************************************************
+# AcsNightlyBuild
+#
+# "@(#) $Id: AcsNightlyBuild,v 1.6 2009/05/25 09:05:43 hsommer Exp $"
+#
+#
+
+######################################
+# Directories names and assumptions  #
+######################################
+
+# Assumes a standard ACS installation in /alma
+# and a standard ACS environment configuration
+# Extracts from SVN the NO-LGPL  or LGPL (32 or 64 bit machines)
+
+#
+# These will contain the command line parsing results 
+# (CL_XXX, CL = command line)
+# or will keep the given default
+#
+CL_DRY_RUN=
+CL_ARCHIVE=
+CL_BUILD_ONLY=
+
+# SVN tags
+CL_ACS_TAG=trunk
+CL_ARCHIVE_TAG=trunk
+
+# Where source for the build are extracted.
+CL_ROOT_DIR=/diska/alma_tmp
+CL_BIN_DISTRIBUTION=
+
+# ACS Garching repository directory
+# for the built binary compact distributions
+CL_BIN_DIR=/alma_te4/ACS_BUILD_BIN
+
+# Garching SVN repository URL
+SVN_REPO="https://alma-svn.hq.eso.org/p2/"
+
+# ARCH 32/64 bit
+# If the ARCH is 32 bit the NO-LGPL is built and tested,
+# otherwise only LGPL
+ARCH=`uname -m`
+
+###
+### ----------- Command Line Parsing ---------------------
+
+#
+# These options can be recognized (longopts comma-separated. colon means argument is required)
+#
+LONGOPTS=help,archive,buildOnly,acsTag:,archiveTag:,rootDir:,binDistribution,binDir:
+SHORTOPTS=hn
+
+#
+# Usage info. Be nice and keep this up-to-date!
+#
+function printUsage {
+   echo "Starts a Nightly Build iteration"
+   echo "Assumes a correct ACS environment configuration"
+   echo ""
+   echo "Usage: `basename $0` [OPTIONS]"
+   echo "Options: "
+   echo "   -h | -help          prints this help and exits"
+   echo "   -n                  dry run. Do not execute commands"
+   echo "   -archive            builds also archive"
+   echo "   -buildOnly          do not run tests, but only builds"
+   echo "   -acsTag TAG         SVN tag to be used for ACS. Default trunk"
+   echo "   -archiveTag TAG     SVN tag to be used for ARCHIVE. Default trunk"
+   echo "   -rootDir  ROOT_DIR  Where to put the sources and build. Default: /diska/alma_tmp          "
+   echo "   -binDistribution    Prepare also a binary distribution   "
+   echo "   -binDir             Where to put binary distribution. Default: /alma_te4/ACS_BUILD_BIN"
+   echo "Environment Variables:"
+   echo "   ACSROOT - Minimal sanity check. Bails out if not set."
+   echo
+   echo "For ACS and ARCHIVE tags, use SVN notation like in the following examples:"
+   echo "   -TRUNK: trunk"
+   echo "   -BRANCH: branches/<branch name> (example branches/ACS-10_2-B)"
+   echo "   -TAG: tags/<tag name> (example tags/ACS-10_1_4-TEMP)"
+}
+
+#
+# Run getopt (posixly_correct needed). We run twice:
+# First run is simply to check the commandline for correctness
+# Second run is the real deal which replaces the command line args with getopt's output
+export POSIXLY_CORRECT=1
+
+getopt -n `basename $0` -u -a -l $LONGOPTS $SHORTOPTS "$@" || {
+   printUsage
+	exit $EC_BADARGS;
+}
+
+set -- `getopt -u -a -l $LONGOPTS $SHORTOPTS "$@"`
+
+#
+# Iterate over getopt's output and set CL_XXX variables accordingly
+#
+while : 
+do
+	case "$1" in
+        --archive)           CL_ARCHIVE=true ;;
+        --buildOnly)         CL_BUILD_ONLY=true ;;
+        --acsTag)            CL_ACS_TAG=$2 ; shift ;;
+        --archiveTag)        CL_ARCHIVE_TAG=$2 ; shift  ;;
+        --rootDir)           CL_ROOT_DIR=$2 ; shift  ;;
+        --binDistribution)   CL_BIN_DISTRIBUTION=true ;;
+        --binDir)            CL_BIN_DIR=$2 ; shift ;;
+        -n)                  CL_DRY_RUN=true ;;
+	--help)              CL_HELP=true ;; 
+	-h)                  CL_HELP=true ;; 
+	--) break ;;
+	esac
+	shift
+done
+shift
+
+#
+# must be unset! otherwise our custom export() function
+# that is defined below doesn't get used by the shell
+#
+export POSIXLY_CORRECT=
+unset POSIXLY_CORRECT
+
+
+if [ "$CL_HELP" ] ; then
+   printUsage
+   exit $EC_OK
+fi
+
+#
+# Set indirect variables, based on command line parameters
+#
+
+# Full name for the binary dostribution file
+BIN_FILE=$CL_BIN_DIR/ACS_BIN.tar.gz
+
+#
+# (Note: Rest of command line now in $@ )
+#
+### ---------- End of Command Line Parsing -------------
+
+################################
+# Initial minimal sanity check #
+################################
+
+if [ X"$ACSROOT" = X ]
+then
+    echo "ERROR - ACSROOT undefined. Cannot continue!"
+    exit -1
+fi
+
+echo ACSROOT: $ACSROOT
+
+###############################
+# If a dry run is requested, the list of ptions is printed
+# and all commands become simply echo outputs.
+#
+if [ "$CL_DRY_RUN" ] ; then
+   CMD_ECHO=echo
+
+   $CMD_ECHO "======== DRY RUN ============="
+   $CMD_ECHO "Setup for execution is:"
+   $CMD_ECHO CL_DRY_RUN=$CL_DRY_RUN
+   $CMD_ECHO CL_ARCHIVE=$CL_ARCHIVE
+   $CMD_ECHO CL_BUILD_ONLY=$CL_BUILD_ONLY
+   $CMD_ECHO CL_ACS_TAG=$CL_ACS_TAG
+   $CMD_ECHO CL_ARCHIVE_TAG=$CL_ARCHIVE_TAG
+   $CMD_ECHO CL_ROOT_DIR=$CL_ROOT_DIR
+   $CMD_ECHO CL_BIN_DISTRIBUTION=$CL_BIN_DISTRIBUTION
+   $CMD_ECHO CL_BIN_DIR=$CL_BIN_DIR
+   $CMD_ECHO BIN_FILE=$BIN_FILE
+   $CMD_ECHO ""
+fi
+
+#########################
+# Let's go!
+#
+echo "===> Rebuild ACS!"
+
+# Parse command line to determine if ARCHIVE to be build as well
+if [ $CL_ARCHIVE ] 
+then
+    echo "     Include ARCHIVE"
+fi
+
+echo "     ACS_TAG = $CL_ACS_TAG"
+echo "     ARCHIVE_TAG = $CL_ARCHIVE_TAG"
+ 
+# 
+# Go to the standard build directory
+#
+if [ !  -d $CL_ROOT_DIR ]
+then
+        echo "ERROR: $CL_ROOT_DIR does not exist. Not a standard machine"
+        echo "Installation aborted"
+	exit 88
+fi
+
+cd $CL_ROOT_DIR
+
+#
+# Backup current source directory
+#
+if [  -d ACS ]
+then
+        echo ""
+        echo "WARNING!"
+        echo "The directory ACS already exist"
+        echo "it will be moved under ACS.$$"
+        $CMD_ECHO mv ACS ACS.$$ > /dev/null 2>&1
+	if [ $? != 0 ]
+	then
+	    echo "cannot move ACS; please check the permissions of the directory."
+	    echo "Installation aborted"
+	    exit 88
+	fi
+
+fi
+
+#
+# Copy from SVN
+#
+echo "===> Checkout NO-LGPL sources from SVN in $PWD"
+$CMD_ECHO svn co "$SVN_REPO$CL_ACS_TAG/ACS" --depth=files
+$CMD_ECHO cd ACS
+if [ "$ARCH" != "x86_64" ]
+then
+  $CMD_ECHO make svn-get-no-lgpl
+else
+  $CMD_ECHO make svn-get-lgpl
+fi
+
+#
+# Rebuild
+#
+echo "===> Rebuild ACS"
+$CMD_ECHO  make build_clean 2>&1 | tee makeBuild.log 
+
+#
+# If ARCHIVE requested, rebuild that as well
+#
+if [ "$CL_ARCHIVE" ] 
+then
+    #
+    # Go back to rootdir for ARCHIVE to testing
+    #
+    $CMD_ECHO cd $CL_ROOT_DIR
+
+    #
+    # Backup current ARCHIVE source directory
+    #
+    if [  -d ARCHIVE ]
+    then
+            echo ""
+            echo "WARNING!"
+            echo "The directory ARCHIVE already exist"
+            echo "it will be moved under ARCHIVE.$$"
+            $CMD_ECHO  mv ARCHIVE ARCHIVE.$$ > /dev/null 2>&1
+    	if [ $? != 0 ]
+    	then
+    	    echo "cannot move ARCHIVE; please check the permissions of the directory."
+    	    echo "Installation aborted"
+    	    exit 88
+    	fi
+    
+    fi
+
+    #
+    # Checkout
+    #
+    echo "===> Checkout ARCHIVE sources from SVN in $PWD"
+    $CMD_ECHO  svn co "$SVN_REPO$CL_ARCHIVE_TAG/ARCHIVE"
+    $CMD_ECHO cd ARCHIVE
+
+    #
+    # Rebuild
+    #
+    echo "===> Rebuild ARCHIVE"
+    $CMD_ECHO  make build 2>&1 | tee makeBuild.log 
+
+fi # End rebuild Archive
+
+#
+# If requested, generate distribution tar file
+# Keep just the last 5 files.
+#
+if [ $CL_BIN_DISTRIBUTION ]
+then
+   echo "===> Generate distribution tar file $BIN_FILE"
+   if [  -f $BIN_FILE.5 ]
+   then
+           $CMD_ECHO  rm -rf $BIN_FILE.5  > /dev/null 2>&1
+           if [ $? != 0 ]
+           then
+               echo "cannot remove $BIN_FILE.5; please check the permissions of the directory."
+           fi
+   fi
+   if [  -f $BIN_FILE.4 ]
+   then
+           $CMD_ECHO  mv $BIN_FILE.4   $BIN_FILE.5  > /dev/null 2>&1
+           if [ $? != 0 ]
+           then
+               echo "cannot move $BIN_FILE.4 in $BIN_FILE.5; please check the permissions of the directory."
+           fi
+   fi
+   
+   if [  -f $BIN_FILE.3 ]
+   then
+           $CMD_ECHO  mv $BIN_FILE.3   $BIN_FILE.4  > /dev/null 2>&1
+           if [ $? != 0 ]
+           then
+               echo "cannot move $BIN_FILE.3 in $BIN_FILE.4; please check the permissions of the directory."
+           fi
+   fi
+   
+   if [  -f $BIN_FILE.2 ]
+   then
+           $CMD_ECHO  mv $BIN_FILE.2   $BIN_FILE.3  > /dev/null 2>&1
+           if [ $? != 0 ]
+           then
+               echo "cannot move $BIN_FILE.2 in $BIN_FILE.3; please check the permissions of the directory."
+           fi
+   fi
+   
+   if [  -f $BIN_FILE.1 ]
+   then
+           $CMD_ECHO mv $BIN_FILE.1   $BIN_FILE.2  > /dev/null 2>&1
+           if [ $? != 0 ]
+           then
+               echo "cannot move $BIN_FILE.1 in $BIN_FILE.2; please check the permissions of the directory."
+           fi
+   fi
+   
+   if [  -f $BIN_FILE ]
+   then
+           echo ""
+           echo "WARNING!"
+           echo "The file $BIN_FILE already exist"
+           echo "it will be moved under $BIN_FILE.1"
+           $CMD_ECHO  mv $BIN_FILE $BIN_FILE.1 > /dev/null 2>&1
+           if [ $? != 0 ]
+           then
+               echo "cannot move ACS; please check the permissions of the directory."
+           fi
+   
+   fi
+
+   $CMD_ECHO cd /
+   $CMD_ECHO gtar -czf $BIN_FILE $ACSROOT $ACSDATA
+
+fi # End build distribution
+
+#
+# If requested, go back to ACS to testing
+#
+if [ X"$CL_BUILD_ONLY" = X ]
+then
+   $CMD_ECHO cd $CL_ROOT_DIR/ACS
+   
+   # Test
+   echo "===> Run ACS modular tests"
+   $CMD_ECHO make test 2>&1 | tee makeTest.log 
+   echo "===> ... ACS modular tests done"
+   
+   #
+   # See if needs to test ARCHIVE as well
+   #
+   if [ "$CL_ARCHIVE" ] 
+   then
+       #
+       # Go back to ACS to testing
+       #
+       $CMD_ECHO cd $CL_ROOT_DIR/ARCHIVE
+       
+       # Test
+       echo "===> Run ARCHIVE modular tests"
+       $CMD_ECHO  make test 2>&1 | tee makeTest.log 
+       echo "===> ... ARCHIVE modular tests done"
+   fi
+
+fi # End if test requested and not build only
+
+echo "===> DONE"
+
+# ___oOo___
+

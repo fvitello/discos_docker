@@ -1,0 +1,324 @@
+<project name="bulkDataNT" basedir="." default="package" xmlns:jacoco="antlib:org.jacoco.ant">
+  <property environment="env" />
+
+  <property name="package.name" value="alma.acs.bulkdata" />
+
+  <property name="home" value=".." />
+  <property name="acs.root.dir" value="${env.ACSROOT}" />
+  <property name="acs.lib.dir" value="${acs.root.dir}/lib" />
+
+  <property name="ndds.root.dir" value="${env.NDDSHOME}" />
+
+  <property name="src.dir" location="${home}/src" />
+  <property name="package.rel.dir" value="alma/acs/bulkdata" /> <!-- TODO: automatically generate it from package.name -->
+  <property name="src.package.dir" value="${src.dir}/${package.rel.dir}" />
+  <property name="idl.dir" location="${home}/idl" />
+  <property name="lib.dir" location="${home}/lib" />
+  <property name="src.test.dir" location="${home}/test" />
+  <property name="tools.dir" location="${home}/tools" />
+  <property name="report.dir" location="${home}/report" />
+  <property name="target.dir" location="${home}/target" />
+  <property name="build.dir" location="${target.dir}/build" />
+  <property name="build.package.dir" value="${build.dir}/alma/acs/bulkdata" /> <!-- TODO: automatically generate it from package.name -->
+
+  <property name="test.dir" location="${target.dir}/test" /> <!-- output directory for JUnit tests -->
+  <property name="test.classes.dir" location="${test.dir}/classes" /> <!-- directory for class files of JUnit test cases -->
+  <property name="test.result.dir" location="${test.dir}/result" /> <!-- output directory for JUnit test result in XML format -->
+  <property name="unittest.result.dir" location="${test.result.dir}/unittest" /> <!-- output directory for unit test result in XML format -->
+  <property name="test.report.dir" location="${report.dir}" /> <!-- output directory for JUnit test report in HTML format -->
+  <property name="unittest.report.dir" location="${test.report.dir}/unittest" /> <!-- output directory for unit test report in HTML format -->
+  <property name="test.docs.dir" location="${test.report.dir}/docs" /> <!-- output directory for Javadocs of test cases -->
+
+  <property name="dds.idl" location="${idl.dir}/bulkDataNT.idl" />
+  <property name="dds.idl.module" value="ACSBulkData" />
+  <property name="dds.idl.module.dir" location="${src.package.dir}/${dds.idl.module}" />
+  <property name="dds.idl.module.rel.dir" value="${package.rel.dir}/${dds.idl.module}" />
+
+  <property name="product.jar.file" value="${lib.dir}/jBulkData.jar" />
+
+  <property name="checkstyle.install.dir" location="${tools.dir}/checkstyle-7.8.2" />
+  <property name="checkstyle.config.file" value="${home}/src/AlmaCS-checkstyle.xml" />
+  <property name="checkstyle.report.dir" location="${report.dir}/checkstyle" />
+  <property name="checkstyle.report.xml.file" location="${checkstyle.report.dir}/checkstyle_report.xml" />
+  <property name="checkstyle.report.plain.file" location="${checkstyle.report.dir}/checkstyle_report.txt" />
+
+  <property name="findbugs.install.dir" location="${tools.dir}/findbugs-3.0.1" />
+  <property name="findbugs.dir" location="${target.dir}/findbugs" />
+  <property name="findbugs.report.dir" location="${report.dir}/findbugs" />
+  <property name="findbugs.report.xml.file" location="${findbugs.report.dir}/findbugs_report.xml" />
+  <property name="findbugs.report.html.file" location="${findbugs.report.dir}/findbugs_report.html" />
+
+  <property name="jacoco.install.dir" location="${tools.dir}/jacoco-0.7.9" />
+  <property name="jacoco.result.file" location="${target.dir}/jacoco.exec" />
+  <property name="jacoco.report.html.dir" location="${report.dir}/coverage/html" />
+  <property name="jacoco.report.xml.file" location="${report.dir}/coverage/report.xml" />
+
+  <path id="build.classpath">
+    <fileset dir="${lib.dir}" includes="*.jar" />
+    <fileset dir="${acs.lib.dir}" includes="*.jar" />
+    <fileset dir="${ndds.root.dir}" includes="class/nddsjava.jar" />
+  </path>
+
+  <path id="test.classpath">
+    <pathelement path="${tools.dir}/junit-4.12.jar" />
+    <pathelement path="${tools.dir}/" /> <!-- TODO -->
+    <pathelement path="${test.classes.dir}" />
+  </path>
+
+  <path id="checkstyle.classpath">
+    <fileset dir="${checkstyle.install.dir}" includes="checkstyle-*-all.jar" />
+  </path>
+
+  <target name="rtiddsgen-condition-check">
+    <uptodate property="dds.idl.module.dir.uptodate"
+              srcfile="${dds.idl}"
+              targetfile="${dds.idl.module.dir}/BulkDataNTFrame.java" />
+              <!-- TODO: specify all generated java source file. -->
+  </target>
+
+  <target name="rtiddsgen" depends="rtiddsgen-condition-check" unless="dds.idl.module.dir.uptodate">
+    <exec executable="${ndds.root.dir}/scripts/rtiddsgen">
+      <arg line="-language Java -replace -package ${package.name} -d ${src.dir} ${dds.idl}" />
+    </exec>
+  </target>
+
+  <target name="compile" depends="rtiddsgen">
+    <echo message="Compiling the java source files..." />
+    <mkdir dir="${build.dir}" />
+    <javac includeantruntime="false" destdir="${build.dir}" debug="on">
+      <src path="${src.dir}" />
+      <classpath refid="build.classpath" />
+    </javac>
+  </target>
+
+  <target name="package" depends="compile">
+    <jar destfile="${product.jar.file}" basedir="${build.dir}" includes="**/*.class" />
+  </target>
+
+  <!-- generate API document -->
+  <target name="doc" description="Generates javadoc" depends="compile">
+    <echo message="Generating javadoc..." />
+    <mkdir dir="${docs.dir}" />
+    <javadoc sourcepath="${gen-src.dir}" destdir="${docs.dir}" windowtitle="ALMA TSC" useexternalfile="yes">
+      <fileset dir="." includes="${gen-src.dir}/**/*.java" excludes="**/impl/**/*.java" />
+      <fileset dir="." includes="${src.dir}/**/*.java" />
+    </javadoc>
+  </target>
+
+  <target name="install-checkstyle">
+    <mkdir dir="${tools.dir}" />
+
+    <get src="http://tsc-dev.alma.nao.ac.jp/git/?p=tsc-src-tools.git;a=blob_plain;f=checkstyle-7.8.2-bin.zip;hb=master"
+         dest="${tools.dir}/checkstyle-7.8.2-bin.zip"
+         ignoreerrors="true"
+         skipexisting="true" />
+
+    <get src="https://downloads.sourceforge.net/project/checkstyle/checkstyle/7.8.2/checkstyle-7.8.2-bin.zip"
+         dest="${tools.dir}/checkstyle-7.8.2-bin.zip"
+         skipexisting="true" />
+    <unzip src="${tools.dir}/checkstyle-7.8.2-bin.zip" dest="${tools.dir}" />
+  </target>
+
+  <target name="install-findbugs">
+    <mkdir dir="${tools.dir}" />
+    <get src="http://tsc-dev.alma.nao.ac.jp/git/?p=tsc-src-tools.git;a=blob_plain;f=findbugs-3.0.1.zip;hb=master"
+         dest="${tools.dir}/findbugs-3.0.1.zip"
+         ignoreerrors="true"
+         skipexisting="true" />
+
+    <get src="http://prdownloads.sourceforge.net/findbugs/findbugs-3.0.1.zip"
+         dest="${tools.dir}/findbugs-3.0.1.zip"
+         skipexisting="true" />
+    <unzip src="${tools.dir}/findbugs-3.0.1.zip" dest="${tools.dir}" />
+  </target>
+
+  <target name="download-test-tools">
+    <echo message="Downloading tools required to build and test..." />
+    <mkdir dir="${tools.dir}" />
+
+    <!-- Download test tools' binaries from tsc-dev git repository (over web interface) -->
+    <get src="http://tsc-dev.alma.nao.ac.jp/git/?p=tsc-src-tools.git;a=blob_plain;f=junit-4.12.jar;hb=master"
+         dest="${tools.dir}/junit-4.12.jar"
+         ignoreerrors="true"
+         skipexisting="true" />    
+    <get src="http://tsc-dev.alma.nao.ac.jp/git/?p=tsc-src-tools.git;a=blob_plain;f=jacoco-0.7.9.zip;hb=master"
+         dest="${tools.dir}/jacoco-0.7.9.zip"
+         ignoreerrors="true"
+         skipexisting="true" />
+
+    <!-- If the download from tsc-dev fails, let's try to download them from the Internet. -->
+    <get src="http://search.maven.org/remotecontent?filepath=junit/junit/4.12/junit-4.12.jar"
+         dest="${tools.dir}/junit-4.12.jar"
+         skipexisting="true" />
+    <get src="http://search.maven.org/remotecontent?filepath=org/jacoco/jacoco/0.7.9/jacoco-0.7.9.zip"
+         dest="${tools.dir}/jacoco-0.7.9.zip"
+         skipexisting="true" />
+
+    <!-- Extract jacoco jar files under ${tools.dir}/jacoco. -->
+    <unzip src="${tools.dir}/jacoco-0.7.9.zip" dest="${jacoco.install.dir}" />
+  </target>
+
+  <target name="checkstyle" depends="install-checkstyle">
+    <mkdir dir="${checkstyle.report.dir}" />
+    <echo message="Checking source style ..." />
+
+    <taskdef resource="com/puppycrawl/tools/checkstyle/ant/checkstyle-ant-task.properties"
+             classpathref="checkstyle.classpath"/>
+
+    <checkstyle config="${checkstyle.config.file}">
+      <fileset dir="${src.dir}" includes="${package.rel.dir}/*.java"/>
+      <fileset dir="${src.test.dir}" includes="${package.rel.dir}/*.java"/>
+      <formatter type="xml" toFile="${checkstyle.report.xml.file}" />
+      <formatter type="plain" toFile="${checkstyle.report.plain.file}" />
+    </checkstyle>
+    <echo message="Checkstyle report was generated to ${checkstyle.report.xml.file} and ${checkstyle.report.plain.file}." />
+  </target>
+
+  <!-- This task runs findbugs and generate report for Jenkins. -->
+  <target name="findbugs" depends="install-findbugs, package">
+    <!-- check if findbugs.install.dir property points to a correct installation directory -->
+    <available file="${findbugs.install.dir}/lib/findbugs-ant.jar" property="findbugs.task.found" />
+    <fail unless="findbugs.task.found"
+            message="Cannot find findbugs installation in ${findbugs.install.dir}. Please set the correct installation path in findbugs.install.dir property. It can be specified by a command line argument '-Dfindbugs.install.dir=/path/to/findbugs-x.y.z' if you trigger ant from command line." />
+
+    <mkdir dir="${findbugs.report.dir}"/>
+    <taskdef name="findbugs"
+             classname="edu.umd.cs.findbugs.anttask.FindBugsTask"
+             classpath="${findbugs.install.dir}/lib/findbugs-ant.jar">
+    </taskdef>
+    <findbugs home="${findbugs.install.dir}"
+              output="xml:withMessages"
+              outputFile="${findbugs.report.xml.file}" >
+      <sourcePath path="${src.dir}" />
+      <auxClasspath refid="build.classpath" />
+      <class location="${product.jar.file}" />
+    </findbugs>
+
+    <!-- convert the report in HTML format -->
+    <xslt in="${findbugs.report.xml.file}"
+          out="${findbugs.report.html.file}"
+          style="${findbugs.install.dir}/src/xsl/fancy.xsl"/>
+  </target>
+
+  <!-- compile test cases for unit test -->
+  <target name="unit-test-compile" depends="download-test-tools">
+    <echo message="Compiling test cases for unit test..." />
+    <mkdir dir="${test.classes.dir}" />
+    <javac includeantruntime="false" destdir="${test.classes.dir}" debug="on">
+      <classpath refid="build.classpath" />
+      <classpath refid="test.classpath" />
+      <src path="${src.test.dir}" />
+      <exclude name="alma/acs/bulkdata/BulkDataNTOneFlowPerformanceTest.java" />
+
+      <!-- TODO: the following test files are excluded due to compilation error, but they have to be included in unit test. -->
+      <exclude name="alma/acs/bulkdata/BulkDataNTSenderStreamConfigurationDefaultTest.java" />
+      <exclude name="alma/acs/bulkdata/BulkDataNTSenderStreamTest.java" />
+    </javac>
+  </target>
+
+  <!-- run unit test and generate test results and code coverage measurement report -->
+  <target name="unit-test" description="Run unit test" depends="compile,unit-test-compile">
+    <echo message="Running unit test..." />
+
+    <delete dir="${unittest.result.dir}" failonerror="false" />
+    <mkdir dir="${unittest.result.dir}" />
+
+    <delete dir="${unittest.report.dir}" failonerror="false" />
+    <mkdir dir="${unittest.report.dir}" />
+
+    <delete dir="${jacoco.report.html.dir}" failonerror="false" />
+    <mkdir dir="${jacoco.report.html.dir}" />
+
+    <taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
+      <classpath path="${jacoco.install.dir}/lib/jacocoant.jar" />
+    </taskdef>
+
+    <jacoco:coverage destfile="${jacoco.result.file}">
+      <junit printsummary="true" fork="true" failureproperty="unit-test.failed" errorproperty="unit-test.failed">
+        <classpath refid="test.classpath" />
+        <sysproperty key="net.sourceforge.cobertura.datafile" file="${coverage.ser.file}" />
+        
+        <classpath refid="build.classpath" />
+
+        <formatter type="xml" />
+        <batchtest todir="${unittest.result.dir}">
+          <fileset dir="${src.test.dir}">
+            <include name="**/*Test.java" />
+            <exclude name="alma/acs/bulkdata/BulkDataNTOneFlowPerformanceTest.java" />
+          </fileset>
+        </batchtest>
+      </junit>
+    </jacoco:coverage>
+
+    <!-- generate JUnit test report -->
+    <junitreport todir="${unittest.result.dir}">
+      <fileset dir="${unittest.result.dir}">
+            <include name="TEST-*.xml" />
+      </fileset>
+      <report format="frames" todir="${unittest.report.dir}" />
+    </junitreport>
+
+    <!-- generate coverage report -->
+    <jacoco:report>
+      <executiondata>
+        <file file="${jacoco.result.file}" />
+      </executiondata>
+
+      <structure name="BulkDataNT">
+        <classfiles>
+          <fileset dir="${build.dir}">
+            <!-- The following classes are excluded because those classes are used only by BulkDataNTGenSender and it is not a tools for the science operation. -->
+            <exclude name="${package.rel.dir}/BulkDataNTGenSender.class" />
+            <exclude name="${package.rel.dir}/BulkDataNTGenSender$*.class" />
+            <exclude name="${package.rel.dir}/BulkDataNTGenSenderConfigurations.class" />
+            <exclude name="${package.rel.dir}/BulkDataNTGenSenderConfigurations$*.class" />
+            <exclude name="${package.rel.dir}/AlphanumericStringConfiguration.class" />
+            <exclude name="${package.rel.dir}/BooleanConfiguration.class" />
+            <exclude name="${package.rel.dir}/CalledMoreThanOnceException.class" />
+            <exclude name="${package.rel.dir}/DoubleConfiguration.class" />
+            <exclude name="${package.rel.dir}/DurationConfiguration.class" />
+            <exclude name="${package.rel.dir}/EmptyStringException.class" />
+            <exclude name="${package.rel.dir}/IllegalStringException.class" />
+            <exclude name="${package.rel.dir}/IntegerConfiguration.class" />
+            <exclude name="${package.rel.dir}/InvalidDurationArgumentException.class" />
+            <exclude name="${package.rel.dir}/MoreThanOneOptionException.class" />
+            <exclude name="${package.rel.dir}/MultipleStringConfiguration.class" />
+            <exclude name="${package.rel.dir}/NotDoubleArgumentException.class" />
+            <exclude name="${package.rel.dir}/NotIntegerArgumentException.class" />
+            <exclude name="${package.rel.dir}/OutOfRangeDoubleArgumentException.class" />
+            <exclude name="${package.rel.dir}/OutOfRangeIntegerArgumentException.class" />
+            <exclude name="${package.rel.dir}/PathConfiguration.class" />
+            <exclude name="${package.rel.dir}/StringConfiguration.class" />
+
+            <!-- The following classes are excluded because BulkDataNTSampleSender is just an example file. -->
+            <exclude name="${package.rel.dir}/BulkDataNTSampleSender.class" />
+
+            <!-- The following classes are excluded because those source files are generated by rtiddsgen commands. -->
+	    <exclude name="${dds.idl.module.rel.dir}/*.class" />
+          </fileset>
+        </classfiles>
+        <sourcefiles encoding="UTF-8">
+          <fileset dir="${src.dir}" />
+        </sourcefiles>
+      </structure>
+
+      <html destdir="${jacoco.report.html.dir}" />
+      <xml destfile="${jacoco.report.xml.file}" />
+    </jacoco:report>
+
+    <!-- this task fails if one of unit tests fails -->
+    <!-- TODO: Currently, the failure of unit test is not considered as failure as the unit test is not completed. When BulkData Java is released, failure of unit test should be considered as failure. -->
+    <!--
+    <fail message="Test failure detected in unit test. Check the test results shown above in the console or in ${unittest.report.dir}." if="unit-test.failed" />
+    -->
+  </target>
+
+  <!-- TODO: generate javadoc -->
+
+  <target name="clean">
+    <delete dir="${dds.idl.module.dir}" />
+    <delete dir="${target.dir}" />
+    <delete dir="${tools.dir}" />
+    <delete dir="${report.dir}" />
+  </target>
+</project>

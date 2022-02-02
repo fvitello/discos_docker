@@ -1,0 +1,9 @@
+INFO \[acsStartJava\] Starting Java application:
+-- alma.acs.testsupport.tat.TATJUnitRunner
+-- com.cosylab.cdb.DALRead
+INFO \[acsStartJava\] Using endorsed jar files in:
+INFO \[DALRead\] Curl data:
+Logger jacorb@DALRead created with custom log levels local=Info, remote=Info
+^[0-9] - OpenJDK
+^[0-9] - openjdk
+^[0-9] - \.*SLF4J:

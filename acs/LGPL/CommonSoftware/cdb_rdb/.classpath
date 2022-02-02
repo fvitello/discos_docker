@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding=".cvsignore|.done_generating_classes|.done_generating_sql|Makefile|gen/" kind="src" path="src"/>
+	<classpathentry excluding=".cvsignore|CDB/|Makefile|ref/|tmcdb/" kind="src" path="test"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="acs.ACSROOT_CONTAINER/ACS-2019JUN-JAVA11/jar,zip"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

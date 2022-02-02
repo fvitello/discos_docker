@@ -1,0 +1,3791 @@
+#!/usr/bin/env perl
+#*******************************************************************************
+# -*- perl-mode  -*-
+#   NAME
+#   Claro2
+# 
+#   $Id: Claro2,v 1.1 2006/05/06 19:55:56 sturolla Exp $
+#   
+#   DESCRIPTION
+#   
+#   carries out compilation of one integration module and puts the
+#   results on the web. Works with pkgin and CVS
+#
+#
+#   AUTHOR
+#   Michele Zamparelli
+#
+#   ENVIRONMENT  
+#   
+#   CAUTION
+#
+#
+#   EXAMPLES
+#
+#   SEE ALSO
+#   
+#   BUGS
+#     the fault detection system is wrong
+#     
+#   TO DO:
+#    substitue Purify for Pkgin
+#    transfer logfiles to websqa
+#    carry out the tests
+#    prepare the report
+#    recompile everything with purify
+#    carry out the test, collect output, prepare the reports
+#
+#
+#
+#  atlsplit atlout.spt
+#  attolcov -block=l -*.tio *.fdc ../src/*.fdc
+#  rm *.fdc *.tsf *.tio *.
+#------------------------------------------------------------------------
+# refactoring excercise May 2005
+# 1) find all the the else if and replace with if
+# 2) list all the variables used across methods
+# 3) determine a borderline between the packages 'Claro', 'Sinners' and 'Main'
+# 4) verify that publishReport is used consistently
+# 5) list all the HTML report files
+# 6) make sure that all the files have the same extensions
+#
+# additional checks to add: disk space and such
+#
+# %main::ELAPSED
+# %Sinners::Sinner
+# %Sinners::SinnerName
+#
+#$INC[++$#INC] = "$ENV{HOME}/sqam/scripts/crontabs";
+# Following has been modifed to adapt to different direcotry
+#use lib "$ENV{SOURCE}/modules";
+
+$INC[++$#INC] = "$ENV{'SOURCE'}/modules";
+require Common;
+require Semaphor;
+
+use POSIX ":sys_wait_h";                # Used by waitpid
+use Time::Local;                        # Used by time()
+use FileHandle;
+
+sub TIOCNOTTY {
+  return (0x20000000|(('t')<<8)|113) ; 
+}
+
+#
+# just a rewriting rule, to save space
+#
+sub executeOrDie { 
+    local($command) = $_[0];
+    Common::executeOrDie($command);
+}
+#
+# this information goes straight into the HTML main report page
+# this is project specific
+sub additionalEnvInfo { 
+    local($info) = "";
+    if ( $project eq "ALMA") { 
+	local($plFile) = "$ENV{ACSROOT}/ACS_PATCH_LEVEL";
+	$info = "- $ENV{ALMASW_RELEASE}";
+	if ( -f $plFile) { 
+	    chop($pl = `cat $plFile`);
+	    $info .= ".$pl";
+	} 
+    }
+
+    if ($project eq "VLT") { 
+	local($vFile) = "$ENV{VLTROOT}/vltMakeInstall.log";
+	$info = "- $ENV{VLTSW_RELEASE}";
+	if ( -f $vFile) { 
+	    $firstLine = `head -1 $vFile`;
+	    if($firstLine =~ /(\d{2}\/\d{2}\/\d{2}\-\d{2}:\d{2})\s*$/) { 
+		# maybe Date::Manip could be used here
+		$info .= " $1";
+	    }
+	}
+    }
+    return $info;
+}
+
+# to be removed?
+sub checkXvfb { 
+    system "ps -eaf | grep Xvfb | grep -v grep > /dev/null 2>&1";
+    if ($?) {
+	print ">>> *** The process Xvfb is DEAD!!! *** \n";
+    } 
+}
+# the same
+#
+# host, user, command
+#
+
+sub remoteCall { 
+  Common::remoteCall(@_);
+}
+
+#
+# the same
+#
+# host, user, command
+#
+sub remoteCopy { 
+    Common::remoteCopy(@_);
+}
+#
+#
+#
+# we have to put some order in all these log methods.
+#
+sub executeAndLog { 
+ local($command, $outfile) = @_;
+ print $command."\n" if $debug;
+ system "$command >> $outfile 2>&1";
+ return $?;
+}
+
+sub PurifyOptions { 
+    if ($OS eq "Linux")  {
+	return "MAKE_PURIFY=on";
+    } else { 
+	return "MAKE_PURECOV=on MAKE_PURIFY=on";
+    }
+}
+
+
+sub timestamp {
+    ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
+    $DATE="## ".localtime() ." ############\n";
+    print $DATE;
+}
+#
+sub datestamp { 
+    local($date);
+    if ( $OS eq "Linux") { 
+	chop($date = `date -I`);
+    } else { 
+	chop($date = `date +\"\%Y-\%m-\%d\"`); #"
+    }
+    return $date;
+}
+#
+sub determineFailure { 
+    local($logfile) = $_[0];
+    open(xxx, $logfile) || warn ">>> determineFailure: could not open $logfile for writing\n";
+    if ( grep(/^ERROR/, <xxx>) > 0 ) { 
+	$failure = 1;
+    } else { 
+	$failure = 0;
+    }
+    close(xxx);
+}
+
+sub isTargetAvailable { 
+    local($result) = 0;
+#   isTargetAvailable :
+#   true  => result 1 
+#   false => result 0 
+    
+    local($target, $makefile) = @_;
+    if  ( ! -f $makefile ) { 
+       warn "> TargetAvailable: there's no makefile $makefile\n";
+       $result = 0;
+    } else {
+	local($resultString);
+	open(tmpFD, "make -n $target -f $makefile 2>&1 |  tail -1 |");
+	$resultString = <tmpFD>;
+	close(tmpFD);
+	
+	if ($resultString =~ /No rule to make target \`$target\'/)  { 
+	    $result = 0;   
+	} else {
+	    $result = 1;
+	}
+    }
+    return $result;
+}
+
+
+
+sub extractOCIViolationsFromMemoryReport {
+    local($file) = $_[0];
+    local(%VioTypes, $resp);
+    local($URL) = "http://www.eso.org/projects/sqam/reference/Purify.html#messages";
+    $resp = "";
+    open(tmpFD, $file) || warn "Could not open $file (OCI violations) for reading\n";
+    while(<tmpFD>) { 
+	if ( /^([A-Z]{3}):/) { 
+	    $VioTypes{$1} = "1";
+	}
+    }
+    $resp = "<a href=\"$URL\">".join(" ",keys %VioTypes)."</a>";
+    close(tmpFD);
+    return $resp;
+}
+
+
+sub extractSummaryFromCoverageReport { 
+    local($file) = $_[0];
+    local($summary) = "";
+    if ( ! -f $file) { 
+	warn ">> extractSummaryFromCoverageReport: asked to extract summary from non existing file ($file)\n";
+	return $summary;
+    }
+    open(readin,$file) || warn ">> could not open $file for reading\n";
+
+    if ( grep(/Test RealTime/,`head -20 $file`)) { 
+	while(<readin>) { 
+	    if (/^Conclusion :/) { 
+		$summary .= $_."\n";
+		foreach $line(<readin>) { 
+		    $line =~ s/^\W+/  /;
+		    $summary .= $line unless $line =~ /^------/;
+		}
+		close(readin);
+		return $summary;
+	    }
+	}
+    } else { 
+	while(<readin>) { 
+	    if (/^to\t/) { 
+		local($dum, $ub, $b, $ul, $l, $uf, $f, $line);
+		local($blockPerc, $funcPerc, $linesPerc);
+		$line = $_;
+# to unused-blocks blocks unused-lines lines unused-funcs funcs files dirs    #
+
+		($dum,$ub, $b, $ul, $l, $uf, $f,$dum ,$dum) 
+		    = split(/\t/,$line);
+		$linesPerc = int ((($l - $ul)/$l)*100) unless $l == 0;
+		$blockPerc = int ((($b - $ub)/$b)*100) unless $b == 0;
+		$funcPerc  = int ((($f - $uf)/$f)*100) unless $f == 0;
+		$summary   = "Conclusion:\n";
+		$summary .= "Functions: \t$funcPerc% (".($f - $uf)."/$f)\n";
+		$summary .= "Block: \t\t$blockPerc% (".($b - $ub)."/$b)\n";
+		$summary .= "Lines: \t\t$linesPerc% (".($l - $ul)."/$l)\n";
+		$summary .= "\n";
+		close(readin);
+		return $summary;
+	    }
+	}
+	close(readin);
+    }
+}
+
+sub writeHTMLFromCoverageReport {
+    local($file) = $_[0];
+    local($fileName);
+    local($outFile) = $_[1];
+    local($mod_dir) = $_[2];
+    local($CoverageReport,$tableHeader,$dirHeader,$dirContHeader) = "";
+    local($dir_name, $file_name, $func_name, $color1, $color2, $color3);
+    local($read_lines);        
+        
+    open(CovReport, "> $outFile") || 
+	warn ">>> Could not open $outFile for writing\n";; 
+   
+   
+    chop($fileName = `basename $file`);
+    print CovReport "<p><a href=\"$fileName\">Complete Report</a><p>\n";   
+   
+    $tableHeader =  "<table border=1>\n";
+    $tableHeader .= "<tr bgcolor=\"#66cccc\"><th colspan=\"2\">Name</th><th colspan=\"2\">Lines</th><th colspan=\"2\">Block</th><th colspan=\"2\">Function</th></tr>\n";
+    $dirContHeader = "<tr bgcolor=\"#66cccc\"><th>File</th><th>Function</th><th>used %</th><th>Total</th><th>used %</th><th>Total</th><th>used %</th><th>Total</th></tr>\n";
+    $dirHeader .= "<tr bgcolor=\"#66cccc\"><th colspan=2>Directory</th><th>used %</th><th>Total</th><th>used %</th><th>Total</th><th>used %</th><th>Total</th></tr>\n";
+         
+    if ( ! -f $file) { 
+	warn ">> writeHTMLFromCoverageReport: asked to extract summary from non existing file ($file)\n";
+    }
+    open(readin,$file) || warn ">> could not open $file for reading\n";
+    
+              	
+	while(<readin>) { 
+	    local($line, $blockPerc, $funcPerc, $linesPerc);
+            local($name,$dum,$ub, $b, $ul, $l, $uf, $f);	    
+            	    
+	    $blockPerc="&nbsp;";
+	    $funcPerc="&nbsp;";
+	    $linesPerc="&nbsp;";
+	    $b="&nbsp;";
+	    $l="&nbsp;";
+	    $f="&nbsp;";
+            
+	    $dir_name="&nbsp;";
+	    $file_name="&nbsp;";
+	    $func_name="&nbsp;";
+            $color1="#33ffff";
+            $color2="#ccffff";
+	    $color3="white";
+	    
+	    $line = $_;
+	    
+	    if (/^di\t/) {
+	       ($dum,$name,$ub, $b, $ul, $l, $uf, $f,$dum) = split(/\t/,$line);
+	       if ( index($name, $mod_dir) != -1 ) {
+		   if ( $name =~ /($mod_dir.*$)/ ) { 
+		       $dir_name = $1;
+		   }
+	          $read_lines = 1;
+	       } else {
+	          $read_lines = 0;	         	          
+	       }	       		 
+	    }
+	    if (/^edi/) { 
+		$CoverageReport .= "</table><p>\n";
+	    }
+	    
+	    if (((/^di\t/) || (/^fi\t/) || (/^fu\t/)) && ($read_lines)) { 
+	      
+	      if ((/^di\t/) || (/^fi\t/)) { 
+            # di name unused-blocks blocks unused-lines lines unused-funcs funcs files    #
+            # fi name unused-blocks blocks unused-lines lines unused-funcs funcs sessions #
+
+		($dum,$name,$ub, $b, $ul, $l, $uf, $f,$dum) = split(/\t/,$line);
+		
+		if (/^di\t/) { # if directory information
+		    #$dir_name=$name;
+                   $color2=$color1;
+		   $CoverageReport .= $tableHeader;
+		   $CoverageReport .= $dirHeader;
+		  
+                } else { # must be file information
+		   $file_name=$name;
+		}
+	        $funcPerc  = int ((($f-$uf)/$f)*100) unless $f == 0;
+                $color3=$color2;
+				
+	    }  elsif (/^fu\t/) {   # is function information
+		# fu name unused-blocks blocks unused-lines lines calls                       #
+	  	($dum,$name,$ub, $b, $ul, $l, $dum) = split(/\t/,$line);
+		$func_name=$name;		   
+	    }
+
+              $linesPerc = int ((($l-$ul)/$l)*100) unless $l == 0;
+              $blockPerc = int ((($b-$ub)/$b)*100) unless $b == 0;
+
+	      if ( $linesPerc == 0 ) {
+	         $linesPerc = "<font color=red>$linesPerc</font>";
+	      }
+	      if ( $blockPerc == 0 ) {
+	         $blockPerc = "<font color=red>$blockPerc</font>";
+	      }
+	      if ( $funcPerc == 0 ) {
+	         $funcPerc = "<font color=red>$funcPerc</font>";
+	      }
+	      
+	      $dir_name =~ s/$basecamp//;
+	    
+	      $CoverageReport .= "<tr>";
+	      $CoreReport = "
+				      <td bgcolor=\"$color3\">$linesPerc</td>
+				      <td bgcolor=\"$color3\">$l</td>
+				      <td bgcolor=\"$color3\">$blockPerc</td>
+				      <td bgcolor=\"$color3\">$b</td>
+				      <td bgcolor=\"$color3\">$funcPerc</td>				      
+				      <td bgcolor=\"$color3\">$f</td></tr>\n";
+
+	      if (/^di/) { 
+		  $CoverageReport .= "<td colspan=2 bgcolor=\"$color2\">".
+		      "<font face=\"geneva\" >$dir_name</font></td>";
+		  $CoverageReport .= $CoreReport;
+		  $CoverageReport .= $dirContHeader; 
+	      } else { 
+		  $CoverageReport .= "<td bgcolor=\"$color2\">$file_name</td>";
+		  $CoverageReport .= "<td bgcolor=\"$color3\">$func_name</td>";
+		  $CoverageReport .= $CoreReport;
+	      }
+	  } # end of if $read_lines
+	} # end of input stream
+	close(readin);
+	print CovReport "<html><title>OCI Coverage for $mod_dir</title><body><center>".$CoverageReport;
+        print CovReport "</table>\n</center>\n</body>\n</html>\n";
+        close (CovReport);
+
+}
+
+
+
+# returns 0 for undetermined
+# 1 for failed, -1 for passed
+#
+sub testFailed { 
+    local($file) = $_[0];
+    open(readin,$file) || warn ">>> testFailed: could not open $file for reading\n";
+    foreach (<readin>) { 
+	return 1 if (/^FAILED/) ;
+	return -1 if (/^PASSED/) ;
+    }
+    close(readin);
+    # undetermined
+    return 0;
+}
+
+sub fontTestFailed { 
+    local($file) = $_[0];
+    local($font) = "";
+    local($answr) = testFailed($file);
+    if ($answr == 0) { 
+	$font = "<font color=gray>UNDETERMINED</font>";
+    }
+    if ($answr == 1) { 
+	$font = "<font color=red>FAILED</font>";
+    }
+    if ($answr == -1) { 
+	$font = "<font color=green>PASSED</font>";
+    }
+    return $font;
+}
+
+##################################################################
+## SEMAPHORES AREA #
+##################################################################
+sub deleteSemaphore { 
+    local($semid) = semget( $IPC_KEY,  0 , 0 );
+    local($line) = (grep(/^\w+\s+$semid/, `ipcs -s`))[0];
+    local($owner);
+    local($whoami);
+
+    return unless existsSemaphore();
+    chop($whoami = `whoami`);
+    
+    if ( $OS eq "Linux") { 
+	($owner) = (split(/\s+/,$line))[2];        
+    } else { 
+	($owner) = (split(/\s+/,$line))[4];    
+    }
+    if($owner ne $whoami) { 
+	print "Semaphore: nothing I can do about it\n";
+	return;
+    }
+
+    if ( $OS eq "Linux") { 
+	system "ipcrm sem $semid";
+    }
+    if ( $OS eq "HP-UX") { 
+	system "ipcrm -S $IPC_KEY";
+    }
+    if ( $OS eq "SunOS") { 
+	system "ipcrm -S $IPC_KEY";
+    }
+}
+
+sub existsSemaphore { 
+    local($semid) = semget( $IPC_KEY,  0 , 0 );
+    return 0 if !defined($semid);
+    return 1;
+}
+
+sub getSemaphore { 
+    if ( !existsSemaphore() ) {  # semaphore does not exist
+	local($semid) = Semaphor::create($IPC_KEY);
+	print "Created Semaphore key:  $IPC_KEY\n";
+    }
+    
+    print "trying to get green light\n" if $debug ;        
+  Semaphor::take($IPC_KEY);
+    print " using resource\n" if $debug ;    
+}
+
+sub giveSemaphore {     
+    print " giving semaphore\n" if $debug ;    
+  Semaphor::give($IPC_KEY);
+}
+###########################################################################
+
+sub System { 
+    local($cmnd) = $_[0];
+    local($sysMsg) = $_[1];
+    local($sem) = $_[2];
+    local($outFile) = $_[3];
+    local($rc) = 0;
+    local($seconds) = $main::timeoutThreshold;
+    local($elapsedTime,$startTime) = 0;
+    local($prefix,$postfix);
+
+    timestamp();
+    if ( $main::FAKE) { 
+	print "> $sysMsg ".$cmnd."\n" if $debug;
+	# this is left for debugging the timing values
+	$elapsedTime = int(rand()*2000); 
+    } else { 
+	$startTime = time();
+	print "> $sysMsg ".$cmnd."\n" if $debug;
+
+	if ($main::SEMAPHORE && $sem eq "1") { 
+	    $rc = Common::spawnWithTimer($seconds, 
+					 "$prefix $cmnd $postfix",$outFile);
+	} else { 
+	    if ($outFile ne "") { 
+		system "$prefix $cmnd $postfix > $outFile 2>&1";
+	    } else { 
+		system "$prefix $cmnd $postfix";
+	    }
+	    $rc = $?;
+	}
+	$elapsedTime =  time() - $startTime;
+    }
+    $main::ELAPSED = $elapsedTime;
+    return $rc;
+}
+
+sub CLEANUP {
+    print "\n\nCaught Interrupt (^C), Aborting\n";
+    giveSemaphore();
+    Claro::dumpMainReport("INTERRUPTED");
+    exit(1);
+}
+
+sub takeSnapshot { 
+    local( $snapFile)  = $_[0];
+# attemp to dump status of processes from the same user.
+# this is aimed at finding out whether some stray processes
+# were left running. 
+    
+    open(wr, "> $snapFile") || warn ">>> takeSnapshot could not open $snapFile for writing\n";
+    print wr "#" x 20 ."\n";
+    print wr "# This file is a snapshot between STEPS TWO and THREE\n";
+    print wr "# All processes listed here with the exeption of other\n";
+    print wr "# Claro2 instances are hanging, should not be there\n";
+    print wr "# and are possibly interfering with the next testing sequence\n";
+    print wr "#" x 20 ."\n";
+    close(wr);
+    
+    if ($OS eq "Linux") { 
+	system "ps -u ". ( getpwuid($<) ) [0] ." --sort=start_time --format=pid,ppid,lstart,cmd --forest --columns 175 > $snapFile 2>&1";
+	system "echo '' >> $snapFile 2>&1";
+	system "/sbin/lsmod >> $snapFile 2>&1";
+	system "echo '' >> $snapFile 2>&1";
+	system "ps -fu root | grep insmod  >> $snapFile 2>&1";
+	system "echo '' >> $snapFile 2>&1";
+	system "ps -fu root | grep rmmod  >> $snapFile 2>&1";
+
+    } else { 
+	system "ps -u ". ( getpwuid($<) ) [0] ." > $snapFile 2>&1";
+    }
+}
+
+#
+# three arguments
+# receiver, subject, body.
+#
+sub sendEmail {
+    local($rcptto,$subject, $body) = @_;
+    
+    $rcptto =~ s/\n//g;
+    # Send emails
+    open(SENDMAIL, "| /usr/sbin/sendmail -t -n") || warn "Unable to open sendmail
+";
+    print SENDMAIL "From: almasccm\@eso.org\n";
+    print SENDMAIL "To: $rcptto\n";  
+    print SENDMAIL "Subject: $subject\n\n";
+    print SENDMAIL "$body\n";
+    close(SENDMAIL); 
+
+}
+#######################################################################
+package Sinners;
+#######################################################################
+#
+# this subroutine will produce the global hashtables
+# %Sinner, to be used as $Sinners{$module} and
+# %SinnerName, same usage
+#
+sub readList { 
+    local($tableName) = $_[0];
+    if ( ! -f $tableName ) { 
+	warn ">>> Sinners file $tableName not found\n";
+	return;
+    }
+    open(fileRead, $tableName) || warn ">>> readList: could not open $tableName for reading\n";
+    while(<fileRead>) {
+	next if (/^#/);		         #)
+	next if (/^\s*$/);	 
+
+	chop;
+	@tmpArray =  split(/\t+/);
+	($module, $name, $email) = ("","","");
+	if($#tmpArray == 2) { 
+	    ($module, $name, $email) = @tmpArray;
+	    $Sinner{$module}= $email;
+	    $SinnerName{$module} = $name;
+	    next;
+	} 
+	if($#tmpArray == 1) { 
+	    ($module, $email) = @tmpArray;
+	    $Sinner{$module} = $email;
+	    $SinnerName{$module} = "";
+	    next;
+	} 
+	print ">>> Something suspect with Sinners: $_\n";
+    }
+    close(fileRead);
+}
+
+#
+# diagnostic routine for Sinners file
+#
+sub printList { 
+    local($tableName) = $_[0];
+    foreach $module (keys %Sinner) { 
+	print "<$module> <$SinnerName{$module}> <$Sinner{$module}>\n";
+    }
+}
+# this routine must access the sinners list.
+# and then call the sendEmail procedure, depending upon
+# the main switch being turned on or off
+#
+# The sinner table must have been build before.
+# We are assuming that the table is present locally in the
+# same directory where this script resides.
+# This is an awkward solution but potentially better than adding
+# inter-process communication or having to check the table out from
+# CVS/CMM.
+#
+# an additional parameter $type choses between the build (1) and the 
+# test (2) failure notification
+sub notifyFailure { 
+    local($module) = $_[0];
+    local($report) = $_[1];
+    local($type)   = $_[2];
+    local($howlerString) = 
+	"> Howler for: $Sinner{$module},$SinnerName{$module},$module - ".
+	localtime();
+    local($warnAuto) = "#" x 60 . "\n  THIS IS AN AUTOMATED MESSAGE -- DO NOT REPLY \n\n". "#" x 60 ."\n" ;
+    if ($Sinner{$module} ne "") {
+	local($hour, $wday) =  (localtime(time))[2,6];
+	# check if it is weekend
+	if (( $wday == 5 && $hour > 17 )  || ($wday == 6) ||
+	    ( $wday == 7 && $hour < 17 ) ) { 
+	    $howlerString .= " Weekend Notification suppression\n";
+	    print $howlerString." - type $type\n";	    
+	} else { # it's not weekend
+
+	    if($type eq 1 && $Claro::SINNER_NOTIFY) { 
+		main::sendEmail($Sinner{$module}, "Build Failure Notification: $main::project - $module", "$warnAuto Dear $SinnerName{$module},\nyour module $module in project $main::project failed to build properly\nCheck on $Claro::destURL \nto confirm and take remedial action\n".("=" x 20)."\n$report");
+	      } elsif ($type eq 2 && $Claro::SINNER_NOTIFY_TEST) { 
+		  main::sendEmail($Sinner{$module}, "Test Failure Notification: $main::project - $module", "$warnAuto Dear $SinnerName{$module},\nyour module $module in project $main::project failed to TEST properly\nCheck on $Claro::destURL \nto confirm and take remedial action\n".("=" x 20)."\n$report");
+		} else { 
+		    $howlerString .= " UNNOTIFYABLE";
+		}
+	    print $howlerString."- type $type\n";
+	}
+    } else { 
+	$howlerString .= " UNNOTIFYABLE";
+	print $howlerString."\n";
+    }
+}
+
+sub logFailure { 
+    local($module) = $_[0];
+    local($report) = $_[1];
+    local($type)   = $_[2];
+    
+    $FailuresLog{$module}{type} = $type;
+    $FailuresLog{$module}{report} = $report;    
+}
+
+sub fireFailureNotifications { 
+    local($module);
+    warn ">> Sinners::fireFailureNotifications \t(".localtime().")\n";
+    foreach $module (keys %FailuresLog) { 
+	notifyFailure($module, $FailuresLog{$module}{report}, 
+		      $FailuresLog{$module}{type});
+    }
+}
+
+#######################################################################
+package main;
+#######################################################################
+
+
+sub convertFromSeconds { 
+    local($scnds) = $_[0];
+    local($retValue,$min, $hrs, $sec);
+    $hrs = int ($scnds / 3600);
+    $min = (int ($scnds / 60) ) % 60;
+    $retValue = $hrs."h,".$min."m";
+    return $retValue;
+}
+# procedure shall not cause script to die in case of failure
+#
+sub archivePreviousLogs {
+    local($logDir) = "$dirNRI";
+    local($destDir) = "$ENV{HOME}/stats/NRI";
+    local($archiveName) = "NRI-LOGS-$HOST.tar";
+    # failure modes:
+    # dir not there, archive not there
+    # 
+    # identify last one
+    # the $integ is already known at runTime.
+    # the hostname must also be known
+    # check if not already archived
+    # if not archive it.
+    # once archived do not delete, another procedure will do it
+    chop($fileName = `ls -r1t $logDir/Claro2-$integ-*.log | grep -v Claro2-$integ-$$ | tail -2 | head -1 `);
+    chop($fileName = `basename $fileName`);
+    warn ">>> Failed to list $dirNRI/Claro2\n" if $?;
+    $fileName =~ /^Claro2-(\w+)-\d+.log/;
+
+    system "mkdir -p $destDir/$integ";
+    warn ">>> Failed to create $destDir/$integ\n" if $?;
+    system "cp $logDir/$fileName $destDir/$integ/$fileName";
+    warn ">>> Failed to create $destDir/$integ\n" if $?;
+
+    # Note: tar (GNU tar) 1.13.25 does not allow the options
+    # -r and -z together, i.e. you cannot add a file to a gzipped archive
+
+    # we gzip the file first
+    system "gzip $destDir/$integ/$fileName";
+    warn ">>> Failed to gzip $destDir/$integ/$fileName\n" if ($?);
+    # warning: the following redirection of STDERR and STDOUT is apparently
+    # needed by gtar, which won't run otherwise, since this script has closed 
+    # and reopened its own STDERR and OUT.
+    system "cd $destDir; gtar prf $archiveName $integ/$fileName.gz > /dev/null 2>&1";
+    if ($?) { 
+	warn ">>> Failed to tar $fileName\n" if $?; 
+    } else { 
+	print ">> File $fileName archived\n";
+	unlink "$destDir/$integ/$fileName.gz";
+    }
+    
+}
+
+# this procedure is used to update the Purified introot
+# with the new files contained in the normal introot
+# The purpose of this is to be able to continue testing
+# a subsystem even when purifcation of some binary necessary
+# for the testing has failed.
+#
+sub updateIntroot { 
+    local($orig, $dest) = @_;
+    local($command) = "cd $orig; find . -type f ! -path './Sources/*' ";
+    if ( ! -d $orig) { 
+	warn ">>> updateIntroot: $orig not existing\n";
+	return;
+    }
+    if ( ! -d $dest) { 
+	warn ">>> updateIntroot: $dest not existing - creating it\n";
+	System "getTemplateForDirectory INTROOT $dest > /dev/null 2>&1";
+	if ($?) { 
+	    warn ">>> Could not create $dest INTROOT area\n";
+	    warn ">>> Purified execution likely to fail\n";
+	    return;
+	}
+    }
+
+    print ">> updateIntroot; start copying files\n";
+    #> /dev/null 2>&1
+    System "cd  $orig; gtar cf - . | ( cd $dest; gtar xkf -  )";
+    warn ">>> updateIntroot: errors during copy ($?)\n" if $?;
+    print ">> updateIntroot:  copying files completed\n";
+}
+
+
+sub cleanUpIntroot { 
+    local($cmnd);
+    print ">> cleaning up INTROOT\n";
+    $cmnd =  "if [  \"X\$INTROOT\" != \"X\" ]; then rm -fr \$INTROOT/* \$INTROOT.purify ; fi ";
+    #print "$cmnd\n" if $debug;
+    system $cmnd;
+    warn ">>> Failed to $cmnd\n" if $?;
+    
+    $cmnd =  "getTemplateForDirectory INTROOT \$INTROOT > /dev/null 2>&1";
+    print "$cmdn\n" if $debug;
+    system $cmnd;
+    warn ">>> Failed to $cmnd\n" if $?;
+}
+
+################################################################
+# VLTSW procedures #############################################
+################################################################
+# this procedure is used to create INTROOT for VLTSW
+sub CreateIntroot { 
+    local($dest) = @_;
+    if ( ! -d $dest) { 
+	warn ">>> CreateIntroot: $dest not existing - creating it\n";
+	system "getTemplateForDirectory INTROOT $dest > /dev/null 2>&1";
+	if ($?) { 
+	    warn ">>> Could not create $dest INTROOT area\n";
+	    return;
+	}
+    }
+}
+
+# this procedure is used to reset the INTROOT/INS_ROOT for VLTSW
+sub ResetVariableDir { 
+    local($var) = @_;
+    if ($ENV{$var} ne "") { 
+       delete $ENV{$var};
+       print ">> Reset $var\n";
+    }
+
+}
+
+# this procedure is used to reset the PATH  for VLTSW
+sub ResetPath { 
+    
+    print ">> Reset PATH:\n";
+   #Reset PATH 
+    $ENV{PATH}=$OLD_PATH;
+    print ">> PATH = $ENV{PATH}\n";
+
+    #Reset LPATH
+    $ENV{LPATH}=$OLD_LPATH;
+    print ">> LPATH = $ENV{LPATH}\n";
+
+    if ( $OS eq "Linux") { 
+    #Reset LD_LIBRARY_PATH for linux
+       $ENV{LD_LIBRARY_PATH}=$OLD_LD_LIBRARY_PATH;
+       print ">> LD_LIBRARY_PATH = $ENV{LD_LIBRARY_PATH}\n";
+    } 
+    elsif ( $OS eq "HP-UX") { 
+    #Reset SHLIB_PATH for "HP-UX"
+       $ENV{SHLIB_PATH}=$OLD_SHLIB_PATH;
+       print ">> SHLIB_PATH = $ENV{SHLIB_PATH}\n";
+    }
+
+}
+
+# this procedure is used to check if the creation of INTROOT and INS_ROOT
+# is needed for the test purpose, only for VLTSW
+# --> some tests need INTROOT, and other can't work with.... 
+sub IsIntrootToBeCreated { 
+    local($mod_dir) = @_;
+    local(@dirs) = ("INS", "ICB", "OSB", "XXX", "DMD");
+    local($result) = 0;
+#   true  => result 1 
+#   false => result 0 
+    foreach $dir (@dirs) {
+       if ( $mod_dir eq $dir ) {
+          $result = 1;  
+       }
+    }
+    return $result;
+}
+
+sub TestPreparation { 
+
+# Define INTROOT/INSROOT only for the modules in ICB/INS/OSB/XXX ...
+# Variable for test already set in .pecs : 
+# INS_USER needed by ICB/INS/OSB/XXX/CCD and INS_HOST needed by CCD 
+    local($tmpMod) = @_;
+    local($tmpDirBase);
+    chop($tmpDirBase = `dirname $tmpMod`);
+     
+    if ( IsIntrootToBeCreated ($tmpDirBase)) {
+       local($INTROOT)="/introot/".$whoami."/".$tmpDirBase;
+       local($INS_ROOT)="/insroot/".$whoami."/".$tmpDirBase;
+
+       if ($ENV{INTROOT} ne $INTROOT) { 
+       # Create empty INTROOT
+           CreateIntroot ($INTROOT);
+           $ENV{INTROOT}=$INTROOT;
+           print "INTROOT = $ENV{INTROOT}\n";
+    
+       #Create empty INS_ROOT
+           if ( ! -d $INS_ROOT) {
+	      system "mkdir -p $INS_ROOT";
+           }
+	   $ENV{INS_ROOT}=$INS_ROOT;
+           print "INS_ROOT = $ENV{INS_ROOT}\n";
+
+       #Update PATH 
+           $ENV{PATH}=$ENV{INTROOT}."/bin:".$ENV{PATH};
+           print "PATH = $ENV{PATH}\n";
+
+       #Update LPATH
+           $ENV{LPATH}=$ENV{INTROOT}."/lib:".$ENV{LPATH};
+           print "LPATH = $ENV{LPATH}\n";
+
+           if ( $OS eq "Linux" ) { 
+           #Update LD_LIBRARY_PATH for linux
+              $ENV{LD_LIBRARY_PATH}=$ENV{INTROOT}."/lib:".$ENV{LD_LIBRARY_PATH};
+              print "LD_LIBRARY_PATH = $ENV{LD_LIBRARY_PATH}\n";
+           } 
+           elsif ( $OS eq "HP-UX" ) { 
+           #Update SHLIB_PATH for "HP-UX"
+              $ENV{SHLIB_PATH}=$ENV{INTROOT}."/lib:".$ENV{SHLIB_PATH};
+              print "SHLIB_PATH = $ENV{SHLIB_PATH}\n";
+           }
+
+           #Add MODROOT  ---done in tat...
+           #	    $Command4 = "$ENV{VLTROOT}/bin/vltSetmod.csh > /dev/null 2>&1";
+           #	 system $Command4;
+           #	 print ">>> $Command4 failed\n" if ($?);
+
+        } # end case same DirBase
+
+    } else {
+       
+       ResetVariableDir("INTROOT");
+       ResetVariableDir("INS_ROOT");
+       ResetPath();
+
+    }  # end case INTROOT/INSROOT check
+
+}
+
+sub environmentsCleanup { 
+    local(@LCUS, $lcu);
+    # NRI users :
+    local(@NRI_users) = ("vltuser7", "vltuser8","vltuser9"); #-- temporary solution....
+    
+    return if ($main::FAKE);
+    if($ENV{LCUROOT} ne "") { 
+	@LCUS = `cd $ENV{LCUROOT}; find . -type f`;
+	for($i = 0; $i <= $#LCUS; $i++) { 
+	    $LCUS[$i] =~ s/^\.\///;
+	    $LCUS[$i] =~ s/\n$//;
+	}
+    }
+    
+    system "find /tmp -user $whoami -name \\*$HOST\\* -type p -exec rm -f {} \\;";
+    system "find /tmp -user $whoami -name \\*$HOST\\*.lock -type f -exec rm -f {} \\;";
+       
+    if($ENV{VLTDATA} ne "") { 
+       foreach $user (@NRI_users) {
+          
+     	  system "find $ENV{VLTDATA}/ENVIRONMENTS -user $user -name \\*$HOST\\* -type d -exec rm -rf {} \\;";	  
+     	  foreach $lcu (@LCUS) { 
+	     system "find $ENV{VLTDATA}/ENVIRONMENTS -user $user -name $lcu -type d -exec rm -rf {} \\;";
+     	  }
+       }
+    }
+    if($ENV{LCUROOT} ne "") { 
+       foreach $user (@NRI_users) {
+	   
+	  system "find $ENV{LCUROOT} -user $user -name LOCK.\\* -type f -exec rm -rf {} \\;";
+       }
+    }
+
+}
+
+
+sub shrinkPNGImage { 
+    local($pngFile) = $_[0];
+    local($baseDir);
+    local($suffix) = int(rand()*2000) * ($$);
+    if ( ! -f $pngFile) { 
+	warn ">>> shrinkPNGImage: $pngFile not found\n";
+	return;
+    }
+    $baseDir = `basedir $pngFile`;
+    system "pngtopnm $pngFile > $pngFile.pnm.$suffix 2> /dev/null";
+    print ">>> pngtopnm $pngFile > $pngFile.pnm.$suffix  failed\n" if ($?);
+    system "pnmcrop $pngFile.pnm.$suffix | pnmtopng > $pngFile 2> /dev/null";
+    print ">>> pnmcrop on $pngFile.pnm.$suffix failed\n" if ($?);
+    system "rm -f $pngFile.pnm.$suffix";
+}
+
+
+package vmstat;
+
+sub start { 
+    local($file) = $_[0];
+    local($step) = $_[1];
+    $VMfile = $file;
+    $VMstep = $step;
+    if($main::OS eq "Linux") { 
+	$vmstat = "vmstat -n 10 2000";
+        $vmretrieve =  "awk '{procsr+=\$1;us+=\$13; sy+=\$14; wa+=\$15 ;id += \$16}END{printf(\"\%.1f \%.1f \%.1f \%.1f \%.1f\\n \",procsr/NR, us/NR, sy/NR, wa/NR, id/NR)}' ";
+	$VMHeader = "<tr align=right><th>procs<th>cs<th>us<th>sy<th>id</tr>";
+    }
+    if($main::OS eq "HP-UX") { 
+	$vmstat = "vmstat 10 2000";
+        $vmretrieve =  "awk '{procsr+=\$1;us+=\$15; sy+=\$16; wa+=\$17 ;id += \$18}END{printf(\"\%.1f \%.1f \%.1f \%.1f \%.1f\\n \",procsr/NR, us/NR, sy/NR, wa/NR, id/NR)}' ";
+	$VMHeader = "<tr align=right><th>procs<th>cs<th>us<th>sy<th>id</tr>";
+    }
+    if($main::OS eq "SunOS") { 
+	$vmstat = "vmstat 10 2000";
+        $vmretrieve =  "awk '{procsr+=\$1;us+=\$19; sy+=\$20; wa+=\$21 ;id += \$22}END{printf(\"\%.1f \%.1f \%.1f \%.1f \%.1f\\n \",procsr/NR, us/NR, sy/NR, wa/NR, id/NR)}' ";
+	$VMHeader = "<tr align=right><th>procs<th>cs<th>us<th>sy<th>id</tr>";
+    }
+    system "$vmstat > $VMfile 2>&1 &";
+    chop($VMStatPID = `ps -u $main::whoami -e -o pid,ppid,cmd | awk '{if(\$3 == "vmstat") print \$1}'`);
+    print ">> VMSTAT PID is $VMStatPID for step $VMstep\n";
+}
+
+sub stop { 
+    local($summary);
+    system "kill -HUP $VMStatPID";
+    if ( $?) { 
+	warn ">>> Could not kill SIGHUP the VMSTAT process\n";
+    }
+    open(tmpFD, "$vmretrieve $VMfile |") || warn ">>> Could not open $command\n";
+    $summary = <tmpFD>;
+    close(tmpFD);
+    $summary{$VMstep} =  $summary;
+    unlink $VMfile || warn ">>> Could not delete $VMfile\n";
+}
+
+sub getSummary { 
+    local($step) = $_[0];
+    if (defined $summary{$step}) { 
+	local($result) = $summary{$step};
+	$result =~ s/\s+$//;
+	$result =~ s/\s+/<td>/g;
+	$result = "<table>$VMHeader<tr><td>$result</tr></table>";
+	return $result;
+    } else { 
+	return "UNDEFINED";
+    }
+}
+
+sub getHTMLSummary { 
+    local($content) = "<h2>VMSTAT SUMMARY</h2><table>\n";
+    $content .="<tr><td>1</td><td>".vmstat::getSummary(1)."</td></tr>\n";
+    $content .="<tr><td>2</td><td>".vmstat::getSummary(2)."</td></tr>\n";
+    $content .="<tr><td>2,5</td><td>".vmstat::getSummary("2,5")."</td></tr>\n";
+    $content .="<tr><td>3</td><td>".vmstat::getSummary(3)."</td></tr>\n";
+    $content .="<tr><td>4</td><td>".vmstat::getSummary(4)."</td></tr>\n";
+    $content .="</table>\n";
+    return $content;
+}
+
+########################################################################
+#### Package CLARO  ####################################################
+########################################################################
+package Claro;
+
+use Socket;
+
+$stepOneTime     = 0;
+$stepTwoTime     = 0;
+$pureSCIOutput   = "PURIFY-SCI-OUTPUT";
+$pureOCIOutput   = "PURIFY-OCI-OUTPUT";
+$normBuildOutput = "NORM-BUILD-OUTPUT";
+$coveOCIReport   = "CoverageReport.OCI";
+$coveStep4Report   = "CoverageReport"; # this is tied to the acsMakefile
+
+$coveDetailReport = "DetailedCoverageReport.html";
+
+$coveOCISummary  = "CoverageReportSummaryOCI.html";
+$memOCISummary   = "MemoryReportSummaryOCI.html";
+$VGReport        = "ValgrindReport.html";
+$generalPurecovExclusionList = 
+"exclude $ENV{VLTROOT}/*\n" .
+"exclude $ENV{ACSROOT}/*\n" .
+"exclude /diskb/alma_tmp/ACS/ExtProd/PRODUCTS/*\n" .
+"exclude /tmp/*\n";
+"exclude /vlt/gnu/share/*\n".
+"exclude /diska/vlt_tmp/$ENV{VLTSW_RELEASE}-tools/PRODUCTS/*\n".
+"exclude /diska/vlt/$ENV{VLTSW_RELEASE}/gnu/*\n".
+"exclude /usr/include/bits/*\n" .
+"exclude /usr/include/*\n" .
+"exclude /usr/include/sys/*\n";
+
+$pkginLogFile = "pkginBuild.log";
+$pkginErrFile = "pkginBuild.err";
+$dirNRI = "/tmp/NRI/";
+$tatSignature = "TestList.lite";
+$UFReportName = "UnusedFilesReport.html";
+$noRobots = "<META NAME=\"ROBOTS\" CONTENT=\"NOINDEX, NOFOLLOW\">\n";
+$TAT = "tat -nc -v";
+
+# Determine number of Modules subdirectories to be builded/tested
+sub determineModulesNb { 
+   local(@modules) = @_;
+   local($numModules) = 0;
+   
+   foreach $tmpMod (@modules) { 
+      foreach $platform (@platforms) {
+	 local($tmpDir) = "$tmpMod/$platform";
+	 ###########################
+	 $tmpDir =~ s/\/\.$//;
+	 
+	 #print "tmpDir = $tmpDir \n";
+	 
+	 next if ( ! -d $tmpDir || 
+	 	   ( -d $tmpDir && -d "$tmpDir/ws") );
+         $numModules ++;
+         
+      }
+   }
+   return $numModules;
+
+}
+
+
+# initializing some of Claro's internal variables
+sub initialize { 
+    ($project, $integ, $basecamp, $base_dest, 
+     $release, $notify, $notifyTest, $extractionEnd, $timeoutThreshold, 
+     $build, $test, $instrument, $valgrind, $remoteHost, 
+     $excludees, $endurance , $feedback, $debug) = @_;
+    
+    # force debug to one
+    $Claro::debug = 1;
+    $tcDir = "TestCoverage-$main::OS";
+    $destURL = "http://$Common::webhost/$main::webDest/$tcDir";
+
+    if ($release eq "" || $release eq "HEAD") { 
+	$ProjectReport = "$integ-Reports";
+    } else { 
+	$ProjectReport = "$integ-$release-Reports";
+    }
+    $destURL = "http://$Common::webhost/$main::webDest/$ProjectReport/$tcDir";
+    if ( $notify eq "on") { 
+	$SINNER_NOTIFY = 1;
+    } else { 
+	$SINNER_NOTIFY = 0;
+    }
+    if ( $notifyTest eq "on") { 
+	$SINNER_NOTIFY_TEST = 1;
+    } else { 
+	$SINNER_NOTIFY_TEST = 0;
+    }
+    if ( $test eq "on") { 
+	$NOTEST = 0;
+    } else { 
+	$NOTEST = 1;
+    }
+    if ( $build eq "on") { 
+	$NOBUILD = 0;
+    } else { 
+	$NOBUILD = 1;
+    }
+
+# preparing the necessary directories if missing
+    if ( ! -d "$dirNRI" ) { 
+	system "mkdir $dirNRI";
+	system "chmod g+w $dirNRI";
+    } else { 
+	if ( ! -w "$dirNRI") { 
+	    die "Could not use existing $dirNRI\n";
+	}
+    }
+
+    main::executeOrDie("rm -fr  $ProjectReport");
+    main::executeOrDie("mkdir -p $ProjectReport/$tcDir");
+
+    if ( Common::isPkgin($integ)) { 
+	local($setTestEnv) = "$integ/test/$integ"."SetTestEnv";
+	print "This is CMM\n" if $debug;
+	$CVS = 0;
+	# here we could put the sourcing of the environment 
+	# specifics to the pkgin subsystem at hand
+	if ( -f $setTestEnv ) { 
+	    local(@tmpLines);
+	    open(tmpFD,$setTestEnv );
+	    @tmpLines = <tmpFD>;
+	    close(tmpFD);
+	    foreach $line ( grep(/^export/,@tmpLines)) { 
+		if($line =~ /export\s(\w+)*\s*=\s*(\w+)/) { 
+		    $ENV{$1} = $2;
+		} else { 
+		    warn ">>> mismatched line $line in $setTestEnv\n";
+		}
+	    }
+	} else { 
+	    warn ">>> warning no $integ/test/$integ"."SetTestEnv for sourcing could be found\n";
+	}
+
+    } else { 
+	print "This is CVS\n" if $debug;
+	$CVS = 1;
+    }
+    @tmpArray = Common::determineModulesFull($integ,1);
+    $numArchModules = $#tmpArray +1;
+# ugly workaround until the platforms are specified in the XML 
+# config file.
+    if ( $project =~ /ALMA/ && $main::OS ne "SunOS") {
+	@platforms = (".", "ws");
+    } else { 
+	@platforms = (".", "ws", "lcu");
+    }
+    
+    $numModules = determineModulesNb(@tmpArray) ;
+    
+    
+    # this part here is because of the different linking ways in the 
+    # respective project Makefiles (vltMakefile, acsMakefile)
+    # the value of this directory indicates where the EXECUTABLES and
+    # LIBRARIES shall be deleted and rebuilt using Purify OCI
+    if ( $project eq "ALMA") { 
+	$pureProjSpec = "test";
+    } else { 
+	$pureProjSpec = "src";
+    }
+
+    $sinnerFile .= "$dirNRI/Sinners.$project";
+    Sinners::readList($sinnerFile);
+
+    # REMOVE ME
+    $main::tcDir = $tcDir;
+    $logfile = "$dirNRI/Claro$$";
+    $BuildRep    = "Claro-$main::OS.html";
+    $buildReport = "$dirNRI/$integ-$$";
+    $OPTIONS = main::PurifyOptions();
+
+    system "find /tmp -user $whoami -name make.log.\\* -exec rm -f {} \\;";
+    system main::remoteCall($Common::webhost,$Common::username, "'if [ ! -d $base_dest$ProjectReport ]; then mkdir -p $base_dest$ProjectReport ; fi'");
+
+    print "Claro2 $main::rcsId called with:\n\tproject $project\n\tsubsystem $integ\n\tbasecamp: $basecamp\n\tdestination: $base_dest\n\trelease: $release\n\tbuild: $build\n\ttest: $test\n\tinstrument: $instrument\n\tvalgrind: $valgrind\n\tnotify: $notify\n\tnotify test: $notifyTest\n\tremote host: $remoteHost\n\texcludees: $excludees\n\textractionEnd: $extractionEnd\n\ttimeoutThreshold: $main::timeoutThreshold\n\tEndurance: $endurance\n\tfeedback: $feedback\n";
+    print "Derived settings:\n\tPID:$$\n\tOS: $main::OS\n\thostname: $main::HOST\n\tuser: $main::whoami\n\tINTROOT: $ENV{INTROOT}\n\tReports: $ProjectReport\n\tPurify OCI: ".($main::purifyOCIAvailable?"AVAILABLE":"UNAVAILABLE")."\n\tPurify SCI: ".($main::purifySCIAvailable?"AVAILABLE":"UNAVAILABLE")."\n\tValgrind: ".($main::valgrindAvailable?"AVAILABLE":"UNAVAILABLE")."\n\tSinners Table: $sinnerFile\n\tDestination:$destURL\n";
+    print "\tACTING ON $numModules MODULES ##### \n";
+    
+#### computing ratio of sinners
+    $numRespModules = 0;
+    foreach $tmpMod (Common::determineModulesFull($integ,1) ) { 
+	if ( $Sinners::Sinner{$tmpMod} ne "" ) { 
+	    $numRespModules++;
+	}
+    }
+    $environmentFile = "Claro2-$integ-Environment";
+    environmentDump();
+}
+
+
+## examples
+#  storeResult($?,$tmpDir,src,n);
+#  storeResult($?,$tmpDir,test,n);
+#  storeResult($rc,$tmpDir,test,test);
+#  storeResult($?,$tmpDir,src,p);
+#  storeResult($?,$tmpDir,src,p);
+#  storeResult($?,$tmpDir,test,p);
+#  storeResult($rc,$tmpDir,test,tp);
+#
+sub storeResult { 
+    local($rc,$mod, $dir, $type) = @_;
+    $Results{$mod}{$dir}{$type} = $rc;
+}
+
+sub storeElapsedTime { 
+    local($tmpDir, $phase) = @_;
+    $ELAPSED{$tmpDir}{$phase} = $main::ELAPSED;
+}
+
+sub testTimingSummary { 
+    local($step) = $_[0];
+    local($type) = $_[1]; # 0 = CSV  , enything else = HTML
+    local($content,$tmpDir) = "";
+    local($sum) = 0;
+
+    foreach $tmpDir (sort { $ELAPSED{$b}{$step}  <=> 
+				$ELAPSED{$a}{$step}  } 
+		     keys %ELAPSED) { 
+	if ( defined $ELAPSED{$tmpDir}{$step}) { 
+	    $sum += $ELAPSED{$tmpDir}{$step};
+	} 
+    }
+    # warrant agains zero sum
+    $sum = 1 if ($sum == 0);
+
+    if ( $type) { 
+	$content .= "<h2>TIMING SUMMARY<br>FOR STEP $step</h2>\n";
+	$content .= "<table>\n";
+	$content .= "<tr><th>module</th><th>seconds</th><th>perc</th></tr>\n";
+    }
+    foreach $tmpDir (sort { $ELAPSED{$b}{$step}  <=> 
+				$ELAPSED{$a}{$step}  } 
+		     keys %ELAPSED) { 
+	local($perc) = 0.0;
+	$content .= "<tr><td>$tmpDir<td>" if ($type);
+	if ( defined $ELAPSED{$tmpDir}{$step}) { 
+	    $perc = sprintf("%2.1f",($ELAPSED{$tmpDir}{$step}/$sum)*100);
+	    if ( $type) { 
+		$content .= "$ELAPSED{$tmpDir}{$step}</td>\n";
+		$content .= "<td>$perc</td>";
+	    } else { 
+		$content .= "$tmpDir $ELAPSED{$tmpDir}{$step}\n";
+	    }
+	} # if the value is zero we just do not put it in the log
+	$content .= "</tr>" if ($type);
+    }
+    if ($type) { 
+	$content .= "<tr><td><font color=red>TOTAL:</font><td>$sum<td></tr>\n";
+	$content .= "</table>\n" ;
+    }
+    return $content;
+}
+
+
+# merely a rewriting rule
+sub System { 
+    &main::System(@_);
+}
+
+sub assessEndurance { 
+    local($dir) = $_[0];
+    local(@timeoutArray);
+    if ($main::ENDURANCE eq "NULL") { 
+	# there's no intention to run endurance tests for this instance
+	return 0;
+    } else { 
+	@timeoutArray = 
+	    Common::getFromMakefile("ENDURANCE_TEST_TIMEOUT","$dir/Makefile");
+	#print "From Makefile: ".$#timeoutArray." ENDURANCE ".$main::ENDURANCE." Local timeout ".$timeoutArray[0]."\n";
+	
+	if ( main::isTargetAvailable("endurance-test","$dir/Makefile") && 
+	     $#timeoutArray != -1 && 
+	     $main::ENDURANCE >= $timeoutArray[0] ) { 
+	    # intention there, preconditions there, return 1
+	    return 1;
+	} else { 
+	    # intention there, precondition missing, return 2
+	    return 2;
+	}
+    }
+}
+
+
+sub runSubsystemOCIMemoryReport { 
+    local($detailedView) = 0;
+    local($leaked, $file, $type, $binary, $faultFile, $faultLine, $culpritFound);
+    local(%Lines, %Leaked, $vio);
+
+    local(@listOfFiles);
+
+    
+    foreach $tmpMod (Common::determineModulesFull($integ,1) ) { 
+	@listOfFiles = (@listOfFiles, `find $tmpMod -name MemoryReport -type f ! -path './*-Reports/*'`);
+    }
+
+    open(report, "> $ProjectReport/$tcDir/$memOCISummary") || warn ">>> runSubsystemOCIMemoryReport: could not open $ProjectReport/$tcDir/$memOCISummary for writing\n";
+    
+    print report "<html>\n";
+    print report $main::body;
+    print report "<center><h1>NRI Purify Report for $integ</h1><br><h2>".`uname -a`."</h2>".`date`."</center>\n";
+    
+    print report "<a href=\"#summary\">Summary View</a>\n";
+    if ( $detailedView) { 
+	print report "<table width=80%>\n";
+	print report "<tr><th>Binary<th>Type<th>Line<th>File</tr>\n";
+    }
+    
+    foreach $file (@listOfFiles) { 
+	$type = "";
+	chop($file);
+	open(tmpFD, $file) || warn "Could not open $file\n";
+	while(<tmpFD>) { 
+	    #print;
+	    if ( /^\*\*\*\*  Purify\/PureCoverage instrumented\s(\S*)/) { 
+		$binary = $1;
+		$binary =~ s/^.*\///;
+	    }
+	    if ( /^([A-Z]{3}):/) { 
+		$type = $1;
+		$culpritFound  = 0;
+		if ( $type eq "MLK") { 
+		    /:(.*)$/;
+		    $leaked = $1;
+		}
+	    }
+	    if ( /^\t.*malloc/) { 
+		#warn "skipping malloc\n";
+		next;
+	    }
+	    if ( /^\t.*rtlib\.o/) { 
+		#warn "skipping rtlib.o\n";
+		next;
+	    }
+	    if ( /^\t[^\[]*\[([^\]]*)\]/ ) { 
+		$faultAddress = $1;
+	    if ( $faultAddress =~ /:/) { 
+		next if ($culpritFound);
+		($faultFile, $faultLine) = split(/:/,$faultAddress);
+		#print "$type\t$faultFile\t$faultLine\t$binary\n";
+		print report 
+		    "<tr><td>$binary<td>$type<td>$faultLine<td>$faultFile</tr>" if ($detailedView);
+		$faultFile =~ s/$basecamp//;
+		
+		$culpritFound = 1;
+		$Counter{$faultFile}{$type}++;
+		$Lines{$faultFile}{$type}{$faultLine} = $binary;
+		$Leaked{$faultFile}{$type}{$faultLine} = $leaked;
+	    }
+	    }
+	}
+	close(tmpFD);
+    }
+    
+    print report "</table><p><hr>\n" if ($detailedView);
+    
+    print report "<a name=\"summary\"><center><h2>Summary View<h2></center></a>\n";
+    print report "<br><table width=80%>\n";
+    
+    foreach $file (keys %Counter) { 
+	local($leaked) = 0;
+	print report "<tr valign=top>\n";
+	#########
+	print report "<td><table>\n";
+	foreach $vio (keys %{ $Counter{$file}}) { 
+	    local(@tmpArray) = (keys %{ $Lines{$file}{$vio} } ) ;
+	    $leaked = 1 if ($vio eq "MLK");
+	    print report "<tr valign=top><td>$vio</td><td>$Counter{$file}{$vio}/".
+		($#tmpArray +1 )."</td>";
+	    #########
+	    print report "<td><table >\n";
+	    
+	    foreach $line (@tmpArray ) { 
+		print report "<tr><td align=left>$line</td><td align=left>$Lines{$file}{$vio}{$line}</td></tr>\n";
+	    }
+	    print report "</table></td>\n";
+	    #########
+	
+	    print report "</td></tr>\n";
+	}
+	print report "</table><td>\n";
+	#########
+	if( $leaked) { 
+	    print report "<td><b>$file</b></td>\n";
+	} else { 
+	    print report "<td>$file</td>\n";
+	}
+	print report "</tr>\n";
+    }
+    print report "</table>\n";
+    print report "</body>\n";
+    print report "</html>\n";
+    close(report);
+    Common::publishReport("$ProjectReport/$tcDir/$memOCISummary");
+}
+
+sub environmentDump { 
+    print "=" x 30 ."\n";
+    print "=== START ENVIRONMENT DUMP ===" ."\n";
+    print "=" x 30 ."\n";
+    $environment=  `env | sort`;
+    print $environment;
+    print "=" x 28 ."\n";
+    print "=== END ENVIRONMENT DUMP ===" ."\n";
+    print "=" x 28 ."\n";
+# saving the environment to a file
+    open(envFD,"> $ProjectReport/$tcDir/$environmentFile") || warn ">>> environmentDump: Could not open $environmentFile for writing\n";
+    print envFD $environment;
+    close(envFD);
+}
+
+sub writeExclusionListForPurecov { 
+    local($tmpMod) = $_[0];
+    local($file)   = $_[1];
+    local($excludeList,$tmp2Mod,$platform);
+ 
+    $excludeList = $generalPurecovExclusionList;
+    # notice: it is assumed that adding many exclusion clauses 
+    # will NOT decrease purecov performance
+    foreach $tmp2Mod (Common::determineModulesFull($integ,1) ) { 
+	next if ($tmp2Mod eq $tmpMod);
+	foreach $platform (@platforms) {
+	    local($tmpBase);
+	    if ($platform eq ".") { 
+		$tmpBase = "$basecamp/$tmp2Mod";
+	    } else {
+		$tmpBase = "$basecamp/$tmp2Mod/$platform";
+	    }
+	    if ( -d "$tmpBase/src") { 
+		$excludeList .= "exclude $tmpBase/src/*\n";
+	    } 
+	    if ( -d "$tmpBase/include") { 
+		$excludeList .= "exclude $tmpBase/include/*\n";
+	    } 
+	}
+    }
+    open(tmpFD,"> $file") || warn ">>> Could not open $file for writing\n";
+    print tmpFD "exclude $ENV{INTROOT}/*\n";
+    print tmpFD $excludeList;
+    close(tmpFD);
+}
+
+#######################################################################
+########### ALEA JACTA EST, WE CAN MAKE THE FINAL SUMMARY REPORT ######
+#######################################################################
+# this procedure writes the index.html with the complete report
+# about build, test and purification failures
+# Fundamental hash tables are:
+#
+# $Results{$tmpDir}{src}{p}      src  dir, purified result (compilation)
+# $Results{$tmpDir}{test}{test}  test dir, normal   result (test execution)
+# $Results{$tmpDir}{test}{tp}    test dir, purified result (test execution)
+# $TestReport{$tmpDir}          FAILED, PASSED, UNDETERMINED
+# $PurifyReporting{$tmpDir}     return code from make pureCoverage command
+# $PurifyCompiling{$tmpDir}     output file from purified compilation
+
+sub dumpMainReport { 
+    local($status) = $_[0];
+    local($coverageContent) = "";
+    local($dataCarrier);
+    local($graphData1, $graphData2, $graphData3,$graphData4, 
+	  $pieFile1, $pieFile2,$pieFile3,$pieFile4);
+    local($pieCommand1,$pieCommand2, $pieCommand3,$pieCommand4);
+    local($pieCommonA,$pieCommonB);
+    local($pieText) = "";
+    local($type, %Summ); # summary hashtable
+    local($LDResetCommand);
+    # turn the following off to avoid pie charts generation
+    local($havePie) = 1;
+    print "> dumpMainReport ($status)\n";
+    $LDResetCommand = "export LD_LIBRARY_PATH=\${LD_LIBRARY_PATH}:~/lib";
+    $graphData1 = "$dirNRI/ModulesResult$$.dat";
+    $pieFile1 =  "ModulesResult";
+    $graphData2 = "$dirNRI/TestAvailability$$.dat";
+    $pieFile2 = "TestAvailability";
+    $graphData3 = "TestTiming.csv";
+    $pieFile3 = "TestTiming";
+    $graphData4 = "PurifiedTestTiming.csv";
+    $pieFile4 = "PurifiedTestTiming";
+    
+    $pieCommonA = "$LDResetCommand; ~/bin/piechart -T png -r0.5 -d0.05 -n 0.08 -B 350x350 ";
+
+    $pieCommand1 = "$pieCommonA -C magenta,red3,orange,yellow,green3 -t 'Test Results' -p 'Passed' -fr< $graphData1  > /tmp/$pieFile1.png 2> /dev/null";
+    $pieCommand2 = "$pieCommonA -C red3,green3 -t 'Test Availability' -p 'Available' -fr < $graphData2 > /tmp/$pieFile2.png 2> /dev/null";
+
+    $Summ = \%Common::Summ;
+
+    foreach $type (keys %$Summ) { 
+	$$Summ{$type}{res} = 0;
+    }
+    $feedbackDataCarrier = "";
+
+    foreach $tmpMod (Common::determineModulesFull($integ,1) ) { 
+	local($tmpDirBase,$responsible);
+	chop($tmpDirBase = `dirname $tmpMod`);
+	$responsible = $Sinners::Sinner{$tmpMod};
+	$responsible =~ s/\@.*$//;
+	foreach $platform (@platforms) {
+	    local($tmpDir) = "$tmpMod/$platform";
+	    local($summary,$square,$label,$dir,$tmpTxt,
+		  $testCell,$pureCell,$valgrindCell, $tmpCovOCICoord);
+
+	    $tmpCovOCICoord = "$tmpDir/test/.purifydir/$coveOCIReport";
+	    $testCell = ""; $pureCell = "";
+	    ###########################
+	    $tmpDir =~ s/\/\.$//;
+	    next if ( ! -d $tmpDir || 
+		      ( -d $tmpDir && -d "$tmpDir/ws") );
+	    system "mkdir -p $ProjectReport/$tcDir/$tmpDir";
+	    if ($?) { 
+		warn ">>> could not mkdir $ProjectReport/$tcDir/$tmpDir\n";
+	    }
+	    $tmpTxt = $tmpDir;
+	    $tmpTxt =~ s/$tmpDirBase\///;
+	    # FIRST COLUMN
+	    if ($CVS) {
+	       $coverageContent .= 
+		  "<tr valign=top>\n<td><b>$tmpTxt</b><br>($tmpDirBase)<br>$responsible</td>\n";
+	    }
+	    else {
+	       local($version) = "0.0";
+	    
+	       if ( -f "$tmpDir/src/Makefile" ) { 
+                     local($line) = (grep(/Makefile,v/, `ident $tmpDir/src/Makefile`))[0];
+	             ($version) = (split(/\s+/,$line))[3];                    
+	       }
+
+	       $coverageContent .= 
+	 	   "<tr valign=top>\n<td><b>$tmpTxt</b><br>v $version<br>($tmpDirBase)<br>$responsible</td>\n";
+	    }
+	    
+	    # SECOND COLUMN
+	    ## Compilation Results BOX ####
+	    $square = "<table><tr><th></th>\n";
+	    foreach $label ("n", "p") { 
+		$square .= "<th>$label</th>";
+	    }
+	    $square .= "</tr>\n";
+	    foreach $dir ("src","test") {
+		$square .= "<tr><td>$dir</td>";
+		foreach $label ("n", "p") { 
+		    if ( defined($Results{$tmpDir}{$dir}{$label})) { 
+			if ( $Results{$tmpDir}{$dir}{$label} == 0) { 
+			   $square .= "<td><font color=\"green\">B</font></td>";
+			} else { 
+			   $square .= "<td><font color=\"red\">F</font></td>";
+			   # here we count
+			   $$Summ{buildfailed}{res}++  if ( $label eq "n" 
+						&& $dir eq "src");
+			   $$Summ{purifyfailed}{res}++ if ( $label eq "p" 
+						 && $dir eq "src");
+			}
+		    } else { 
+			$square .= "<td><font color=\"gray\">?</font></td>";
+		    }
+		}
+		$square .= "</tr>";
+	    }
+	    $square .= "<tr><td><b><i>test</i></b></td>";
+	    ##
+	    foreach $label ("test", "tp") { 
+		if ( defined($Results{$tmpDir}{test}{$label})) { 
+		    if ( $Results{$tmpDir}{test}{$label} == 0) { 
+			$square .= "<td><font color=\"green\">X</font></td>";
+		    } else { 
+			if ( $Results{$tmpDir}{test}{$label} == -666) { 
+			    $square .= "<td><font style=bold color=\"red\">T</font></td>";
+			    # we count the timeouts only for non purified tests
+			    $$Summ{testtimeout}{res}++ unless ($label eq "tp");
+			} else { 
+			    $square .= "<td><font color=\"red\">X</font></td>";
+			}
+		    }
+		} else {
+		    $square .= "<td><font color=\"gray\">?</font></td>";
+		}
+	    }
+	    
+	    $square .= "</tr>";
+	    $square .= "</table>\n";
+	    ##
+	    
+	    # NOTICE: these error codes must match the various
+	    # vltMakefile acsMakefile and such.
+	    $msgTxt = "";
+	    if ( $PurifyReporting{$tmpDir} == 1) { 
+		$msgTxt = "No <tt>atlout.spt</tt>.<br>This test is probably <b>empty</b><br>";
+	    }
+	    if ( $PurifyReporting{$tmpDir} == 2) { 
+		$msgTxt = "No <tt>attolcov.tio</tt>.";
+	    }
+	    if ( $PurifyReporting{$tmpDir} == 3) { 
+		$msgTxt = "Some files were rejected.";
+	    }
+	    if ( $PurifyReporting{$tmpDir} == 4) { 
+		$msgTxt = "Empty atlout.spt. <br><h3>SECONDARY SCI PURIFY FAILURE</h3>";
+		$$Summ{purifyfailed}{res}++;
+	    }
+	    # counting the beans...
+	    if( $TestReport{$tmpDir} =~ /FAILED/ ) { 
+		$$Summ{testfailed}{res}++;
+	    } else { 
+		if( $TestReport{$tmpDir} =~ /PASSED/) { 
+		    $$Summ{testpassed}{res}++;
+		} else { 
+		    if( $TestReport{$tmpDir} =~ /UNDETERMINED/) { 
+			$$Summ{testundetermined}{res}++;
+		    }
+		}
+	    }
+	    # SECOND COLUMN
+	    $coverageContent .= "<td align\"center\">";
+	    if ( $Results{$tmpDir}{src}{"n"} != 0 )  { 
+		$coverageContent .= 
+		    "<h3><a href=\"$tmpDir/$normBuildOutput\">BUILD FAILURE</a></h3>";
+	    }
+	    $coverageContent .= "$square</td>\n";
+	    # THIRD COLUMN
+	    if ( ! -d "$tmpDir/test" ) { 
+		$testCell = "<b>No test directory,<br>nothing to do here</b>";
+		$$Summ{notestdir}{res}++;
+	    } else { 
+		if ( ! -f "$tmpDir/test/Makefile" ) { 
+		    $testCell = "<b>No Makefile found,<br>nothing to do here</b>";  
+		    $$Summ{nomakefile}{res}++;
+		} else { 
+		    $testCell = "<b>".$TestReport{$tmpDir}."</b>";
+		}
+	    }
+	    ###
+
+	    # FOR STEP FOUR
+	    if ( defined($Results{$tmpDir}{src}{p}) && 
+			 ( $Results{$tmpDir}{src}{"p"} == 0 ) ) { 
+		if ( -f "$tmpDir/test/$coveStep4Report"  ) { 
+		    System "cp $tmpDir/test/$coveStep4Report $ProjectReport/$tcDir/$tmpDir";
+		    # the following method should be made OS independent
+		    $summary = main::extractSummaryFromCoverageReport("$tmpDir/test/$coveStep4Report");
+		    # Purify's Report Box #####
+		    $pureCell .= "<h5><pre>\n".$summary."</pre></h5>\n";
+		    if ( $main::purifySCIAvailable ) { 
+			$pureCell .=  "<p><a href=\"$tmpDir/$coveStep4Report\">Detailed Report</a><p>$msgTxt\n";
+		    } elsif ( $main::purifyOCIAvailable ) { 
+			main::writeHTMLFromCoverageReport ("$tmpDir/test/$coveStep4Report","$ProjectReport/$tcDir/$tmpDir/$coveDetailReport", $tmpDir);
+			  $pureCell .=  "<p><a href=\"$tmpDir/$coveDetailReport\">Detailed Report</a><p>$msgTxt\n";
+		      }
+		    ###
+		} else { 
+		    # no file TestCoverage
+		    $pureCell .= "ERROR: No coverage info available<br>";
+		    $pureCell .= "$msgTxt\n";
+		}
+		if ( -f "$tmpDir/test/MemoryReport"  ) { 
+		    $pureCell .=  "<br><a href=\"$tmpDir/test/MemoryReport\">Memory Report</a> (".main::extractOCIViolationsFromMemoryReport("$tmpDir/test/MemoryReport").")";
+		}
+	    } else {  # result from purification defined but not zero
+		if ( defined($Results{$tmpDir}{src}{p} ) ) { 
+		    # <td align\"center\">
+		    $pureCell .= 
+			"<h3><a href=\"$tmpDir/$pureSCIOutput\">PURIFY FAILURE</a></h3>";
+		}
+	    }
+	    # FOR STEP TWO AND HALF
+
+	    if ( defined($Results{$tmpDir}{$pureProjSpec}{po}) ) { 
+		if ( $Results{$tmpDir}{$pureProjSpec}{"po"} == 0 ) { 
+		    # MEMORY
+		    if ( -f "$ProjectReport/$tcDir/$tmpDir/MemoryReport"  ) { 
+			$pureCell .=  "<br><a href=\"$tmpDir/MemoryReport\">Memory Report (OCI)</a> (".main::extractOCIViolationsFromMemoryReport("$ProjectReport/$tcDir/$tmpDir/MemoryReport").")";
+		    }
+		    # COVERAGE
+		    if ( -f "$tmpCovOCICoord" ) { 
+			System "cp $tmpCovOCICoord $ProjectReport/$tcDir/$tmpDir";
+			# the following method should be made OS independent
+			$summary = main::extractSummaryFromCoverageReport("$tmpCovOCICoord");
+			main::writeHTMLFromCoverageReport ("$tmpCovOCICoord", "$ProjectReport/$tcDir/$tmpDir/$coveDetailReport",$tmpDir);
+
+			# Purify's Report Box #####
+			$pureCell .= "<h5><pre>\n".$summary."</pre></h5>\n";
+			$pureCell .=  "<p><a href=\"$tmpDir/$coveDetailReport\">OCI Detailed Report</a><p>$msgTxt\n";
+
+			###
+		    } 
+		} else { 
+		    $pureCell .= 
+			"<br><a href=\"$tmpDir/$pureOCIOutput\">OCI PURIFY FAILURE</a>";
+		}
+	    } # no return code defined for OCI, probably the module 
+	    # does not contain instrumentable languages
+
+	    # here we add the Valgrind information produced by the
+	    # stepValgrind() procedure
+	    if ( -f "$tmpDir/test/$VGReport" ) { 
+		System "cp $tmpDir/test/$VGReport $ProjectReport/$tcDir/$tmpDir";
+		$valgrindCell = 
+		    "<a href=\"$tmpDir/$VGReport\">Valgrind Memory Report</a>\n";
+	    }
+	    $coverageContent .= "<td>$testCell<br>$pureCell"."&nbsp;".$valgrindCell;
+	    $coverageContent .= "</td></tr>\n";
+	} # loop over platform end
+    } # main loop over modules end
+    
+    if (! -d "$ProjectReport/$tcDir") { 
+	system "mkdir -p $ProjectReport/$tcDir";
+    }
+    open(out, "> $ProjectReport/$tcDir/index.html");
+    print out "<html>$main::body<center><h2>Test & Coverage Report for $integ<br>($main::HOST - $main::OS $main::KERNEL ".main::additionalEnvInfo().")</h2>";
+
+    print out "<table width=100%>\n<tr valign=top>\n<td>\n";
+
+    # first item
+    print out "<a href=\"http://$Common::webhost/sqam/reference/UnitCoverageNotes.html\">Notes</a><br>\n";
+    print out "<a href=\"$main::mainLogFile\">Log</a><br>";
+    if ($status eq "RUNNING"  ) { 
+	print out 
+	    "<a href=\"Claro2-$integ.snap\">Surviving Processes</a><br>";
+    } else { 
+	print out 
+	    "<a href=\"Claro2-$integ-final.snap\">Surviving Processes</a><br>";	
+    }
+    print out "Timeout threshold set to $main::timeoutThreshold<br>\n";
+    print out "<a href=\"../DynamicSummary.html\">History</a><br>\n";
+    print out "<a href=\"../$BuildRep\">Build output</a><br>\n";
+    print out "<a href=\"../$UFReportName\">Unused files</a><br>\n";
+    print out "<a href=\"$environmentFile\">Environment</a><br>\n";
+    print out "<a href=\"TimingSummary.html\">Timing Info</a><br>\n";
+    if ( $purifyOCIAvailable && $status eq "FINAL" ) { 
+	print out "<a href=\"MemoryReportOCI.html\">Memory OCI Report</a>\n";
+    }
+    # second item
+    print out "<td align=center>\n";
+    print out Common::Timestamp();
+    print out "<br>Extracted: ".gmtime($extractionEnd)." GMT\n";
+    print out "<br>Build: ".main::convertFromSeconds($stepOneTime)." Testing: ".main::convertFromSeconds($stepTwoTime)." <br>\n";
+    print out "<br>Status: $status<br>\n";
+    if ($NOBUILD) { 
+	print out "Build: <font color=red font=+1>OFF</font><p>\n";
+    } 
+    print out "Notification: ".$numRespModules. "/".$numArchModules."<br>\n";
+    if ($instrument eq "off") { 
+	print out "Instrument: <font color=gray font=+1>OFF</font><br>\n";
+    } else { 
+	print out "Instrument: <font color=green font=+1>ON</font><br>\n";
+    }
+    print out "Notify: ";
+    if ($SINNER_NOTIFY) { 
+	print out "<font color=green font=+1>ON</font>/";
+    } else { 
+	print out "<font color=gray font=+1>OFF</font>/";
+    }
+    if ($SINNER_NOTIFY_TEST) { 
+	print out "<font color=green font=+1>ON</font>";
+    } else { 
+	print out "<font color=gray font=+1>OFF</font>";
+    }
+    print out  "<br>\n";
+
+    if ($NOTEST) { 
+	print out "Test: <font color=gray font=+1>OFF</font><p>\n";
+    } else { 
+	print out "Test: <font color=green font=+1>ON</font><p>\n";
+    }
+    ##################################
+    # PIE CHART CREATION: LINUX ONLY
+    ##################################
+    if ($havePie && $main::OS eq "Linux" && 
+	$status ne "RUNNING"  && ! $NOTEST )  {
+	local($missDir, $missMake);
+	$missDir  = $$Summ{notestdir}{res};
+	$missMake = $$Summ{nomakefile}{res};
+	# writing datasets
+	open(tmpFD2,"> $graphData1");
+	print tmpFD2 "No Directory $$Summ{notestdir}{res}\n";
+	print tmpFD2 "No Makefile $$Summ{nomakefile}{res}\n";
+	print tmpFD2 "Undetermined $$Summ{testundetermined}{res}\n";
+	print tmpFD2 "Failed $$Summ{testfailed}{res}\n";
+	print tmpFD2 "Passed $$Summ{testpassed}{res}\n";
+	close(tmpFD2);
+
+	open(tmpFD2,"> $graphData2");
+	print tmpFD2 "Missing ".($missDir + $missMake)."\n";
+	print tmpFD2 "Available ".( $numModules - ( $missDir + $missMake ) ) ."\n";
+	close(tmpFD2);
+
+	system $pieCommand1;
+	print ">>> $pieCommand1 failed\n" if ($?);
+	main::shrinkPNGImage("/tmp/$pieFile1.png");
+	system "cp /tmp/$pieFile1.png $ProjectReport/$tcDir";
+
+	system $pieCommand2;
+	print ">>> $pieCommand2 failed\n" if ($?);
+	main::shrinkPNGImage("/tmp/$pieFile2.png");
+	system "cp  /tmp/$pieFile2.png $ProjectReport/$tcDir/$pieFile2.png";
+	if ( -f "$ProjectReport/$tcDir/$pieFile1.png") { 
+	    $pieText = "<table border=0><tr align=center><td><img src=\"$pieFile1.png\"></td><td><img src=\"$pieFile2.png\"></td></tr></table>";
+	}
+	unlink $graphData1, $graphData2;
+	unlink "/tmp/$pieFile2.png","/tmp/$pieFile1.png";
+	print out $pieText;
+	print out "<!-- PIECOMMAND1 $pieCommand1 -->\n";
+	print out "<!-- PIECOMMAND2 $pieCommand2 -->\n";
+    }
+
+    ######
+    # third item
+    print out "<td align=right>\n";
+    print out "<table border=0>";
+    $dataCarrier = "<!--\nSTATISTICS\\$project\\$integ\\$main::OS\\$base_dest\\".
+	main::datestamp()." ";
+    $$Summ{modules}{res} = $numModules;
+    foreach $type (sort {$$Summ{$a}{ord} <=> $$Summ{$b}{ord}} keys %$Summ) { 
+	next if( $$Summ{$type}{res} == 0);
+	#
+	if ( defined $$Summ{$type}{color}) { 
+	   print out "<tr><td><font color=$$Summ{$type}{color} size=1>$$Summ{$type}{label}</font>";	    
+	   print out "<td><font color=$$Summ{$type}{color} style=bold>$$Summ{$type}{res}</font></tr>\n";
+	} else {
+	    print out "<tr><td><font color=gray size=1>$$Summ{$type}{label}</font>";
+	    print out "<td>$$Summ{$type}{res}</tr>\n";
+	}
+    }
+    foreach $type (keys %$Summ) { 
+	$dataCarrier .= "$type=$$Summ{$type}{res}:";
+	$feedbackDataCarrier .= "$$Summ{$type}{res},";
+    }
+    $dataCarrier .= "\nTIMING: STEPONE ".main::convertFromSeconds($stepOneTime)." STEPTWO ".main::convertFromSeconds($stepTwoTime);
+    $dataCarrier .= "\n-->\n";
+    $feedbackDataCarrier =~ s/,$//;
+    print out "</table><p>\n";
+    print out "</tr>\n</table><p>\n";
+
+    # MAIN TABLE
+    print out "<table border=1>\n";
+    print out "<tr><th>Module</th><th>Build status</th><th>Test Status & Coverage Info</th></tr>\n";
+    print out $coverageContent;
+    print out "</table>\n</center>\n</body>\n</html>\n";
+    print out $dataCarrier if $status ne "RUNNING";
+    close(out);
+    
+    # TIMING INFORMATION FOR TESTING, NORMAL
+    open(out, "> $ProjectReport/$tcDir/$graphData3") || 
+	warn ">>> failed to open $ProjectReport/$tcDir/$graphData3 for writing\n";
+    print out testTimingSummary(2);
+    close(out);
+
+    # TIMING INFORMATION FOR TESTING, PURIFIED
+    if ( $accomplished{4} == 1 ) { 
+	open(out, "> $ProjectReport/$tcDir/$graphData4") || 
+	    warn ">>> failed to open $ProjectReport/$tcDir/$graphData4 for writing\n";
+	print out testTimingSummary(4);
+	close(out);
+    }
+
+    if ($havePie && $main::OS eq "Linux" && !$NOTEST ) { 
+	local($size) = "1000";
+	local($pieCommonB) = "$LDResetCommand; ~/bin/piechart -T png -r0.5 -d0.05  -n 0.08 -B $size"."x"."$size ";
+	"-C red3,green3,blue1,gray1 ";
+	system "head -15 $ProjectReport/$tcDir/$graphData3 > $ProjectReport/$tcDir/$graphData3.short";
+	$pieCommand3 = "$pieCommonB -t 'Test Timing'  -fn < $ProjectReport/$tcDir/$graphData3.short > $ProjectReport/$tcDir/$pieFile3.png";
+	system $pieCommand3;
+	warn ">>> Failed to $pieCommand3\n" if ($?);
+	main::shrinkPNGImage("$ProjectReport/$tcDir/$pieFile3.png");
+
+	if ( $accomplished{4} == 1) { 
+	    system "head -15 $ProjectReport/$tcDir/$graphData4 > $ProjectReport/$tcDir/$graphData4.short";
+	    $pieCommand4 = "$pieCommonB -t 'Purified Test Timing'  -fn < $ProjectReport/$tcDir/$graphData4.short > $ProjectReport/$tcDir/$pieFile4.png";
+	    system $pieCommand4;
+	    warn ">>> Failed to $pieCommand4\n" if ($?);
+	    main::shrinkPNGImage("$ProjectReport/$tcDir/$pieFile4.png");
+	}
+	
+	open(out, "> $ProjectReport/$tcDir/TimingSummary.html");
+	print out "<html>\n$main::body<center><h1>Summary of Test Timing for $integ</h1><h4>(piecharts on 15 most time consuming modules only)</h4><br>\n";
+	print out Common::Timestamp()."</center><hr>\n";
+	print out "<center><img src=\"$pieFile3.png\"></center>\n<p><br>";
+	print out "<a href=\"$graphData3\">Complete Timing Info</a>\n";
+	if ( $accomplished{4} == 1 ) { 
+	    print out "<hr>\n";
+	    print out "<center><img src=\"$pieFile4.png\"></center>\n<p clear=left>";
+	    print out "<a href=\"$graphData4\">Complete Timing Info</a><br>\n";
+	}
+
+	print out "<table width=80\%><tr valign=top><td>".vmstat::getHTMLSummary()."\n";
+	print out "<td>".testTimingSummary(2,1)."<td>".testTimingSummary(4,1)."</tr>\n";
+	print out "</table>\n";
+	print out "</center></body></html>\n";
+	close(out);
+    }
+    Common::publishReport("$ProjectReport/$tcDir");
+}
+
+########################################
+## try to assess non accessed files ####
+sub findUnusedFiles { 
+    local($startTime) = $_[0];
+    local($findCmnd) = "find ";
+    local(@dirs,$dir,$atime);
+
+    @dirs = Common::determineDirs( $integ);
+    foreach $dir (@dirs) { 
+	$findCmnd .= "$dir ";
+    }
+    $findCmnd .= " -type f ! -path '*/CVS/*' ! -path '*/test/*' |";
+    open(out, "> $ProjectReport/$UFReportName");
+    print out "<html>\n";
+    print out "<center><h2>Unused files  Report for $integ ($HOST)</h2><p>\n";
+    print out Common::Timestamp()."</center>\nThis report lists all the files which are stored in the repository but were not accessed during the build. CVS files and files contained under '*/test/*' are ignored.<br><pre>\n";
+
+    open(tmpFD, $findCmnd);
+    while(<tmpFD>) { 
+	chop;
+	$atime = (stat)[8];
+	if ( $atime < $startTime) { 
+	    print out "$_ \n";
+	    #print  "$_ ($atime, $startTime)\n";
+	}
+    }
+    close(tmpFD);
+    print out "</pre>\n";
+    print out "</html>\n";
+    close(out);
+    Common::publishReport("$ProjectReport/$UFReportName");
+}
+
+
+##  STEP ONE: Here we BUILD TEST
+sub stepOne { 
+    local($tmpMod, $counter,$startSeconds, $pkginReportsString);
+    warn "#" x 30 . "\n" if $debug;
+    warn "### STEP ONE: BUILDING \t(".localtime().")\n" if $debug;	
+    warn "#" x 30 . "\n" if $debug;
+    vmstat::start("/tmp/VMSTAT-Claro2-$integ-$$", 1);
+    $startSeconds = time();
+
+    if ($CVS) {
+	if ( -f "$integ/Makefile") {
+	    local($command) = "cd $integ; make build > $buildReport 2>&1";
+	    System "$command  ","","","";
+	    if ($?) { 
+		warn "$command ($integ) failed \n" if $debug;
+	    }
+	    # we copy over the 'real' build logs.
+	    if ( -f "$integ/build.log") { 
+		System "cp $integ/build.log $ProjectReport/build.log","";
+	    } else { 
+		if ( -f "$integ/buildLinux.log") { 
+		    System "cp $integ/buildLinux.log $ProjectReport/build.log","";
+		} else { 
+		    if ( -f "$integ/buildVxWorks.log") { 
+			System "cp $integ/buildVxWorks.log $ProjectReport/build.log","";
+		    }
+		}
+	    }
+	    ## 
+	} elsif  ( -f "$integ/src/Makefile") {
+	    # for the one module approach
+	    local($command) = "cd $integ/src; make all";
+	    local($testLogfile) = "Claro2-TEST-$integ";
+	    System "$command > build.log 2>&1","","","";
+	    if ($?) { 
+		warn ">>> $command ($integ) failed (all)\n" if $debug;
+	    }
+	    if ( -f "$integ/src/build.log") { 
+		System "cp $integ/src/build.log $ProjectReport/build.log","";
+	    } 
+	} else { 
+	    print ">>> ** Cannot find any Makefile. How do you want me to build this thing???\n";
+	}
+
+    } else { ###### PKGIN ##############
+	if ($main::VLTSW) { 
+	    local($command) = "cd INSTALL; build > build.log 2>&1";
+	    
+# BUILD
+# Clean up VLTROOT and VLTSW directory...
+	    System "rm -rf /diska/vlt_tmp/vltroot.old; mv $ENV{VLTROOT} /diska/vlt_tmp/vltroot.old","";      
+	    
+	    
+	    # retrieve the TPOINT source
+	    System "cp -p ~vltsw/TAPE/TPOINT/TPOINT* ~vltsw/TAPE/TPOINT/*tar.Z TPOINT/",""; 
+	    
+	    
+	    System "$command  ","","","";
+	    if ($?) { 
+		warn "$command ($integ) failed \n" if $debug;
+	    }
+	    System "cp INSTALL/build.log $ProjectReport/build.log","";
+	} else {  #non VLTSW case
+	    local($tmpFile);
+	    System "pkginBuild $integ -fromstep CREATE_ROOTS > $buildReport 2>&1","","","";
+	    # I am not sure pkgin respects the error codes
+	    if ($?) { 
+		warn ">>> pkginBuild $integ failed \n" if $debug;
+	    }
+	    # the pkginBuild logfiles for STDERR and STDOUT have been written now.
+	    $tmpFile = "$pkginLogFile"."-$integ-$main::OS.txt";
+	    System "cp INSTALL/$pkginLogFile $ProjectReport/$tmpFile";
+	    if ( -f "$ProjectReport/$tmpFile") { 
+		Common::publishReport("$ProjectReport/$tmpFile");
+		  $pkginReportsString = 
+		      "<a href=\"$tmpFile\">Complete STDOUT<a>";
+	    } else { 
+		warn ">>> could not find $tmpFile\n";
+	    }
+
+	    $tmpFile = "$pkginErrFile"."-$integ-$main::OS.txt";
+	    System "cp INSTALL/$pkginLogFile $ProjectReport/$tmpFile";
+	    if ( -f "$ProjectReport/$tmpFile") { 
+		Common::publishReport("$ProjectReport/$tmpFile");
+		  $pkginReportsString .= 
+		      "&nbsp;&nbsp;<a href=\"$tmpFile\">Complete STDERR<a>";
+	    } else { 
+		warn ">>> could not find $tmpFile\n";
+	    }
+	    # there is no pkginTest, so we have to loop.
+	} # end VLTSW case
+    } # end of pkgin case
+#
+#
+# BUILD REPORT
+#
+    open(out, "> $ProjectReport/$BuildRep");
+    print out "<html>\n";
+    print out "<center><h2>Build Report for $integ ($main::HOST)</h2><p>\n";
+    print out Common::Timestamp()."</center>\n<pre>\n";
+    print out Common::bunteBilder($buildReport) if ( -f $buildReport );
+    print out "</pre>\n";
+    if ( -f "$ProjectReport/build.log") { 
+	print out "<hr>\n<pre>\n";
+	print out Common::bunteBilder("$ProjectReport/build.log") ;
+	print out "</pre>\n";
+    }
+    if ( Common::isPkgin($integ)) { 
+	print out "<hr>\n";
+	print out $pkginReportsString."<br>\n";
+    }
+    print out "</html>\n";
+    close(out);
+    Common::publishReport("$ProjectReport/$BuildRep");
+    vmstat::stop();
+    $stepOneTime = time() - $startSeconds;
+}
+
+    
+#####################################
+#### TENTATIVE COMMON PART
+#####################################
+
+# regardless of the type CVS/CMM, we now try to assess
+# whether at module level compilation in the src and test dirs has succeeded
+# or failed.
+# We use the 'question mode' of GNU make 3.79 to this end.
+# NOPE, it doesn't work because of the way the VLT/ACS makefile
+# is structured, so no hope of using it for the time being.
+
+
+sub stepCleanForVLTSW { 
+    local($tmpMod);
+    foreach $tmpMod (Common::determineModulesFull($integ,1) ) { 
+	foreach $platform (@platforms) {
+	    local($tmpDir) = "$tmpMod/$platform";
+	    ###########################
+	    $tmpDir =~ s/\/\.$//;
+	    next if ( ! -d $tmpDir || 
+		      ( -d $tmpDir && -d "$tmpDir/ws") );
+	    foreach $dir ("src","test") { 
+	      if ( -f "$tmpDir/$dir/Makefile" ) { 
+		local($command);
+		$command = "cd $tmpDir/$dir; make clean > /dev/null 2>&1";
+		System $command,"","","";
+	      }
+	    }   
+	}
+    }
+}
+
+
+sub stepIntermediate { 
+    local($tmpMod, $counter);
+    warn "#" x 30 . "\n" if $debug;
+    warn "### INTERMEDIATE STEP: ASSESSING BUILD RESULTS \t(".localtime().")\n" 
+	if $debug;	
+    warn "#" x 30 . "\n" if $debug;
+    
+    $counter = 1;
+    foreach $tmpMod (Common::determineModulesFull($integ,1) ) { 
+	foreach $platform (@platforms) {
+	    local($tmpDir) = "$tmpMod/$platform";
+	    ###########################
+	    $tmpDir =~ s/\/\.$//;
+	    next if ( ! -d $tmpDir || 
+		      ( -d $tmpDir && -d "$tmpDir/ws") );
+	    if ( -f "$tmpDir/src/Makefile" ) { 
+		local($command);
+		$sysMsg = "1:$counter/$numModules";
+		$command = "cd $tmpDir/src;  make all > $normBuildOutput 2>&1";
+		System $command,$sysMsg,"","";
+		storeResult($?,$tmpDir,src,n);
+		# here we put the notification
+		# the error output should be sent along wit the e-mail
+		if ($?) { 
+		    local($report) = "";
+		    $report = `cat $tmpDir/src/$normBuildOutput`;
+		    Sinners::logFailure($tmpMod,$report,1);
+		    system "mkdir -p $ProjectReport/$tcDir/$tmpDir";
+		    system "cp -f $tmpDir/src/$normBuildOutput $ProjectReport/$tcDir/$tmpDir";
+		}
+	    }
+	    if ( -f "$tmpDir/test/Makefile" ) { 
+		local($command);
+		$command = "cd $tmpDir/test;  make clean all > $normBuildOutput 2>&1";
+		# if the build failed there's no
+		# point in trying to test it
+		if ( $Results{$tmpDir}{src}{n} == 0) { 
+		    
+		    if ($main::VLTSW) { 
+			# VLTSW test preparation
+			main::TestPreparation($tmpMod);
+		    } 
+		    System $command,$sysMsg,"","";
+		    storeResult($?,$tmpDir,test,n);
+		    
+		    if ($main::VLTSW) { 
+			main::ResetVariableDir("INTROOT");
+			main::ResetVariableDir("INS_ROOT"); 
+			main::ResetPath();  
+		    } 
+		    
+		} else { 
+		    print "> $sysMsg build failed, skipping make all in test dir\n";
+		}
+	    }
+	  $counter++;
+	}
+    }
+}  # step Intermediate END
+
+
+
+sub stepDirty { 
+    if($project eq "ALMA") { 
+	# emergency solution
+	if ( $ENV{ACSROOT} ne $ENV{INTROOT} ) { 
+	    unlink "$ENV{INTROOT}/bin/tat" || 
+		warn "*** Could not delete TAT from INTROOT\n";
+	}
+	# other EMERGENCY solution
+	#
+	system "killACS > /dev/null 2>&1";
+	# we do not check the return code
+	warn ">>> could not execute killACS\n" if ($?);
+	
+        # little favor to ALMA people to get their ICD dir already compiled
+	if ($ENV{INTROOT} ne "") { 
+	    print ">> making INTROOT readable for everybody\n";
+	    system "find $ENV{INTROOT} ! -perm -a+r -exec chmod a+r {}\\;" || warn ">>> Could not chmod $ENV{INTROOT}\n";
+	}
+    }
+}
+
+
+# for good measure, since I do not trust the global target
+# test to go and compile in the test directories and also
+# hand down external options like Purify, I prefer to loop
+# over all the modules and make all in test by myself.
+
+
+sub stepTwo { 
+    local($tmpMod, $counter,$startSeconds);
+    system "mkdir -p $ProjectReport/$tcDir";
+    vmstat::start("/tmp/VMSTAT-Claro2-$integ-$$", 2);
+    $startSeconds = time();
+    main::environmentsCleanup();
+    warn "#" x 30 . "\n" if $debug;
+    warn "### STEP TWO: TESTING \t(".localtime().")\n" if $debug;	
+    warn "#" x 30 . "\n" if $debug;
+    $counter = 1;
+    
+    if ($main::VLTSW) { 
+#before running the tests, change the permission of ccsScheduler1 and msgServer1 in $VLTROOT/bin
+	local($fixperms) = "/diska/vlt_tmp/FixPerms-$main::HOST";
+	local($command) = "$fixperms > /dev/null 2>&1";
+	System "$command  ","","","";
+# use TEST_WAIT (default 3600), 
+#...should be set according to the module...(ex:for buildTestCCD, TEST_WAIT=7200 !)
+	$ENV{TEST_WAIT}="3600";
+	print ">> TEST_WAIT = $ENV{TEST_WAIT}\n";
+    } 
+    
+    foreach $tmpMod (Common::determineModulesFull($integ,1) ) { 
+	if ($main::VLTSW) { 
+	    # VLTSW test preparation
+	    main::TestPreparation($tmpMod);
+	} 
+
+	main::checkXvfb();
+	foreach $platform (@platforms) {
+	    local($tmpDir) = "$tmpMod/$platform";
+	    local($baseDir);
+	    chop($baseDir = `basename $tmpMod`);
+	    $baseDir  .= $platform;
+	    $baseDir =~ s/\/\.$//;
+	    $tmpDir =~ s/\/\.$//;
+	    ###########################
+	    next if ( ! -d $tmpDir || 
+		      ( -d $tmpDir && -d "$tmpDir/ws") );
+	    
+	    if ( -f "$tmpDir/test/Makefile" ) { 
+		local($command);
+		local($rc);
+		local($testLogfile);
+		chop($testLogfile = `echo 'Claro2-TEST-$$'`);
+		
+		# notice that if we have pkgin case, there will be
+		# typically no test target, and if there's one, we
+		# should use it!
+		if ( -f "$tmpDir/test/$tatSignature") {  
+		    $command = "cd $tmpDir/test; $TAT ";
+		} else { 
+		    if (main::isTargetAvailable(test ,"$tmpDir/test/Makefile" ) ) { 
+			$command = "cd $tmpDir/test; make test ";
+		} else { 
+		    # we try with TAT
+		    $command = "cd $tmpDir/test; $TAT ";
+		}
+		}
+		$sysMsg = "2:$counter/$numModules";
+		
+		# if the build failed there's no
+		# point in trying to test it
+		if ( $Results{$tmpDir}{src}{n} == 0) {
+		    local($ae);
+		    main::takeSnapshot("$tmpDir/test/NRISnapshot-before.txt");
+		    
+		    $ae = assessEndurance("$tmpDir/test");
+		    if ($ae == 0) { 
+			# normal test
+			$rc = System "$command > $dirNRI/$testLogfile 2>&1", $sysMsg,"1","";
+		    }
+		    if ($ae == 1) { 
+			local($ott) = $main::timeoutThreshold;
+			local(@tmpArray) ;
+			@tmpArray = 
+			  Common::getFromMakefile("ENDURANCE_TEST_TIMEOUT","$tmpDir/test/Makefile");
+			
+			$command = "cd $tmpDir/test; make endurance-test ";
+			# reset the timer as appropriate
+			# launch the test via the make command
+			# fake value for testing
+			$main::timeoutThreshold = ($tmpArray[0] * 60) ; 
+			print "> temporary timeout threshold set to $main::timeoutThreshold\n";
+			$rc = System "$command > $dirNRI/$testLogfile 2>&1", $sysMsg,"1","";
+			$main::timeoutThreshold = $ott;
+		    }
+		    if ($ae == 2) { 
+			print ">>> $tmpDir is not an endurance test\n";
+			# I am not yet 100% sure of the consequences of this 
+			# next command with respect to counters, and other
+			# measurers
+			next;
+		    }
+
+		    storeElapsedTime($baseDir,2);
+		    storeResult($rc,$tmpDir,test,test);
+		    main::takeSnapshot("$tmpDir/test/NRISnapshot-after.txt");
+		    if( main::testFailed("$dirNRI/$testLogfile") eq 1 ||
+			main::testFailed("$dirNRI/$testLogfile") eq 0
+			) { 
+			Sinners::logFailure($tmpMod,$report,2);
+		      }
+
+		    # ADDED because of timeouts on RED HAT enterprise
+		    system "killACS > /dev/null 2>&1" 
+			if ($project eq "ALMA");
+		} else { 
+		    print "> $sysMsg $tmpDir build failed, skipping testing\n";
+		    open(wrtmp,"> $dirNRI/$testLogfile");
+		    print wrtmp "\n\n Module $tmpDir has failed to build.\n    No test was carried out";
+		    close(wrtmp);
+		}
+		
+		if ($rc) { 
+		    warn ">>> $command failed ($tmpMod)\n" if $debug;
+		    # customization for VLT projects:
+		    # TAT should free environments in case of a 
+		    # timeout
+
+		    if($rc eq -666 && $project eq "VLT") { 
+			local($command) =  "cd $tmpDir/test; ";
+			$command .= "tat -v -nc cleanEnv";
+			System "$command > /dev/null 2>&1", $sysMsg, "1","";
+		    }
+		}
+
+		$TestReport{$tmpDir} = "<a href=\"$tmpDir/$testLogfile\">".main::fontTestFailed("$dirNRI/$testLogfile")."</a>\n";
+		# here we should copy the test reports to the web
+		system "mkdir -p $ProjectReport/$tcDir/$tmpDir";
+		if ( -f "$dirNRI/$testLogfile") { 
+		    system "cp $dirNRI/$testLogfile $ProjectReport/$tcDir/$tmpDir";
+		} else { 
+		    warn ">>> Test Logfile $dirNRI/$testLogfile missing from $tmpMod\n" if $debug;
+		}
+		#
+		# here we copy the entire test directory on the web 
+		system "cp -rf $tmpDir/test $ProjectReport/$tcDir/$tmpDir";
+		system "chmod -R a+r  $ProjectReport/$tcDir/$tmpDir";
+		$TestReport{$tmpDir} .= "&nbsp; (<a href=\"$tmpDir/test\">test</a>)\n";
+		unlink "$dirNRI/$testLogfile";
+	} else { 
+	    # there was no Makefile!
+	}
+	    $counter++;
+	} # end of loop over platforms
+    } # end of loop over modules
+    vmstat::stop();
+    $stepTwoTime = time() - $startSeconds;
+    $accomplished{2} = 1;
+} # END stepTwo
+
+
+
+sub stepTwoAndHalf { 
+    local($tmpMod, $counter);
+    local($covSumCont);
+    warn "#" x 40 . "\n" if $debug;
+    warn "### STEP TWO AND HALF: TESTING WITH PURIFY OCI\t(".localtime().")\n" if $debug;	
+    warn "#" x 40 . "\n" if $debug;
+
+    vmstat::start("/tmp/VMSTAT-Claro2-$integ-$$", "2,5");
+    main::environmentsCleanup();
+
+    # what are the consequences of this on STEP four ?
+    $counterStep = 1;
+    $counter = 1;
+    $covSumCont = "<html>\n$main::body\n<h1>Summary of Coverage Reports (OCI) for $integ</h1><table width=60%>\n";
+    foreach $tmpMod (Common::determineModulesFull($integ,1) ) { 
+
+	main::checkXvfb();
+        # TODO add testPreparation for VLTSW ...?
+	foreach $platform (@platforms) {
+	    local($tmpDir) = "$tmpMod/$platform";
+	    local($pureDir) = "$tmpDir/test/.purifydir";
+	    $tmpDir =~ s/\/\.$//;
+	    ###########################
+	    next if ( ! -d $tmpDir || 
+		      ( -d $tmpDir && -d "$tmpDir/ws") );
+	    local($exe,$lib,$dir);
+	    
+	    $sysMsg = "2,5:$counter/$numModules";
+	    
+	    # you must bail out if no EXE not LIBS are listed in
+	    # the Makefile
+	    @tmpArray = (Common::getFromMakefile("EXECUTABLES","$tmpDir/src/Makefile"), 
+			 Common::getFromMakefile("LIBRARIES","$tmpDir/src/Makefile"),
+			 Common::getFromMakefile("LIBRARIES_L","$tmpDir/src/Makefile"),
+			 Common::getFromMakefile("EXECUTABLES_L","$tmpDir/src/Makefile"));
+
+	    if ($#tmpArray == -1) { 
+		warn ">> $sysMsg: $tmpDir: nothing to instrument, skipping\n";
+		$counter++;
+		next;
+	    }
+	    # you must bail out if the normal build failed
+	    if ( $Results{$tmpDir}{src}{"n"} != 0 )  { 
+		warn ">> $sysMsg: $tmpDir: normal build failed, skipping\n";
+		$counter++;
+		next;
+	    }
+		
+	    if( (Common::getFromMakefile("MAKE_VXWORKS","$tmpDir/src/Makefile"))[0]  =~ /on/i ) { 
+		$counter++;
+		next;
+	    }
+	    	    
+	    foreach $dir ("src","test") { 
+		if ( -f "$tmpDir/$dir/Makefile" ) { 
+
+		    # different way to link in the two projects
+		    # TO BE CONFIRMED, ranlib vs ld
+		    # 
+		    if ( $dir eq $pureProjSpec ) { 
+			foreach $exe ( Common::getFromMakefile("EXECUTABLES","$tmpDir/$dir/Makefile"), Common::getFromMakefile("EXECUTABLES_L","$tmpDir/$dir/Makefile") ) { 
+			unlink "$tmpDir/bin/$exe" || warn ">>> Could not delete $tmpDir/bin/$exe";
+		    }
+			foreach $lib ( Common::getFromMakefile("LIBRARIES","$tmpDir/$dir/Makefile"),Common::getFromMakefile("LIBRARIES_L","$tmpDir/$dir/Makefile") ) { 
+			    unlink "$tmpDir/lib/lib$lib" || warn ">>> Could not delete $tmpDir/bin/$exe";
+			}
+		    }
+		    # for the sake of this exercise we can delete 
+		    # both .purify and .purifydir
+		    # but we should think of a more robust solution 
+		    # (involving the makefiles) later on
+		    
+		    system "rm -fr $tmpDir/$dir/.purify $tmpDir/$dir/.purifydir";
+		    if ($?) { 
+			print ">>> failed to remove $tmpDir/$dir/.purify\n";
+		    }
+		    system "mkdir $tmpDir/$dir/.purifydir";
+		    #
+		    # this is the place where on-the-fly configuration files
+		    # like .purify and .purecov should be created, containing
+		    # suppress and exclude directives
+
+		    writeExclusionListForPurecov($tmpMod,"$tmpDir/$dir/.purecov");
+		    # VLT and ALMA seem to use different approaches 
+		    # to linking libraries
+		    if ( $dir eq $pureProjSpec ) { 
+			System "cd $tmpDir/$dir; make LD=\"purecov -always-use-cache-dir -counts-file=.purifydir/purecov-%v.pcv purify -show-directory=on -always-use-cache-dir -fds-inuse-at-exit=no -user-path=../test:../src:src:test -g++=yes  -collector=/usr/bin/ld  -log-file=./.purifydir/MemoryReport -append-logfile=yes -messages=batch -view-file=.purifydir/purify-%v.pv gcc \" do_exes do_libs > $pureOCIOutput 2>&1",$sysMsg,"0","" ;
+			storeResult($?,$tmpDir,$dir,po);
+			if ($?) { 
+			    warn ">>> $sysMsg failed to instrument with OCI for $tmpDir \n";
+			    system "mkdir -p $ProjectReport/$tcDir/$tmpDir";
+			    system "cp -f $tmpDir/src/$pureOCIOutput $ProjectReport/$tcDir/$tmpDir";
+			}
+			System "cd $tmpDir/$dir; make install ",$sysMsg,"0","/dev/null" ;
+		    }
+		}
+	    }
+
+	    next if ($NOTEST);
+	    if ( -f "$tmpDir/test/Makefile" ) { 
+		local($command);
+		local($rc);
+		local($testLogfile);
+		chop($testLogfile = `echo 'Claro2-TEST-$$'`);
+
+		# notice that if we have pkgin case, there will be
+		# typically no test target, and if there's one, we
+		# should use it!
+		
+		if ( -f "$tmpDir/test/$tatSignature") {  
+		    $command = "cd $tmpDir/test; $TAT ";
+		} else { 
+		    if (main::isTargetAvailable(test ,"$tmpDir/test/Makefile" ) ) { 
+			$command = "cd $tmpDir/test; make test ";
+		    } else { 
+			# we try with TAT
+			$command = "cd $tmpDir/test; $TAT ";
+		    }
+		}
+		
+		# if the build failed there's no
+		# point in trying to test it
+		if ( $Results{$tmpDir}{src}{n} == 0) { 
+		    $rc = System "$command > $dirNRI/$testLogfile 2>&1", $sysMsg,"1","";
+		    #storeResult($rc,$tmpDir,test,test);
+		    if($rc eq -666 && $project eq "VLT") { 
+			local($command) =  "cd $tmpDir/test";
+			$command .= "tat -v -nc cleanEnv";
+			System "$command > /dev/null 2>&1", $sysMsg, "1","";
+		    }
+		} else { 
+		    print "> $sysMsg build failed, skipping testing\n";
+		}
+
+		local(@pcv_file_list) = glob("$pureDir/*pcv");		
+		if ( @pcv_file_list  != 0 ) { 
+		    local($command) 
+			= "cd $pureDir; purecov -export=$coveOCIReport *.pcv";
+		    system "$command > /dev/null 2>&1" ;
+		    if ($?) { 
+			print ">>> $pureDir: $command failed\n";
+		    }
+		    if ( -f "$pureDir/$coveOCIReport") { 
+			$covSumCont .= "<tr valign=top><td>$tmpDir</td><td><pre>".main::extractSummaryFromCoverageReport("$pureDir/$coveOCIReport")."</pre></td></tr>\n";
+		    } else { 
+			print ">>> $pureDir: no $coveOCIReport file found\n";
+		    }
+		} else { 
+		    print ">>> $pureDir: no *.pcv files found\n";
+		}
+		if ($rc) { 
+		    warn ">>> $command failed ($tmpMod)\n" if $debug;
+		}
+		# here we copy the entire test directory on the web 
+		# first make sure we have the directory
+		system "mkdir -p $ProjectReport/$tcDir/$tmpDir";
+		if ( -f "$pureDir/MemoryReport") { 
+		    system "cp -rf $pureDir/MemoryReport $ProjectReport/$tcDir/$tmpDir";
+		    print ">>> failed to copy MemoryReport to $ProjectReport/$tcDir/$tmpDir\n" if ($?);
+		} else { 
+		    print ">>> $pureDir: no MemoryReport file found\n";
+		}
+		if ( -f "$pureDir/$coveOCIReport") { 
+		    system "cp -rf $pureDir/$coveOCIReport $ProjectReport/$tcDir/$tmpDir";
+		    print ">>> failed to copy $coveOCIReport to $ProjectReport/$tcDir/$tmpDir\n" if ($?);
+		    
+		} else { 
+		    print ">>> $pureDir: no $coveOCIReport file found\n";
+		}
+		unlink "$dirNRI/$testLogfile";
+	    } else { 
+		# there was no Makefile!
+	    }
+	    $counterStep++;
+	    $counter++;
+	} # end loop over platform
+    } # end loop over modules
+    $covSumCont .= "</table></body></html>\n";
+    open(tmpFD, "> $ProjectReport/$tcDir/$coveOCISummary") || 
+	warn ">>> Could not open $ProjectReport/$tcDir/$coveOCISummary for writing\n";
+    print tmpFD $covSumCont;
+    close(tmpFD);
+    Common::publishReport("$ProjectReport/$tcDir/$coveOCISummary");
+    runSubsystemOCIMemoryReport();
+    vmstat::stop();
+}
+
+
+
+
+sub stepThree {     
+    local($tmpMod, $counter);
+    vmstat::start("/tmp/VMSTAT-Claro2-$integ-$$", 3);
+      
+    warn "#" x 30 . "\n" if $debug;
+    warn "### STEP THREE: PURIFYING \t(".localtime().")\n" if $debug;	
+    warn "#" x 30 . "\n" if $debug;
+    
+# 2004-02-23
+# problem with Purify dependencies discovered:
+# it seems that coverage values may depend on whether all libraries
+# the module depends upon have been successfully instrumented first.
+#
+# what follows is a quick fix in search for a more well-thought solution
+# if Linux && ALMA && project ne ACS
+# loop through all the instrumented libraries and copy them to INTROOT
+#
+    if ($main::OS eq "Linux" && $basecamp =~ /ALMA$/ &&  $integ ne "ACS" 
+	&& $integ ne "ARCHIVE" ) { 
+	local($purifiedBasecamp) = "/alma/mzampare/crontabs/ALMA.purified";
+	local($lib, $libShort);
+	if ( -d $purifiedBasecamp) { 
+	    foreach $lib (glob("$purifiedBasecamp/lib/*")) { 
+#	    print $lib."\n";
+		chop($libShort = `basename $lib`);
+		if ( ! -f "$ENV{INTROOT}/lib/$libShort" && ! -d $lib ) { 
+		    system "cp $lib $ENV{INTROOT}/lib/";
+		    if ($?) { 
+			warn "Failure copying $lib to $ENV{INTROOT}/lib\n";
+		    }
+		}
+	    }
+	} else { 
+	    warn ">>> Could not find location for instrumented ACS Libraries\n";
+	}
+    }
+    
+    if ($CVS) {
+	if ( -f "$integ/Makefile") {
+	    # we turn off this approach but leave it in the code
+	    # in case we might have to return to it later.
+	    
+	    # this is the 'legal' approach of delegating to the
+	    # subsystem makefile the order of compilation.
+	    if ( 0 ) { 
+		local($command) = "cd $integ; make $OPTIONS build";
+		System "$command  ";
+		if ($?) { 
+		    warn "$command ($integ) failed \n" if $debug;
+		}
+	    } else { 
+		  # this is the dirty approach, where the procedure choses
+		# an arbitrary sequence. It has the advantage that it is
+		# much easier to collect information about success or failure
+		# at module level.
+		
+		$counter = 1;
+		foreach $tmpMod (Common::determineModulesFull($integ,1) ) { 
+		    foreach $platform (@platforms) {
+			local($tmpDir) = "$tmpMod/$platform";
+			###########################
+			$tmpDir =~ s/\/\.$//;
+			next if ( ! -d $tmpDir || 
+				  ( -d $tmpDir && -d "$tmpDir/ws") );
+			if ( -f "$tmpDir/src/Makefile" ) { 
+			    local($command);
+			    $command = "cd $tmpDir/src;  make $OPTIONS clean all install";
+			    $sysMsg = "3:$counter/$numModules";
+			    # if the build failed non purified there's no
+			    # point in trying to purify it.
+			    if ( $Results{$tmpDir}{src}{n} == 0) { 
+				if ($main::OS ne "Linux") { 
+				    writeExclusionListForPurecov($tmpMod,"$tmpDir/.purecov");
+				}
+				System $command,$sysMsg,"1",$pureSCIOutput;
+				storeResult($?,$tmpDir,src,p);
+				system "mkdir -p $ProjectReport/$tcDir/$tmpDir";
+				system "cp -f $tmpDir/src/$pureSCIOutput $ProjectReport/$tcDir/$tmpDir";
+			    } else { 
+				print "> $sysMsg build failed, skipping Purify\n";
+			    }
+			}
+		      $counter++;
+		    } # end loop over platform
+		}
+	    } # end of switch
+	} else { # end of if -f $integ/Makefile
+	    ## this is for the ONE MODULE approach
+	    ########################################
+	    $counter = 1;
+	    if  ( -f "$integ/src/Makefile") {
+		  local($command);
+		  $command = "cd $integ/src;  make $OPTIONS clean all install";
+		  $sysMsg = "3:$counter/$numModules";
+		  # if the build failed non purified there's no
+		  # point in trying to purify it.
+		  if ( $Results{$integ}{src}{n} == 0) { 
+		      System $command,$sysMsg,"1",$pureSCIOutput;
+		      storeResult($?,$integ,src,p);
+		      system "cp -f $integ/src/$pureSCIOutput $ProjectReport/$tcDir/$integ";
+		  } else { 
+		      print "> $sysMsg build failed, skipping Purify\n";
+		  }
+	      } # $integ/src/Makefile present
+	}
+    }  else { 
+	########################################
+	### PKGIN
+	########################################
+	# for explanation of the following if, check the corresponding
+	# CVS area above.
+	if(0)  {
+	    substitutePurifyMakefileOptions("$integ/config/$integ"."INSTALL.cfg");
+	    System "pkginBuild $integ -ver LAST -fromstep CREATE_ROOTS";
+	    # I am not sure pkgin respects the error codes
+	    if ($?) { 
+		warn ">>> pkginBuild $integ failed ($OPTIONS)\n" if $debug;
+	      }
+	} else {  # illegal way, say corresponding CVS part
+# do the same for vltsw 
+	    $counter = 1;
+	    foreach $tmpMod (Common::determineModulesFull($integ,1) ) { 
+		foreach $platform (@platforms) {
+		    local($tmpDir) = "$tmpMod/$platform";
+		    ###########################
+		    $tmpDir =~ s/\/\.$//;
+		    next if ( ! -d $tmpDir || 
+			      ( -d $tmpDir && -d "$tmpDir/ws") );
+		    if ( -f "$tmpDir/src/Makefile" ) { 
+			local($command);
+			$sysMsg = "3:$counter/$numModules";
+			$command = "cd $tmpDir/src;  make $OPTIONS clean all install";
+			# if the build failed non purified there's no
+			# point in trying to purify it.
+			if ( $Results{$tmpDir}{src}{n} == 0) { 
+			    if ($main::OS ne "Linux") { 
+				writeExclusionListForPurecov($tmpMod,"$tmpDir/.purecov");
+			    }
+			    System $command,$sysMsg,"1",$pureSCIOutput;
+			    storeResult($?,$tmpDir,src,p);
+			    system "mkdir -p $ProjectReport/$tcDir/$tmpDir";
+			    system "cp -f $tmpDir/src/$pureSCIOutput $ProjectReport/$tcDir/$tmpDir";
+			} else { 
+			    print "> $sysMsg build failed, skipping Purify\n";
+			}
+		    }
+		   $counter++;
+		} # end loop over platform
+	    }
+	}
+	# the pkginBuild logfiles for STDERR and STDOUT have been written now.
+	# there is no pkginTest, so we have to loop.
+    }
+    vmstat::stop();
+} # END stepThree
+
+
+
+sub stepFour { 
+    local($tmpMod, $counter);
+# for good measure, since I do not trust the global target
+# test to go and compile in the test directories and also
+# hand down external options like Purify, I prefer to loop
+# over all the modules and make all in test by myself.
+    
+    warn "#" x 30 . "\n" if $debug;
+    warn "### STEP FOUR: PURIFY-TESTING \t(".localtime().")\n" if $debug;	
+    warn "#" x 30 . "\n" if $debug;
+    
+    vmstat::start("/tmp/VMSTAT-Claro2-$integ-$$", 4);
+#
+    main::environmentsCleanup();
+    $counter = 1;
+    foreach $tmpMod (Common::determineModulesFull($integ,1) ) { 
+	# TODO add testPreparation for VLTSW ...?
+	main::checkXvfb();
+	foreach $platform (@platforms) {
+	    local($tmpDir) = "$tmpMod/$platform";
+	    local($baseDir);
+	    chop($baseDir = `basename $tmpMod`);
+	    $baseDir  .= $platform;
+	    $baseDir =~ s/\/\.$//;
+	    ###########################
+	    $tmpDir =~ s/\/\.$//;
+	    next if ( ! -d $tmpDir || 
+		      ( -d $tmpDir && -d "$tmpDir/ws") );
+	    
+	    next if ( defined($Results{$tmpDir}{src}{p}) && 
+		      ( $Results{$tmpDir}{src}{p} != 0  ) )  ;
+	    
+	    if ( -f "$tmpDir/test/Makefile" ) { 
+		local($command, $result);
+		local($rc);
+		$command = "cd $tmpDir/test;  make $OPTIONS clean all ";
+		$sysMsg = "4:$counter/$numModules";
+		
+		# if the build failed there's no
+		# point in trying to test it
+		if ( $Results{$tmpDir}{src}{n} == 0) { 
+		    System $command,$sysMsg;
+		    storeResult($?,$tmpDir,test,p);
+		} else { 
+		    print "> $sysMsg build failed, skipping testing\n";
+	            $counter++;
+		    next;
+		}
+		
+		if ($?) { 
+		    warn ">>> $command failed ($tmpMod)\n" if $debug;
+		    warn ">>> Reverting to non-purified build ($tmpMod)\n" if $debug;
+		    $command = "cd $tmpDir/test;  make clean all ";		    
+		    $sysMsg = "4:REV $counter/$numModules";
+		    System $command,$sysMsg;
+		    # result here is not stored
+		    $sysMsg = "4:$counter/$numModules";
+		}
+	    
+	    # notice that if we have pkgin case, there will be
+	    # typically no test target, and if there's one, we
+	    # should use it!
+		if ( -f "$tmpDir/test/$tatSignature") {  
+		    $command = "cd $tmpDir/test; $TAT ";
+		} else { 
+		    if (main::isTargetAvailable(test ,"$tmpDir/test/Makefile" ) ) { 
+			$command = "cd $tmpDir/test;  make test ";
+		    } else { 
+			# we try with TAT
+			$command = "cd $tmpDir/test; $TAT ";
+		    }
+		}
+		$rc = System $command,$sysMsg,"1","/dev/null";
+		storeResult($rc,$tmpDir,test,tp);
+		storeElapsedTime($baseDir,4);
+
+		# ADDED because of timeouts on RED HAT enterprise
+		system "killACS > /dev/null 2>&1" 
+		    if ($project eq "ALMA");
+		
+		if ($rc) { 
+		    warn ">>> $command failed ($tmpMod)\n" if $debug;
+		}
+		
+		if ( main::isTargetAvailable(purifyReport,"$tmpDir/test/Makefile")) { 
+		    $command = "cd $tmpDir/test;  make purifyReport 2>&1";
+		} elsif (main::isTargetAvailable(pureReport,"$tmpDir/test/Makefile")) { 
+		    $command = "cd $tmpDir/test;  make pureReport 2>&1";
+		} else {
+		    # no target purifyReport. we should do 
+		    # something about it
+		    warn ">>> $tmpDir/test/Makefile has no purifyReport/pureReport target\n";
+	            $counter++;
+		    next;
+		}
+		
+		$result= `$command` ;
+		if ($?) { 
+		    warn ">>> $command failed ($tmpMod $?)\n" if $debug;
+		    $result =~ /Error (\d+)\s*$/;
+		    print "Purify Report: ERROR is $1\n[$result]\n";
+		    $PurifyReporting{$tmpDir} = $1;
+		    # now in theory we have a report
+		}
+	    } else {  # no Makefile
+		warn ">>> $tmpDir/test has no Makefile\n";
+	    }
+	   $counter++;
+	}# end loop over platform
+    }
+    vmstat::stop();
+    $accomplished{4} = 1;
+}
+
+# This subroutine inserts valgrind on each module having only c++ code
+# Than makes a test and collects the results 
+# The sub returns the ast table  %valgrindResults containing 
+# (module, report_file_path)
+# P.S.: to be used on not instrumented code and after a make build
+#
+sub stepValgrind {
+    #The valgrind option --log-file is not modifiable 
+    local($valgrindTools)="--tool=memcheck";
+    local($valgrindOptions)="--leak-check=full -v --trace-children=yes";
+
+    local($tmpMod);                           # Module path
+    local($platform);                         # LCU or WS 
+    local($sysMsg, $counter);
+    local($vDebug) = 1;
+
+    foreach $tmpMod (Common::determineModulesFull($integ,1) ) { 
+        
+	main::checkXvfb();
+	foreach $platform (@platforms) {
+	    local($tmpDir) = "$tmpMod/$platform";
+	    local($baseDir);
+	    local(@deliArray);                # Used to check if the src/Makefile contains
+                                              # references to c++ files
+            local(@testListArray);            # List of all TestList*.lite file in <module>/test
+            local($TestListFile);             # Each file of @testListArray             
+	    chop($baseDir = `basename $tmpMod`);
+	    $baseDir  .= $platform;
+	    $baseDir =~ s/\/\.$//;
+	    $tmpDir =~ s/\/\.$//;
+            
+	    next if ( ! -d "$tmpDir" || 
+		      ( -d "$tmpDir" && -d "$tmpDir/ws") );
+
+	    @deliArray = (Common::getFromMakefile("EXECUTABLES","$tmpDir/src/Makefile"), 
+			 Common::getFromMakefile("LIBRARIES","$tmpDir/src/Makefile"));
+
+            next if ($#deliArray == -1);
+	    $sysMsg = "2,8:$counter/$numModules";
+
+	    print ">>>> $sysMsg: module $tmpDir is interesting for valgrind\n" 
+		if ($vDebug);
+	    @testListArray = glob("$tmpDir/test/TestList*.lite");
+               
+            print @testListArray if ($vDebug);
+	    foreach $TestListFile (@testListArray) { 
+		# $TestListFile now contains the FQ path of a TestList file, in a module
+		# which we know to contain some C++/C deliverables (either EXE or LIBS)
+                local($outputFile);          # New TestList*.lite with valgrind options
+                local($scriptLineNumber);    # Script line number for test case (2)
+                local($case);                # Values: "1" for format 1, "2" for format 2
+                local(@TestListlineFile);    # TestList*.lite file to be analyzed for inserting 
+                                             # valgrind options
+                local($line);                # Line of @TestListlineFile
+
+		$outputFile = "";            # Initialization
+
+		if ( ! -f $TestListFile) { 
+		    warn ">>> Catastrophic error $TestListFile does not exist\n";
+		    next;
+
+		}
+            
+		open( TMPTESTFILE,"< $TestListFile");
+		@TestListlineFile = <TMPTESTFILE>;
+		close(TMPTESTFILE);
+
+		$scriptLineNumber = 1;       # Initialization
+		$case = 0;                   # Initialization
+
+		foreach $line (@TestListlineFile) {
+                    local(@parts);           # Words of $line where " " is used as separator
+                    local($cntr);	     # Counter for distinguishing scripts in one test line
+                                             # marking them with progressive numbers
+                    local($status);          # Used to mark beginning of a sub command, identified 
+                                             # by the sequence "...", in the test line
+                    local($i);               # Index in the for control structure
+                    local($tmp);             # Temporary line containg 1 test modified with valgrind
+                    local(@words);           # Used to retrive the script name for the $line
+                    local($path);            # Absolute path to TestList.sed 
+
+		    if (($line =~ /PROLOGUE/) ||  
+			($line =~ /ENVIRONMENT/) ||  
+			($line =~ /EPILOGUE/) || ($line =~ /SOURCE/)) {
+			$outputFile .= $line;
+			next;
+		    }
+		    if ( ( $line =~ /^[\s]*\#/ ) || ( $line =~ /^[\s]*$/ ) ) {  
+			   $outputFile .= $line;
+			   next;
+		    }
+
+		    # Line is processed
+                    # Line has some content that requiries analysis
+		    # The line could have two formats:
+		    # 1) number ScriptName [@SLEEP X] [script] "script [options]+" [[@SLEEP X] [[script]| ["script [options]+"]]]
+                    # 2) Script [options]
+
+                    # Removal of whitespaces chars at the begin. of the string
+                    $line =~ s/^\s+//;   
+		    # Removal of whitespaces chars at the end of the string  
+                    $line =~ s/\s+$//;   
+		    # Removal of whitespaces sequences
+                    $line =~ s/\s+/\ /g; 
+         
+                    if ( $line =~ /^[\d]+/ ) {
+			# First case            
+			if ( $case == 0 ) {
+			    $case = 1;
+			}
+   
+			@parts = split(/\ /, $line);  # Line splitted by " "
+
+			$cntr = 1;               # Initialization                        
+			$status = 0;                # 1 at the beginning of a string starting with quote
+	       
+			$tmp = $parts[0]." ".$parts[1]." ";
+			for ( $i = 2 ; $i <= $#parts ; $i++ ) { 
+			    if ( $parts[$i] =~ /^\"/ ) {   # " emacs
+				if ( $parts[$i]=~ /\@SLEEP/ ) {
+				    $parts[$i]=~s/^\"//;   # " emacs
+				    $tmp=$tmp."\"$parts[$i] "; # "" emacs
+				    $status=1;
+				    next;
+				} else {
+				    $status = 1;
+				    $parts[$i] =~s/^\"//;  # " emacs
+				    $tmp .= "\"valgrind $valgrindTools $valgrindOptions --log-file=./tatlogs/run\$PID/VALGRIND_$parts[1]_Script_$cntr  $parts[$i] ";
+				    $cntr++;
+				    next;
+				}
+			    }
+			    
+			    if ( $parts[$i] =~ /\"$/ ) { # " emacs
+				 $status = 0;
+				 $tmp .= $parts[$i]." ";
+				 next;
+			     }
+
+			    if ( $status == 1) {
+				$tmp .= $parts[$i]." ";
+				next;
+			    } else {
+				$tmp .="\"valgrind $valgrindTools $valgrindOptions --log-file=./tatlogs/run\$PID/VALGRIND_$parts[1]_Script_$cntr $parts[$i]\" ";
+				$cntr++;
+				next;  
+			    }
+			}	  
+			$outputFile .= $tmp."\n";
+		    } else {
+			# Second case
+			if ( $case == 0 ) {
+			    $case=2;
+			}
+
+			@words = split(/ /,$line); # Get the script name     
+			$line = "$scriptLineNumber $words[0] \"valgrind $valgrindTools $valgrindOptions --log-file=./tatlogs/run\$PID/VALGRIND_$words[0] $line\"";
+			$scriptLineNumber++;
+			$outputFile .= $line."\n";
+		    }
+		} # end loop over lines
+
+	        # Rewrite the TestList.lite inserting valgrind
+	 	print ">>>> $sysMsg:  Modifying file $TestListFile\n" if ($vDebug);
+		system "mv $TestListFile $TestListFile.orgvg";
+		if ($?) { 
+		    warn ">>> Could not make backup of $TestListFile\n";
+		}
+		open( newTestList,">  $TestListFile");
+                print newTestList $outputFile;
+                close(newTestList);
+                
+         
+                # In case of case 2 a new filter is required in the TestList[\w]*.sed
+                if ( $case == 2 ) {
+		    $path = $TestListFile;
+		    $path =~ s/TestList[\w]*\.lite$/TestList.sed/;
+    
+		    # Append to the TestList[\w]*.sed a filter
+		    print ">>>> $sysMsg: A) Modifing file $path\n" if ($vDebug);
+		    open( TestListSed,">>  $path");
+		    print TestListSed "\ns/^[0-9]*\ -\ //g\n";
+   	 	    close(TestListSed);
+		}
+	    } # end of loop over @testListArray
+            
+            # Here we have modified all the files in the test dir 
+	    # and now we can make a test
+            # and than collect results
+            if ( $#testListArray != -1 ) {
+   
+                local(@filesInModule);         # Selected VALGRIND result files 
+                local($fileInModule);          # each file in @filesInModule
+                local(@valgrindFiles);         # VALGRIND result files     
+                local($valgrindFile);          # Each file in @valgrindFiles
+                local(@vgFileLines);           # File $valgrindFile content 
+                local($rc);                    # Return code from the command
+		local($command) = "cd $tmpDir/test ; make test"; # Command
+
+		print ">>>> $sysMsg: B) Making $command\n" if ($vDebug);
+		$rc = System "$command > /dev/null 2>&1",$sysMsg,"1","";
+                if ($rc) {
+		    warn ">>> $command failed\n";
+                }
+		# reverting the modified files
+		foreach $TestListFile (@testListArray) { 
+		    if ( -f "$TestListFile.orgvg") { 
+			system "mv $TestListFile.orgvg $TestListFile";
+			if ($?) { 
+			    warn ">>> Could not revert backup of $TestListFile\n";
+			}
+		    }
+		}
+                # Collecting data                
+                @filesInModule=();
+                @valgrindFiles = glob("$tmpDir/test/tatlogs/run*/VALGRIND*");
+
+                # Now we filter only the VALGRIND files that refers to /introot or /bin
+                # and save these results in  @filesInModule
+                foreach $valgrindFile (@valgrindFiles) {
+            
+		    ###open( TMPTESTFILE,"< $valgrindFile");
+		    ###@vgFileLines=<TMPTESTFILE>;
+		    ###close(TMPTESTFILE);
+
+                    # file to be considered are file on wich we find:
+                    # 1) --exec=../bin
+                    # 2) --exec=$INTROOT
+                    # 3) --exec=<absolute path of this module>
+                    # In the presintax grep variables do not need 
+		    # to be cleaned with \ symbols
+	            $psyntax = $ENV{ 'INTROOT' };
+		    $psyntax2 = "$basecamp$tmpDir/bin";
+                    # MZA ha cambiato idea. Adesso vuole si considerino tutti i file senza questo filtro
+		    ###if ( grep('/\-\-exec=\.\.\/bin[a-zA-Z0-9_$\(\)\/\ ]+/', 
+			###      @vgFileLines) ||
+			 ###grep('/\-\-exec=$psyntax[a-zA-Z0-9_$\(\)\/\ ]+/', 
+			   ###   @vgFileLines) ||
+			 ###grep('/\-\-exec=$psyntax2 [a-zA-Z0-9_$\(\)\/\ ]+/', 
+			 ###     @vgFileLines) ) { 
+		    push  @filesInModule,  $valgrindFile;
+		    #print  ">> To be analized file: $valgrindFile\n";
+		    ###}
+                }
+		
+                # Now we create the report for these files
+	        if ( $#filesInModule != -1 ) {
+
+                    local($report);       # entire Valgrind report
+                    local($reportMiddle) = ""; # Part of the final $report containing all the 
+                                            # internal anchors
+                    local($reportBlock) = "";  # Part of the final $report containing all the
+                                            # revealed VALGRIND problems
+                    local($reportEnd);      # Final html part of $report
+ 
+		    $reportEnd="</body>\n</html>\n";  # Initialziation
+		    $report="<html>\n<title>VALGRIND Report on TAT tests</title>\n<body>\n<center><h2>VALGRIND Report on TAT tests</h2><p>$tmpDir<p>".Common::Timestamp()."</center><p><br>\n<h3>File[s]:</h3>\n<table>\n";
+
+		    # Here we process each file
+		    foreach $fileInModule (@filesInModule) {
+                        
+                        local($lineOne);              # Each line of @filesInModule
+                        local(@list);                 # Each file $lineOne 
+                        local(@uniqued);              # Sorted file with no duplicated sequencial lines
+                        local($oldline);              # Temporary line used in the process to remove
+                                                      # duplicated sequencial lines
+                        local($lineTwo);              # Each line of @uniqued
+                        local($flag1);                # It is set to 1 when, processing @uniqued  the 
+                                                      # line containing "--exec=" is reached.
+                        local($keepBlock);            # It is set to 1 when, analizyng @uniqued, a 
+                                                      # block of relevant lines is reached
+                        local($block);                # Contains html code for highlithing file names
+
+			$lineOne = $fileInModule;
+			$lineOne =~ s/\n//g;
+
+			# Removal of double empty lines in order to separate sequences of 
+                        # code report. Result goes on @uniqued            
+			open( TMPTESTFILE,"< $lineOne");
+			@list=<TMPTESTFILE>;
+			close(TMPTESTFILE);
+
+			@uniqued= ();
+			$oldline = "";
+			foreach $line (@list){
+			    if ($oldline ne $line ) {
+				push @uniqued, $line; 
+				$oldline=$line;
+			    } 
+			}
+			$flag1=0;                    # Initialization
+			$keepBlock=0;                # Initialization
+			$block="";                   # Initialization
+		 
+			foreach $lineTwo (@uniqued) {
+			    # Used to create a sintax to be seach in ~/
+                            local($presintax, $presintax2); 
+			    # Used to extract only file name from path $lineOne
+                            local($tmplineOne);      
+
+			    $lineTwo =~ s/\n//g;
+			    # lines until "--exec" are not considered
+			    ###if ( (!($lineTwo =~ /--exec=/) ) && ($flag1==0)) {
+                            if ( (!($lineTwo =~ /Contents of/) ) && ($flag1==0)) {
+				next;
+			    } else {
+				$flag1 = 1;
+				###if (!($lineTwo =~ /--exec=/)) {
+                                if (!($lineTwo =~ /Contents of/)) {
+				    ###if (($lineTwo =~ /Use of unitialized value of size/) || ($lineTwo =~ /[\d]+ bytes in [\d]+ blocks are possibly lost/) || ($lineTwo =~ /[\d]+ bytes in [\d]+ blocks are definitely lost/) || ($lineTwo =~ /uninitialized/ )) {
+				    if (($lineTwo =~ /Use of unitialized value of size/) || ($lineTwo =~ /Invalid read of size/) || ($lineTwo =~ /Process terminating with default action of signal/) || ($lineTwo =~ /Syscall param write/) || ($lineTwo =~ /[\d]+ bytes in [\d]+ blocks are possibly lost/) || ($lineTwo =~ /[\d]+ bytes in [\d]+ blocks are definitely lost/) || ($lineTwo =~ /uninitialized/)) {
+
+					# This is the beginning of code report block
+					$tmplineOne = $lineOne;
+					$tmplineOne =~ s/(.*)VALGRIND(.*)/\2/;
+					$block = $block."<h3><a name=\"$tmplineOne\">$tmplineOne</a></h3><br><FONT COLOR=red>$lineTwo</FONT><br>";
+
+					$keepBlock=1;
+					next;
+				    } else {
+					if  (($lineTwo =~ /^==[\d]+==\s*$/) && ($keepBlock==1))  {
+					    # This is the end of the code report block
+					    $keepBlock=0;
+					    # parts to be considered should have:
+					    # 1) ../bin
+					    # 2) $INTROOT
+					    # 3) <absolute path of this module>
+					    $presintax = $ENV{ 'INTROOT' };
+					    $presintax =~ s/\//\\\//g;
+					    $presintax =~ s/\./\\./g;
+					    $presintax2 = "$basecamp$tmpDir/bin";
+					    $presintax2 =~ s/\//\\\//g;
+					    $presintax2 =~ s/\./\\./g;
+					    if (( $block =~ /$presintax/ ) || ( $block =~ /\.\.\/bin/ ) || ($block =~ /$presintax2/ )) {
+                                            ###if (( $block =~ /\.\.bin/ ) || ($block =~ /$presintax2/ )) {
+						# Removal of the path from the file name
+						$tmplineOne = $lineOne;
+						$tmplineOne =~ s/(.*)VALGRIND(.*)/\2/;
+						$reportMiddle = $reportMiddle."<tr><td><ul><li><a href=\"#$tmplineOne\">$tmplineOne</a><ul></td></tr>\n";
+						$reportBlock = $reportBlock."<hr><br><pre>$block</pre>";
+					    }
+					    # Further analisys of the block has to be done here
+					    # reset of the $block
+					    $block="";
+					} else {
+					    if ($keepBlock==1) {
+						$block = $block."$lineTwo\n";
+					    }
+					}
+				    }
+				}
+			    }
+			}
+		    }  # end of loop over @filesInModule
+		    $report .= $reportMiddle."</table><br><br>".$reportBlock.$reportEnd;
+
+		    # Create a report if there are data
+		    if ( $reportMiddle ne "" ) {
+			local($reportLocal)  = "$tmpDir/test/$VGReport";
+			open(reportHtml,"> $reportLocal");
+			print reportHtml "$report";
+			print ">>>> $sysMsg: C) Creating report $reportLocal\n"
+			    if ($vDebug);
+			close(reportHtml);    
+		        # here we copy the entire test directory on the web 
+                        print  ">>>> $sysMsg: D) Copying files in report area.\n\n"
+			    if ($vDebug);
+	                system "cp -rf $tmpDir/test/tatlogs/run*/VALGRIND* $ProjectReport/$tcDir/$tmpDir";
+                        system "chmod 644 $ProjectReport/$tcDir/$tmpDir/VALGRIND*";      
+		    } else {
+			# There is no report. Data can be removed
+                        print ">>>> $sysMsg:  There is no report. Data can be removed.\n\n" if ($vDebug);
+			unlink glob("$tmpDir/test/tatlogs/run*/VALGRIND*");
+		    }
+		} else {
+		    # No one of the VALGRIND files produced has 
+                    # 1) --exec=../bin
+                    # 2) --exec=$INTROOT
+                    # 3) --exec=<absolute path of this module>
+                    # so we delete them
+                    print ">>>> $sysMsg: Files unused. Delete them.\n" if ($vDebug);
+	            unlink glob("$tmpDir/test/tatlogs/run*/VALGRIND*");
+                } # end if 
+	    } else { # end if over empty @testListArray
+		print ">>>> $sysMsg: Module $tmpDir has no TestList*.lite\n" 
+		    if ($vDebug);
+	    }
+	} # end loop over platforms
+	  $counter++;
+    } # end loop over modules
+}
+
+sub openSocket { 
+    local($port, $them, $string) = @_;
+    local($hostname, $sockaddr, $name, $aliases, $proto);
+    local($this, $that, $thisaddr, $thataddr);
+    $hostname = $main::HOST;
+    $sockaddr = 'S n a4 x8';
+    
+    
+    ($name, $aliases, $proto) = getprotobyname('tcp');
+    ($name, $aliases, $port) = getservbyname($port, 'tcp')
+	unless $port =~ /^\d+$/;
+    ($name, $aliases, $type, $len, $thisaddr) =
+	gethostbyname($hostname);
+    ($name, $aliases, $type, $len, $thataddr) = gethostbyname($them);
+    
+    $this = pack($sockaddr, &AF_INET, 0, $thisaddr);
+    $that = pack($sockaddr, &AF_INET, $port, $thataddr);
+
+    for($i = 0; $i < 3; $i++) { 
+	eval { 
+	    print ">> openSocket attempt #$i (".localtime().")\n";
+	    socket(S, &PF_INET, &SOCK_STREAM, $proto) || die ">>> socket: $!";
+	    bind(S, $this) || die  "bind: $!";
+	    connect(S, $that) || die "connect: $!";
+	    print S $string;
+	    close(S);
+	};
+	if ($@) { 
+	    warn ">>> $@ ($port,$them)";
+	    sleep 5;
+	} else { 
+	    print ">> socket transmission successful ($port, $them)\n";
+	    last;
+	}
+    }
+}
+
+# this routine is both called to notify the host station in case of a remoteHost
+# setup, but also used to notify the controlling process (NRI)
+# In the first case the content of the string does not matter
+# In the second case the dynamic figures are transmitted.
+# Notice though that dumpMainReport() must have been called first
+#
+sub provideFeedback { 
+    local($port, $them, $string,@checkArray);
+    ($port,$them) = split(/\@/,$main::feedback);
+
+    $string = "$main::project $main::integ $main::extractionEnd $main::HOST 4";
+    $string .= ":".$Claro::feedbackDataCarrier;
+    print ">>>> FEEDBACK STATS: $Claro::feedbackDataCarrier\n";
+    @checkArray = split(/,/,$Claro::feedbackDataCarrier);
+    if ( $#checkArray != $#Common::Summ) { 
+	warn ">>> something's wrong with feedback stats, quantity does not match\n";
+    }
+    openSocket($port, $them,$string);
+}
+
+
+sub setUpServer { 
+    local($port) = $main::reportPort;
+    local($sockaddr) = 'S n a4 x8';
+
+    ($name, $aliases, $proto) = getprotobyname('tcp');
+    ($name, $aliases, $port) = getservbyname($port, 'tcp')
+	unless $port =~ /^\d+$/;
+    
+    $this = pack($sockaddr, &AF_INET, $port, "\0\0\0\0");
+    
+    socket(S, &PF_INET, &SOCK_STREAM, $proto) || die "socket: $!";
+    # this bind should be put in an eval
+    bind(S, $this) || warn "bind: $!";
+    listen(S, 5) || warn "connect: $!";
+
+    print "Listening again\n";
+    ($addr = accept(NS,S)) || die $!;
+    print "accept ok \t(".localtime().")\n";
+    ($af,$port,$inetaddr) = unpack($sockaddr,$addr);
+    @inetaddr = unpack('C4',$inetaddr);
+    #print "$af $port @inetaddr\n";
+    $| = 1;
+    $string = <NS>;
+    close(NS);
+    return $string;
+}
+
+##########################################################################
+####### MAIN #############################################################
+
+
+# TO DO:
+
+#  testbed
+if (0) { 
+    print "TESTBED ACTIVE\n";
+    $basecamp="/diska/vlt_tmp/NRI/VLT";
+    chdir $basecamp || die "Could not chdir to $basecamp\n";
+    $project = "VLT";
+    @platforms=("lcu","ws","");
+    # put the things to be tested in here.
+    $webDest = "/home/web/sqa/docs/vlt/snapshot3";
+    $integ = "atcsBUILD";
+    $tcDir="TestCoverage-Linux";
+    $ProjectReport = "$integ-Reports";
+    exit;
+}
+package main;
+
+$TMPFATHER = getppid();
+########################################
+# VARIABLES SETTINGS
+########################################
+$debug = 1;
+$rcsId = '$Revision: 1.1 $';
+$IPC_KEY=8999;
+$REMOTE = "ssh";
+$header2 = "<!--#include virtual=\"../../frame/top.html\" -->\n<center>\n";
+$footer2 = "</center>\n</table>\n<!--#include virtual=\"../../frame/bottom.html\" -->";
+$body = "<body background=\"../../../frame/background.jpg\">";
+chop($OS = `uname`);
+chop($HOST = `hostname`);
+chop($KERNEL = `uname -r`);
+chop($whoami = `whoami`);
+
+
+###########################################
+## WHICH PURIFY DO WE HAVE AVAILABLE? #####
+###########################################
+`which purecov > /dev/null 2>&1`;
+if ( $? == 0) { 
+    $purifyOCIAvailable = 1;
+}
+
+if ( $OS ne "Linux") { 
+    $purifySCIAvailable = 0;
+} else { 
+    `which attolcc > /dev/null 2>&1`;
+    if (  $? == 0) { 
+	$purifySCIAvailable = 1;     
+    } else { 
+	$purifySCIAvailable = 0;
+    }
+}
+
+`which valgrind > /dev/null 2>&1`;
+if ( $? == 0) { 
+    $valgrindAvailable = 1;     
+}
+
+# In case the optional argument "-nofork" is provided it will be removed 
+# from @ARGV
+if ( $ARGV[0] eq "-nofork" ) { 
+	$NOFORK = 1;
+	shift @ARGV;
+    }
+
+###########################################
+
+if($#ARGV < 16 ) { 
+    if ( $ARGV[0] eq "-kill" ) { 
+	deleteSemaphore();
+	exit;
+    } 
+    elsif ( $ARGV[0] eq "-release" ) { 
+	giveSemaphore();
+	exit;
+    }  
+    elsif ( $ARGV[0] eq "-get" ) { 
+	getSemaphore();
+	exit;
+    } elsif ($ARGV[0] eq "-cleanup") { 
+	$0 = "NRIDyn-$project-CLEANUP";
+	timestamp();
+	getSemaphore();
+	timestamp();
+	cleanUpIntroot();
+	timestamp();
+	giveSemaphore();
+	timestamp();
+	exit;
+    } else { 
+	die "Usage Claro [ -nofork ] <project> <buildModule> <basecamp> <webdest> <release> <notify> <notify test> <extractionEnd> <timeout> <build> <test> <instrument> <valgrind> <remoteHost> [<excludees>] <endurance> <feedback>\n";
+    }
+}
+
+# TIME_WAIT
+$debug = 1 if $ARGV[0] eq "-debug";
+###
+# CAUTION: NEXT THREE VARIABLES ARE VERY DANGEROUS
+# AND SHOULD ONLY BE MODIFIED FOR DEBUGGING/TESTING
+#
+$FAKE = 0;
+$NOTEST = 0;
+$SEMAPHORE = 1;
+
+$dirNRI = $Claro::dirNRI;
+################################################
+$SIG{'HUP'} = 'CLEANUP';
+
+$project = $ARGV[0];
+$integ = $ARGV[1];
+$basecamp = $ARGV[2];
+$base_dest = $ARGV[3];
+$release = $ARGV[4];
+$notify = $ARGV[5];
+$notifyTest = $ARGV[6];
+$extractionEnd = $ARGV[7];
+$timeoutThreshold = $ARGV[8];
+$build  = $ARGV[9];
+$test = $ARGV[10];
+$instrument = $ARGV[11];
+$valgrind = $ARGV[12];
+$remoteHost = $ARGV[13];
+$excludees = $ARGV[14];
+$ENDURANCE = $ARGV[15];
+$feedback  = $ARGV[16];
+################################################
+## CHECKING THE OPTIONS #########################
+################################################
+if ( $build ne "on" && $build ne "off") { 
+    die "Set the build value properly [on|off]\n";
+}
+
+if ( $test ne "on" && $test ne "off") { 
+    die "Set the test value properly [on|off]\n";
+}
+
+if ( $notify ne "on" && $notify ne "off") { 
+    die "Set the notify value properly [on|off]\n";
+}
+
+if ( $notifyTest ne "on" && $notifyTest ne "off") { 
+    die "Set the notify test value properly [on|off]\n";
+}
+
+if ( $instrument ne "on" && $instrument ne "off") { 
+    die "Set the instrument ($instrument) value properly [on|off]\n";
+}
+
+if ( $valgrind ne "on" && $valgrind ne "off") { 
+    die "Set the valgrind ($valgrind) value properly [on|off]\n";
+}
+
+if ( $excludees eq "") { 
+    $excludees = "\"\"";
+}
+
+if ( ! -d "$basecamp/$integ") { 
+    die "$basecamp/$integ not there or not a directory\n";
+}
+
+chdir $basecamp || die ">>> **Could not chdir to basecamp $basecamp**\n";
+
+$mainLogFile = "Claro2-$integ-$$.log";
+##############################################
+# FORKING SECTION ############################
+
+if ( ! $NOFORK) { 
+    $pid = fork();
+    if ( $pid  > 0 ) { 
+	exit;
+    }
+    close(STDIN);
+    close(STDOUT);
+    close(STDERR);
+    open(STDERR,"> $dirNRI/$mainLogFile") || die "Could not open $mainLogFile for STDERR\n";
+    open(STDOUT,">&STDERR") || die "Could not open $mainLogFile for STDOUT\n";
+    POSIX::setsid();
+    open(TTY, " < /dev/tty");
+    ioctl(TTY,&TIOCNOTTY,0);
+    close(TTY);
+    $0 = "NRIDyn-$project-$integ";
+    STDOUT->autoflush(1);
+    STDERR->autoflush(1);
+    $| = 1;
+}  
+#################################################
+
+if($remoteHost =~ /\@/) { 
+    # I am already running on a remote host
+    ($reportPort,$reportStation) = split(/\@/,$remoteHost);
+    $remoteHost = "";
+    print 
+    "I am running on a remote host with reporting due to $reportPort\@$reportStation\n";
+} elsif ($remoteHost =~ /\w|\d/ ) {
+    $reportPort = 6666;
+    print "Claro PID $$ is about to spawn to remote host using port $reportPort\n";
+}
+
+
+
+$base_dest .= "/" if ($base_dest !~ /\/$/);
+$hostname = $Common::webhost;
+$username = $Common::username;
+$sqahost  = $Common::sqahost;
+$sinnerFile = "$dirNRI/Sinners.$project";
+
+
+@Common::EXCLUDEES = ();
+foreach $del (split(/:/,$excludees) ) { 
+    $del =~ s/\s//g;
+    push(@Common::EXCLUDEES, $del);
+}
+$webDest =  $base_dest;
+$webDest =~ s#/home/web/sqa/docs##;  #
+#
+
+$VLTSW = 0;
+if ($integ eq "vltsw") {
+   $VLTSW = 1;
+}   
+
+$ENV{DISPLAY} = ":2.0";
+
+if ( $SEMAPHORE) { 
+   getSemaphore();
+}
+
+# In case the command used to activate Claro2 contains
+# a remoteHost option we have to reitarate the command
+# without "-nofork" and without "&" at the end in order to
+# make the calling process wainting for the called one to finish
+if ( $remoteHost ne "") {
+   # Call Claro2 with -nofork option on a remote host
+   local($tmpCommand);
+   local($sameUser) =$ENV{USER};
+   
+   # first ping
+   $tmpCommand = "ping -c 10 $remoteHost > /dev/null";
+   system $tmpCommand;
+   if ($?) { 
+       print ">>> ping non responsive on remote host $remoteHost\n";
+       print ">>> remote host operations aborted \n"; 
+       $remoteHost = ""; $test = "off";
+   } else { 
+       # then attempt remote Call
+       $tmpCommand = "ls /dev/null";
+       $tmpCommand = remoteCall($remoteHost,$sameUser,$tmpCommand);
+       system $tmpCommand;
+       if ($?) { 
+	   print ">>> remote shell non responsive on remote host $remoteHost\n";
+	   print ">>> ($tmpCommand)\n";
+	   print ">>> remote host operations aborted \n"; 
+	   $remoteHost = ""; $test = "off";
+       } else { 
+	   if ( -f $sinnerFile) { 
+	       $tmpCommand = "scp  $sinnerFile $sameUser\@$remoteHost:$sinnerFile";
+	       system $tmpCommand;
+	       warn ">>> failed to copy sinners list to the remote host $remoteHost\n>>> ($tmpCommand)\n" 
+		   if($?);
+	   } else { 
+	       warn ">>> $sinnerFile **missing**\n";
+	   }
+	   $tmpCommand = 
+	       "'sqam/scripts/crontabs/Claro2 $project $integ  $basecamp $base_dest $release $notify $notifyTest $extractionEnd $timeoutThreshold $build $test $instrument $valgrind $reportPort\@$main::HOST $excludees $ENDURANCE $feedback'";
+	   print $tmpCommand."\n";
+	   system(remoteCall($remoteHost,$sameUser,$tmpCommand));
+	   if ($?) { 
+	       warn ">>> ******************************************\n";
+	       warn ">>> CONNECT TO $remoteHost AS $sameUser FAILED\n";
+	       warn ">>> ******************************************\n";
+	       print ">>> remote host operations aborted \n"; 
+	       $remoteHost = "";
+	   } else { 
+	       # tasks here are:
+	       # 1) wait for completion 
+	       # 2) reset the semaphore
+	       # 3) provide feedback
+	       # 4) end
+
+	       $string = Claro::setUpServer();
+	       print "RECEIVED $string (".localtime()."\n";
+	       if($SEMAPHORE) { 
+		   giveSemaphore();
+	       }
+
+	       if ($feedback ne "") { 
+		   Claro::provideFeedback();
+		 }
+	       warn "#" x 30 . "\n" if $debug;
+	       print "Terminating Claro...\n" if $debug;
+	       
+	       exit;
+	   }
+	   #
+       }
+   }
+}
+
+
+
+# cleanup all those annoying files idl*.cc
+system "find /tmp -name idl\\*.cc -user $whoami -exec rm -f {} \\;";
+archivePreviousLogs();
+
+if ( ! -d $basecamp) {
+    system "mkdir -p $basecamp";
+    if ($?) { 
+	if($SEMAPHORE) { 
+	    giveSemaphore();
+	}
+	die "Failed to mkdir $basecamp\n";
+    }
+}
+
+timestamp();
+
+if ($VLTSW) { 
+    $OLD_PATH=$ENV{PATH};
+    $OLD_LPATH=$ENV{LPATH};
+    
+    if ( $OS eq "Linux") { 
+	#Update LD_LIBRARY_PATH for linux
+	$OLD_LD_LIBRARY_PATH=$ENV{LD_LIBRARY_PATH};
+    } 
+    elsif ( $OS eq "HP-UX") { 
+	#Update SHLIB_PATH for "HP-UX" 
+	$OLD_SHLIB_PATH=$ENV{SHLIB_PATH};
+    }
+}
+
+# this sequence of parameters should be made equal to NRI, for consistency
+Claro::initialize($project, $integ, $basecamp, $base_dest, 
+		  $release, $notify, $notifyTest, $extractionEnd, 
+		  $timeoutThreshold, $build, $test, $instrument, $valgrind,
+		  $remoteHost,  $excludees, $ENDURANCE, $feedback, $debug);
+
+if ($VLTSW) { 
+    Claro::stepCleanForVLTSW();
+  }
+
+$startTime = time();
+if ($Claro::NOBUILD) { 
+    print "### WARNING: NOBUILD IS ON, SKIPPING STEP ONE\n";
+} else {
+    Claro::stepOne();
+  }
+
+if ( $reportStation ne "") { 
+    # this instance has been spawn remotely and should notify
+    # the calling station of completed step one
+    print "> reporting back to $reportPort \@ $reportStation\n";
+    Claro::openSocket($reportPort, $reportStation,"$project $integ $extractionEnd $main::HOST 1\n");
+
+}
+Claro::stepIntermediate();
+Claro::findUnusedFiles($startTime);
+Claro::stepDirty();
+
+if ($Claro::NOTEST) { 
+    print "### SKIPPING STEP TWO\n";
+} else { 
+    Claro::stepTwo();
+      if ( $valgrindAvailable && $valgrind eq "on" ) { 
+	  Claro::stepValgrind();
+	}
+  }
+
+if ( $instrument eq "on" ) { 
+    Claro::dumpMainReport("RUNNING");
+      takeSnapshot("$Claro::ProjectReport/$Claro::tcDir/Claro2-$integ.snap");
+      Sinners::fireFailureNotifications();
+      
+      if ($VLTSW) { 
+	  ResetVariableDir("INTROOT");
+	  ResetVariableDir("INS_ROOT"); 
+	  ResetPath();  
+      } 
+      
+      # the following is before step two and half
+      if ($VLTSW) { 
+          # We can use INTROOT.purify and build one by one the module....	  
+	  System "rm -rf $ENV{VLTROOT}.purify","";	  
+	  CreateIntroot ("$ENV{VLTROOT}.purify");
+	  $ENV{INTROOT}=$ENV{VLTROOT}.".purify";
+	  Claro::stepCleanForVLTSW();
+	  
+          if ( $purifyOCIAvailable ) {
+	      if ($ENV{$RATIONAL_OCI_DIR} ne "") { 
+		  system "find $ENV{$RATIONAL_OCI_DIR}/.. -user $whoami -name \"cache\" -type d -exec rm -rf {} \\;";
+		  
+	      }
+	  }
+	  if ( $purifySCIAvailable ) {
+	      if ($ENV{$RATIONAL_DIR} ne "") { 
+		  system "find $ENV{$RATIONAL_DIR}/.. -user $whoami -name \"cache\" -type d -exec rm -rf {} \\;";
+		  
+	      }  
+	  }
+	  
+      } else {
+	  # update the introot to the introot for purify
+	  updateIntroot("$ENV{INTROOT}", "$ENV{INTROOT}.purify");
+	  # then reset the INTROOT variable for all children of this session
+	  $ENV{INTROOT} .= ".purify";
+	  
+      } #end vltsw case
+      
+      if ($main::OS eq "Linux") { 
+	  # which Purify do we have available?
+	  if ( $purifyOCIAvailable && $purifySCIAvailable) { 
+	      Claro::stepTwoAndHalf();  # to get memory reports
+		if ( ! $Claro::CVS && ! $VLTSW) { 
+		    System "pkginClean $integ";
+		}
+		Claro::stepThree();
+		
+		if ( ! $Claro::NOTEST ) {
+		    Claro::stepFour(); # to get coverage reports
+		  }
+	    } 
+	  elsif  ($purifyOCIAvailable) {
+	      Claro::stepTwoAndHalf();  # to get memory and coverage reports
+	    } 
+	  elsif ($purifySCIAvailable) { 
+	      Claro::stepThree();
+		if ( ! $Claro::NOTEST ) {
+		    Claro::stepDirty();
+		      Claro::stepFour();
+		  }
+	    } else { # too bad! you do not have any Purify installed.
+		# do nothing!
+
+	    }
+      } else {  # it is not Linux
+	  if ( ! $Claro::CVS && ! $VLTSW) { 
+	      System "pkginClean $integ";
+	  }
+	  if ( $purifyOCIAvailable ) { 
+	      Claro::stepThree();
+		if ( ! $Claro::NOTEST ) {
+		    Claro::stepDirty();
+		      Claro::stepFour();
+		  }
+	    } else { 
+		# bad luck.
+	    }
+      }
+  } else { # end if instrument on
+      Sinners::fireFailureNotifications();
+    }  
+Claro::dumpMainReport("FINAL");
+takeSnapshot("$Claro::ProjectReport/$Claro::tcDir/Claro2-$integ-final.snap");
+Common::publishReport("$Claro::ProjectReport/$Claro::tcDir/Claro2-$integ-final.snap");
+
+
+if($SEMAPHORE) { 
+   giveSemaphore();
+}
+
+if ($feedback ne "") { 
+    Claro::provideFeedback();
+}
+
+warn "#" x 30 . "\n" if $debug;
+warn "### STEPS COMPLETED \t(".localtime().")\n" if $debug;	
+warn "#" x 30 . "\n" if $debug;
+print "Terminating Claro...\n" if $debug;
+
+# the dog's biting its tail
+# we should now close STDOUT and STDERR and copy the file to the web.
+if ( -f "$dirNRI/$mainLogFile" ) { 
+    close(STDOUT);
+    close(STDERR);
+    system "cp $dirNRI/$mainLogFile $Claro::ProjectReport/$Claro::tcDir";
+    warn "Failed copy of main log file\n" if $?;
+    Common::publishReport("$Claro::ProjectReport/$Claro::tcDir/$mainLogFile");
+} else { 
+    print "No main log could be found on $main::HOST\n";
+    close(STDOUT);
+    close(STDERR);
+}
+

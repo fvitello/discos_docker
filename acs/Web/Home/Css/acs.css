@@ -1,0 +1,17 @@
+A.leftmenu:link{color:#ffffff; text-decoration: none; font-weight: bold; font-size: 14px; }
+A.leftmenu:visited{color:#ffffff; text-decoration: none; font-weight: bold; font-size: 14px; }
+A.leftmenu:hover{color:#ffffff; text-decoration: underline; font-weight: bold; font-size: 14px; }
+
+A.leftmenu2:link{color:#ffcccc; text-decoration: none; font-weight: bold; font-size: 14px; }
+A.leftmenu2:visited{color:#ffcccc; text-decoration: none; font-weight: bold; font-size: 14px; }
+A.leftmenu2:hover{color:#ffcccc; text-decoration: underline; font-weight: bold; font-size: 14px; }
+
+A.navig:link{color:#0000cc; text-decoration: none; font-weight: normal; font-size: 14px; }
+A.navig:visited{color:#0000cc; text-decoration: none; font-weight: normal; font-size: 14px; }
+A.navig:hover{color:#ff0000; text-decoration: underline; font-weight: normal; font-size: 14px; }
+
+body{font-family: Helvetica; font-size:14px;}
+td{font-family: Helvetica; color: #000000; font-size: 14px;}
+div.outlined { border: solid; border-width: thin; padding: 1.0em; background: #ffff99; color: #000066; font-weight: bold; text-align: left; }
+
+tooltip {position:absolute;visibility:hidden;border:1px solid black;font-size:12px;layer-background-color:lightyellow;background-color:lightyellow;padding:1px";}

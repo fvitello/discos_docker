@@ -1,0 +1,45 @@
+#! /bin/bash
+
+#---------------------------------------------------------
+# Fetch again from a standard machine the file that we
+# normally remove because we do not want to distribute.
+#---------------------------------------------------------
+
+startDir=$PWD
+remHost=te22.hq.eso.org
+cd $HOME
+
+echo "This command must be executed in the directory where the command reside!"
+
+#
+# CVS passwords
+#
+
+echo "Going to fetch files from $remHost. You need the almamgr password"
+scp almamgr@$remHost:.cvspass .
+
+#
+# ssh keys to allow ssh to root without password.
+#
+mkdir -p .ssh
+
+if [ -f $startDir/ssh/id_dsa ]
+then
+   cp $startDir/ssh/id_dsa $startDir/ssh/id_dsa.pub .ssh
+else
+   echo "Cannot find  $startDir/ssh/id_dsa; check your startup directory"
+   exit 1
+fi
+
+chmod og-r .ssh/id_dsa
+
+#
+# ssh verificatoin and help
+#
+echo "==== Check if ssh to root is OK"
+echo "If are requested now a password to login, then su root and give the following command:"
+echo "> ssh root@localhost cat ~almamgr/.ssh/id_dsa.pub \>\> /root/.ssh/authorized_keys2"
+echo ====
+ssh root@localhost echo "I am root!"
+ssh root@$HOST echo "I am root!"
+echo "_oOo_" 

@@ -1,0 +1,24 @@
+#include "Tests.idl"
+
+module org
+{
+   module jacorb
+   {
+      module test
+      {
+         interface TimingServer
+         {
+            long operation (in long id, in long delay);
+            char ex_op     (in char ch, in long delay) raises (EmptyException);
+
+            long long server_time (in long delay);
+         };
+
+         interface ComplexTimingServer: TimingServer
+         {
+            void setServerConfig (in long fwdPoint, in Object fwd);
+            long forwardOperation (in long id, in long delay);
+         };
+      };
+   };
+};

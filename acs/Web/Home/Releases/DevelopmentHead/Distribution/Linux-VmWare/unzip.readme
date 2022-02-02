@@ -1,0 +1,4 @@
+The zip files were created on Windows using winzip, where they can also be unzipped without problems.
+
+On Linux systems, the "unzip" command fails because of the large file size.
+Use instead "7za e .zip" or "ark". For details see http://kbase.redhat.com/faq/docs/DOC-2624

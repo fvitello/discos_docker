@@ -1,0 +1,81 @@
+1 - Nominal test. Number of Devices: 1
+1 - MC_TEST_COMPONENT 
+1 - 	MC_TEST_COMPONENT:doubleSeqProp ['12124']
+1 - 		Great! All values are consecutive
+1 - 		Great! Collected at least YY values: XX
+1 - 		Great! Collected at most YY values: XX
+1 - 	MC_TEST_COMPONENT:doubleProp ['3432535']
+1 - 		Great! All values are consecutive
+1 - 		Great! Collected at least YY values: XX
+1 - 		Great! Collected at most YY values: XX
+1 - 	MC_TEST_COMPONENT:longProp []
+1 - 		Great! All values are consecutive
+1 - 		Great! Collected at least YY values: XX
+1 - 		Great! Collected at most YY values: XX
+1 - 	MC_TEST_COMPONENT:longSeqProp []
+1 - 		Great! All values are consecutive
+1 - 		Great! Collected at least YY values: XX
+1 - 		Great! Collected at most YY values: XX
+1 - 	MC_TEST_COMPONENT:patternProp []
+1 - 		Great! All values are consecutive
+1 - 		Great! Collected at least YY values: XX
+1 - 		Great! Collected at most YY values: XX
+1 - Cyclic buffer test. Number of Devices: 1
+1 - MC_TEST_COMPONENT 
+1 - 	MC_TEST_COMPONENT:doubleSeqProp ['12124']
+1 - 		Great! First blob is greater than:  XX
+1 - 		Great! All values are consecutive
+1 - 		Great! Collected at least YY values: XX
+1 - 		Great! Collected at most YY values: XX
+1 - 	MC_TEST_COMPONENT:doubleProp ['3432535']
+1 - 		Great! First blob is greater than:  XX
+1 - 		Great! All values are consecutive
+1 - 		Great! Collected at least YY values: XX
+1 - 		Great! Collected at most YY values: XX
+1 - 	MC_TEST_COMPONENT:longProp []
+1 - 		Great! First blob is greater than:  XX
+1 - 		Great! All values are consecutive
+1 - 		Great! Collected at least YY values: XX
+1 - 		Great! Collected at most YY values: XX
+1 - 	MC_TEST_COMPONENT:longSeqProp []
+1 - 		Great! First blob is greater than:  XX
+1 - 		Great! All values are consecutive
+1 - 		Great! Collected at least YY values: XX
+1 - 		Great! Collected at most YY values: XX
+1 - 	MC_TEST_COMPONENT:patternProp []
+1 - 		Great! First blob is greater than:  XX
+1 - 		Great! All values are consecutive
+1 - 		Great! Collected at least YY values: XX
+1 - 		Great! Collected at most YY values: XX
+1 - Cyclic buffer reset test. Number of Devices: 1
+1 - MC_TEST_COMPONENT 
+1 - 	MC_TEST_COMPONENT:doubleSeqProp ['12124']
+1 - 		Great! First blob is greater than:  XX
+1 - 		Great! First blob is lower than:  XX
+1 - 		Great! All values are consecutive
+1 - 		Great! Collected at least YY values: XX
+1 - 		Great! Collected at most YY values: XX
+1 - 	MC_TEST_COMPONENT:doubleProp ['3432535']
+1 - 		Great! First blob is greater than:  XX
+1 - 		Great! First blob is lower than:  XX
+1 - 		Great! All values are consecutive
+1 - 		Great! Collected at least YY values: XX
+1 - 		Great! Collected at most YY values: XX
+1 - 	MC_TEST_COMPONENT:longProp []
+1 - 		Great! First blob is greater than:  XX
+1 - 		Great! First blob is lower than:  XX
+1 - 		Great! All values are consecutive
+1 - 		Great! Collected at least YY values: XX
+1 - 		Great! Collected at most YY values: XX
+1 - 	MC_TEST_COMPONENT:longSeqProp []
+1 - 		Great! First blob is greater than:  XX
+1 - 		Great! First blob is lower than:  XX
+1 - 		Great! All values are consecutive
+1 - 		Great! Collected at least YY values: XX
+1 - 		Great! Collected at most YY values: XX
+1 - 	MC_TEST_COMPONENT:patternProp []
+1 - 		Great! First blob is greater than:  XX
+1 - 		Great! First blob is lower than:  XX
+1 - 		Great! All values are consecutive
+1 - 		Great! Collected at least YY values: XX
+1 - 		Great! Collected at most YY values: XX

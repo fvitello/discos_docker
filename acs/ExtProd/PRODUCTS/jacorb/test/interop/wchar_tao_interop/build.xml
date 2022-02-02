@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+
+<project name="wchar tao interoperability" default="compile">
+
+    <import file="../common/common-interop.xml" />
+
+</project>

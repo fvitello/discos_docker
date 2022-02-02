@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>		
+  <!--
+	 - Example Configuration Database Entry for a Fridge
+	 -
+	 - Author: Sebastian Cornejo
+	 -
+   -->
+<LogStoreClass xmlns="urn:schemas-cosylab-com:LogStoreClass:1.0" 
+xmlns:baci="urn:schemas-cosylab-com:BACI:1.0"
+xmlns:cdb="urn:schemas-cosylab-com:CDB:1.0"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+logFileDir = "/mnt/gas02/data1/AcsLogs-8.1" 
+
+amqp_enabled = "false" 
+amqp_user = "alma"
+amqp_password = "guest" 
+amqp_host = "ariadne.osf.alma.cl"
+amqp_routingkey = "setToLocation" 
+
+kafka_enabled = "true" 
+kafka_user = "" 
+kafka_password = "" 
+kafka_brokers = "10.200.114.136:32778,10.200.114.136:32779,10.200.114.136:32790" 
+/> 

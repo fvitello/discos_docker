@@ -1,0 +1,603 @@
+#!/bin/ksh
+#*******************************************************************************
+#
+# "@(#) $Id: 0_InstallACS.LinuxVx,v 1.1 2004/11/11 09:54:35 gchiozzi Exp $"
+#
+#
+
+#************************************************************************
+#   NAME
+#   0_InstallACS - installation of ACS
+#
+#   SYNOPSIS
+#
+#   DESCRIPTION
+#
+#   FILES
+#
+#   ENVIRONMENT
+#
+#   RETURN VALUES
+#
+#   CAUTIONS
+#
+#   EXAMPLES
+#
+#   SEE ALSO
+#
+#   BUGS
+#
+#------------------------------------------------------------------------
+
+ALMASW_RELEASE=ACS-4.0
+PWD=`pwd`
+SAVE_CURR_DIR=`pwd`
+
+# installation of ACS 
+# ==============================
+# This script can be executed as whatever user
+# This script assumes that you do not want to install 
+# gnu and tcltk (to avoid root access)
+
+# $1 is the directory where the tar files are stored.
+# $2 is the directory where the stuff will be installed.
+if [ $# -ne 2 ]
+then
+    echo "usage 0_InstallACS <CDFILES> <INSTALL_DIR>"
+    exit 2
+fi
+
+# The custom installation is provided for Linux only
+OS=`uname`
+if [ "$OS" != "Linux" ]
+then 
+    echo "This platform is not supported"
+    echo "This installation procedure is provided for Linux only"
+    echo "Script aborted" 
+    exit 5
+fi
+OSVer=`cat /etc/redhat-release | awk '{print $5}'`
+
+CDFILES=$1
+export PATH=$PATH:$CDFILES
+
+if [ ! -d $CDFILES ]
+then
+    echo "$CDFILES does not exist or is not a directory, cannot continue"
+    exit 1
+fi
+cd $CDFILES
+if ! cd $CDFILES
+then
+    echo "can't cd to $CDFILES!"
+    exit 3
+fi
+
+INSTALL_DIR=$2
+if [  -d $INSTALL_DIR ]
+then
+        echo ""
+        echo "WARNING!"
+        echo "The directory $INSTALL_DIR already exist"
+        echo "it will be moved under $INSTALL_DIR.$$"
+        echo "Press return to continue or ctrl-c to abort ... "
+        read input
+        mv $INSTALL_DIR $INSTALL_DIR.$$ > /dev/null 2>&1
+	if [ $? != 0 ]
+	then
+	    echo "cannot move $INSTALL_DIR; please check the permissions of the directory."
+	    echo "Installation aborted"
+	    exit 88
+	fi
+        clear
+
+fi
+mkdir -p $INSTALL_DIR
+if [ $? != 0 ]
+then
+    echo "cannot create directory $INSTALL_DIR: installation aborted"
+    exit 1
+fi
+chmod -R g+rx $INSTALL_DIR
+cd $INSTALL_DIR
+if ! cd $INSTALL_DIR
+then
+    echo "can't cd to $INSTALL_DIR!"
+    exit 3
+fi
+
+echo ""
+echo ""
+echo "		Welcome to the $ALMASW_RELEASE installation procedure" 
+echo ""
+echo "          The installation consists of 3 parts."
+echo ""
+echo "          In PART 1 you will be able to choose the tools "
+echo "          you want to install, among the tools in our "
+echo "          distribution. "
+echo ""
+echo "          PART 2 will unpack the ACSSW sources."
+echo ""
+echo "          PART 3 will prepare the environment variables to use ACS. "
+echo ""
+echo "          PART 4 (optional for RH9 only): installation of AIPS++ "
+echo ""
+echo ""
+echo "Press return to continue ... "
+read input
+clear
+
+echo "PART 1: tools"
+echo ""
+echo "This are the tools in our distribution:"
+echo ""
+echo "[1] gnu and tcltk tools"
+echo "[2] java"
+echo "[3] Ant and JacORB"
+echo "[4] ACE "
+echo "[5] Python, omniORB and omnipython"
+echo "[6] Mico"
+echo "[7] Tomcat"
+echo "[8] All of the above"
+echo ""
+echo "For the specific version numbers, look at the ACS release notes"
+echo ""
+echo "If you choose to install gnu and tcltk from our distribution"
+echo "be aware that you will install binaries compiled under the path:"
+echo "/alma/$ALMASW_RELEASE"
+echo "For this reason, you must provide the same path for <INSTALL_DIR>"
+echo ""
+echo "Please, enter here the number(s) of the tool(s) you want"
+echo "to install, use blank(s) as separator and press return:"
+echo ""
+read LIST
+
+# ask confirmation on LIST!
+clear
+while (true)
+do
+echo ""
+echo "You want to install the following tools:"
+echo ""
+echo "$LIST from our list:"
+echo ""
+echo "[1] gnu and tcltk tools"
+echo "[2] java"
+echo "[3] Ant and JacORB"
+echo "[4] ACE"
+echo "[5] Python, omniORB and omnipython"
+echo "[6] Mico"
+echo "[7] Tomcat"
+echo "[8] All of the above"
+echo ""
+echo "Is this correct?[y,n]"
+read CHOICE
+case $CHOICE in
+    y) clear
+       break
+       ;;
+    n) echo "Please, repeat the numbers:"
+       read LIST
+       ;;
+    *) clear
+       echo "invalid option; repeat your choice"
+       echo ""
+       ;;
+esac
+done
+clear
+
+cd $INSTALL_DIR
+
+ALL=`echo $LIST | grep 8`
+if [ "$ALL" != "" ]
+then 
+    LIST="1 2 3 4 5 6 7"
+fi
+GNU_TCL=`echo $LIST | grep 1`
+if [ "$GNU_TCL" = "" ]
+then 
+    clear
+    echo "WARNING:"
+    echo "You chose not to install gnu and tcltk"
+    echo "You can rely on your own installation. Be reminded that ACS 4.0"
+    echo "works with gcc 3.4.1 and tcl/tk 8.4. Other configurations are not supported."
+    echo "Press return to continue or ctrl-c to abort ... "
+    read input
+    clear
+fi
+if [ "$GNU_TCL" != "" ] && [ "$INSTALL_DIR" != "/alma/$ALMASW_RELEASE" ]
+then
+    clear
+    echo "You want to install gnu and tcltk from our distribution."
+    echo "Be aware that you will install binaries that are compiled"
+    echo "under the path /alma/$ALMASW_RELEASE."
+    echo "You must give the same path as INSTALL_DIR:"
+    echo "INSTALL_DIR=/alma/$ALMASW_RELEASE"
+    echo "not INSTALL_DIR=$INSTALL_DIR"
+    echo "Please, begin again the installation."
+    exit 9
+fi
+for number in $LIST
+do
+    case $number in
+    1) echo ""
+       ls $CDFILES/ACS.tar.gz > /dev/null 2>&1
+       if [ $? != 0 ]
+       then
+	   echo "file containing gnu/tcltk is missing from the directory $CDFILES!"
+	   echo "Installation aborted"
+	   exit 4
+       else
+	   echo "extracting gnu tools ..."
+           if $CDFILES/gtar xpzf $CDFILES/ACS.tar.gz alma/$ALMASW_RELEASE/gnu
+           then
+               mv alma/$ALMASW_RELEASE/gnu .
+               rm -rf alma
+               echo "      ... gnu tools done"
+           else
+               echo "untar of ACS.tar.gz to extract gnu failed"
+               exit 1
+           fi
+           if $CDFILES/gtar xpzf $CDFILES/ACS.tar.gz alma/$ALMASW_RELEASE/tcltk
+           then
+               mv alma/$ALMASW_RELEASE/tcltk .
+               rm -rf alma
+               echo "      ... tcltk tools done"
+           else
+               echo "untar of ACS.tar.gz to extract tcltk failed"
+               exit 1
+           fi
+       fi
+       ;;
+    2) echo ""
+       ls $CDFILES/ACS.tar.gz > /dev/null 2>&1
+       if [ $? != 0 ]
+       then
+            echo "file containing java is missing from the directory $CDFILES!"
+            echo "Installation aborted"
+            exit 4
+       else
+	    echo "extracting java ..."
+            if $CDFILES/gtar xpzf $CDFILES/ACS.tar.gz alma/$ALMASW_RELEASE/java
+	    then
+                mv alma/$ALMASW_RELEASE/java .
+                rm -rf alma
+		echo "      ... java done"
+            else
+                echo "untar of ACS.tar.gz to extract java failed"
+                exit 1
+            fi
+       fi
+       ;;
+    3) echo ""
+       ls $CDFILES/ACS.tar.gz > /dev/null 2>&1
+       if [ $? != 0 ]
+       then
+            echo "file containing Ant and JacORB is missing from the directory $CDFILES!"
+            echo "Installation aborted"
+            exit 4
+       else
+	    echo "extracting Ant and JacORB ..."
+	    if $CDFILES/gtar xpzf $CDFILES/ACS.tar.gz alma/$ALMASW_RELEASE/ant
+            then
+                mv alma/$ALMASW_RELEASE/ant .
+                rm -rf alma
+                echo "      ... Ant done"
+            else
+                echo "untar of ACS.tar.gz failed"
+                exit 1
+            fi
+	    if $CDFILES/gtar xpzf $CDFILES/ACS.tar.gz alma/$ALMASW_RELEASE/JacORB
+            then
+                mv alma/$ALMASW_RELEASE/JacORB .
+                rm -rf alma
+                echo "      ... JacORB done"
+            else
+                echo "untar of ACS.tar.gz failed"
+                exit 1
+            fi
+       fi
+       ;;
+    4) echo ""
+       ls $CDFILES/ACS.tar.gz > /dev/null 2>&1
+       if [ $? != 0 ]
+       then
+            echo "file containing TAO is missing from the directory $CDFILES!"
+            echo "Installation aborted"
+            exit 4
+       else
+            echo "extracting TAO ..."
+            if $CDFILES/gtar xpzf $CDFILES/ACS.tar.gz alma/$ALMASW_RELEASE/TAO
+            then
+                mv alma/$ALMASW_RELEASE/TAO .
+                rm -rf alma
+                echo "      ... TAO done"
+            else
+                echo "untar of ACS.tar.gz failed"
+                exit 1
+            fi
+       fi
+       ;;
+    5) echo ""
+       ls $CDFILES/ACS.tar.gz > /dev/null 2>&1
+       if [ $? != 0 ]
+       then
+            echo "file containing Python and the Omni distribution is missing from the directory $CDFILES!"
+            echo "Installation aborted"
+            exit 4
+       else
+            echo "extracting Python and the Omni distribution ..."
+            if $CDFILES/gtar xpzf $CDFILES/ACS.tar.gz alma/$ALMASW_RELEASE/Python
+            then
+                mv alma/$ALMASW_RELEASE/Python .
+                rm -rf alma
+                echo "      ... Python and the Omni distribution done"
+            else
+                echo "untar of ACS.tar.gz failed"
+                exit 1
+            fi
+       fi
+       ;;
+    6) echo ""
+       ls $CDFILES/ACS.tar.gz > /dev/null 2>&1
+       if [ $? != 0 ]
+       then
+            echo "file containing Mico distribution is missing from the directory $CDFILES!"
+            echo "Installation aborted"
+            exit 4
+       else
+            echo "extracting Mico distribution ..."
+            if $CDFILES/gtar xpzf $CDFILES/ACS.tar.gz alma/$ALMASW_RELEASE/mico
+            then
+                mv alma/$ALMASW_RELEASE/mico .
+                rm -rf alma
+                echo "      ... Mico distribution done"
+            else
+                echo "untar of ACS.tar.gz failed"
+                exit 1
+            fi
+       fi
+       ;;
+    7) echo ""
+       ls $CDFILES/ACS.tar.gz > /dev/null 2>&1
+       if [ $? != 0 ]
+       then
+            echo "file containing Tomcat distribution is missing from the directory $CDFILES!"
+            echo "Installation aborted"
+            exit 4
+       else
+            echo "extracting Tomcat distribution ..."
+            if $CDFILES/gtar xpzf $CDFILES/ACS.tar.gz alma/$ALMASW_RELEASE/Tomcat
+            then
+                mv alma/$ALMASW_RELEASE/Tomcat .
+                rm -rf alma
+                echo "      ... Tomcat distribution done"
+            else
+                echo "untar of ACS.tar.gz failed"
+                exit 1
+            fi
+       fi
+       ;;
+    *) echo ""
+       echo "the item number $number is not in the list"
+       ;;
+    esac
+done
+
+# check about the existence of CCSLite, for backward compatibility
+CCSLITE=0
+$CDFILES/gtar tpzf $CDFILES/ACS.tar.gz alma/$ALMASW_RELEASE/CCSLite > /dev/null 2>&1
+if [ "$?" = "0" ]
+then
+    CCSLITE=1
+fi
+
+echo ""
+echo "The installation of the tools is finished."
+echo ""
+echo "Press return to continue ..."
+read input
+
+clear
+
+if [ "$CCSLITE" = 1 ]
+then
+    echo "PART 1b: CCSLite (cmm, vcc, tat ...) and"
+    echo "CCSLite will be installed in $INSTALL_DIR"
+    echo "Press return to continue ..."
+    read input
+fi
+
+echo ""
+if [ "$CCSLITE" = 1 ]
+then
+    echo "Installing CCSLite ..."
+fi
+cd $INSTALL_DIR
+ls $CDFILES/ACS.tar.gz > /dev/null 2>&1
+if [ $? != 0 ]
+then
+    echo "file containing CCSLite is missing from the directory $CDFILES!"
+    echo "Installation aborted"
+    exit 4
+else
+    if [ "$CCSLITE" = 1 ]
+    then
+        if $CDFILES/gtar xpzf $CDFILES/ACS.tar.gz alma/$ALMASW_RELEASE/CCSLite
+        then 
+            mv alma/$ALMASW_RELEASE/CCSLite .
+            rm -rf alma
+	    echo "      ... CCSLite done"
+            echo ". . ."
+        else
+    	    echo "untar of ACS.tar.gz failed"
+            exit 1
+        fi
+    fi
+fi
+echo ""
+if [ "$CCSLITE" = 1 ]
+then
+     echo "The installation of CCSLite is finished."
+echo ""
+echo "Press return to continue ..."
+read input
+clear
+fi
+
+echo "PART 2: ACSSW sources"
+echo "Now the ACS sources will be unpacked under the $HOME/ACS directory."
+echo ""
+echo "Press return to continue ..."
+read input
+echo ""
+echo "Unpacking the ACS sources ..."
+echo ""
+cd $HOME
+if ! cd $HOME
+then
+    echo "can't cd to $HOME!"
+    exit 3
+fi
+if [ -d ACS ]
+then
+    mv ACS ACS.save_$$
+    echo " ... existing ACS moved to ACS.save_$$"
+fi
+if $CDFILES/gtar -xpzf $CDFILES/ACSsources.tar.gz
+then
+    echo "      ... ACS Sources done"
+else
+    echo "untar of ACSsources.tar.gz failed"
+    exit 1
+fi
+
+echo "Press return to continue ... "
+read input
+clear
+
+
+# Preparation of the .bash_profile
+echo "PART 3: environment"
+echo ""
+echo "A directory .acs is created under your home directory"
+echo "This directory contains 4 files:"
+echo ".bash_profile.acs which sets all the necessary environment variables"
+echo ".emacs, .emacs.local and xresourcs.emacs with some useful settings for emacs"
+echo ""
+echo "Please, have a look at those files and source the .bash_profile.acs"
+echo "before starting using the ACS software"
+echo "use the command:"
+echo ". $HOME/.acs/.bash_profile.acs"
+echo ""
+echo "If you chose not to install Java, Ant. JacORB, ACE, Python, OmniORB"
+echo "modify accordingly the corresponding environment variables"
+echo "like JAVA_HOME, PYTHONPATH, ACE_ROOT etc."
+echo "If you didn't install gnu and tcltk tools, just take care"
+echo "of having the PATH and LD_LIBRARY_PATH correctly set."
+echo "you DON'T need to modify the variable GNU_ROOT and TCLTK_ROOT"
+echo "you find in the $HOME/.acs/.bash_profile.acs"
+echo ""
+echo "The .bash_profile.acs file supposes that you are using bash as "
+echo "interactive shell."
+cp -r $CDFILES/INSTALL/.acs  $HOME
+if [ $? != 0 ]
+then
+    echo "the copy of the environment files failed"
+    echo "please, copy yourself the .acs directory from the ACS cd"
+    echo "into your home dir and have a look at the .bash_profile.acs file"
+else
+    if [ "$INSTALL_DIR" != "/alma/$ALMASW_RELEASE" ]
+    then
+      sed  -e "s?ALMASW_ROOTDIR=/alma?#ALMASW_ROOTDIR=/alma?" \
+           -e "s?ALMASW_RELEASE=$ALMASW_RELEASE?#ALMASW_RELEASE=$ALMASW_RELEASE?" \
+           -e "s?ALMASW_INSTDIR=\$ALMASW_ROOTDIR/\$ALMASW_RELEASE?#ALMASW_INSTDIR=\$ALMASW_ROOTDIR/\$ALMASW_RELEASE?" \
+           -e "s?# ALMASW_INSTDIR=_where_you_install_the_software_?ALMASW_INSTDIR=$INSTALL_DIR?" \
+           -e "s?# ALMASW_RELEASE=""?ALMASW_RELEASE=""?" \
+           -e "s?# ALMASW_ROOTDIR=\$ALMASW_INSTDIR?ALMASW_ROOTDIR=\$ALMASW_INSTDIR?" \
+           $HOME/.acs/.bash_profile.acs > $HOME/.acs/.bash_profile.tmp
+	   mv $HOME/.acs/.bash_profile.tmp $HOME/.acs/.bash_profile.acs
+    fi
+fi
+echo "Press return to continue ... "
+read input
+clear
+
+# Optional installation of AIPS++
+while (true)
+do
+echo "          PART 4 (optional): installation of AIPS++ "
+echo ""
+echo "On Linux, it is possible to install AIPS++ ."
+echo "AIPS++ is distributed with a set of rpms which have to be installed as root."
+echo "The AIPS++ rpms get installed under /usr and ~650MB space are needed."
+echo "If you choose y[es] you will have to type the root password"
+echo "then the buildAIPS++ will be launched. Please, check the result in:"
+echo "buildAIPS++.log !!!"
+echo "Note that the buildAIPS++ will remove previous AIPS++ installation"
+echo "if you choose n[o] you will finish the ACS installation."
+
+read CHOICE
+case $CHOICE in
+    y*) DIR=$SAVE_CURR_DIR
+	if [ "$OSVer" != "9" ]
+	then
+	    echo "AIPS++ is supported on RH9 only"
+	    echo "AIPS++ installation will be skipped"
+	    echo "Press return to continue ... "
+	    read input
+	    break
+	else
+	    echo "Installing AIPS++..."
+	fi
+	cd $DIR
+        chmod ugo+x buildAIPS++
+	su - -c "cd $DIR; ./buildAIPS++"
+	echo "The installation of AIPS++ is finished"
+	echo "Please, check the log file buildAIPS++.log in $DIR"
+	echo "Press return to continue ... "
+	read input
+	break
+	;;
+    n*) break
+	;;
+     *) clear
+       echo "invalid option; repeat your choice"
+       echo ""
+       ;;
+esac
+done 
+clear
+
+
+cd $PWD
+
+echo ""
+echo ""
+echo "*******************************************************************"
+echo ""
+echo "The installation of the basic tools for $ALMASW_RELEASE  has been" 
+echo "succesfully performed."
+echo ""
+if [ "$CCSLITE" = 1 ]
+then
+    echo "Now you should set up the environment as in paragraph 4.3.3"
+    echo "of the ACS Installation Manual."
+    echo ""
+    echo "Then, you can continue your installation from chapter 5"
+else
+    echo "Now you should set up the environment as in paragraph 6" 
+    echo "of the README file you find in the ACS distribution directory structure."
+    echo ""
+    echo "Then, you can continue your installation from paragraph 7" 
+fi
+    echo "building the ACS libraries."
+echo ""
+echo "*******************************************************************"
+echo ""
+echo ""
+
+exit 0
+
+

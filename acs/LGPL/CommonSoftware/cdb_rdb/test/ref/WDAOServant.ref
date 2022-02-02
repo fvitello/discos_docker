@@ -1,0 +1,7 @@
+1 - DAO:  CLOCK1
+2 -  --clientVM -- com.cosylab.cdb.jdal.ClearCache -d corbaloc::xxxxxxx:yyyy/CDB
+3 - DAO:  CLOCK1
+1 - WDAO:  CLOCK1
+3 - WDAO:  CLOCK1
+2 - ----------T--:--:--.--- INFO [alma.acs.logging] Logger jacorb@cdbjDALClearCache created with custom log levels local=Info, remote=Info to avoid log jams due to careless default log level settings.
+2 - ----------T--:--:--.--- INFO [cdbjDALClearCache] Cleared CDB cache for all curls.

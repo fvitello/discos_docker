@@ -1,0 +1,14 @@
+Running the following command:
+Starting Java application
+^[jJ]ava
+Using endorsed jar files in:
+ACS Manager: corbaloc::
+ACS Name Service: corbaloc::
+ACS Interface Repository: corbaloc::
+Logging to ACS log server.
+export
+alma.acs.testsupport.tat.TATJUnitRunner
+DEBUG \[acsStartJava\] ACS Interface Repository: IOR:
+OpenJDK
+openjdk
+Archived non-system classes are disabled because the java.system.class.loader

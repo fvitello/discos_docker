@@ -1,0 +1,73 @@
+1 - DispatchPacketCheck messages buffer correctly ... ok
+1 - DispatchPacketCheck clears sends pending messages before priority message ... ok
+1 - DispatchPacketCheck messages buffer correctly ... ok
+1 - LogLevel ACSLog log levels map to correct logging values ... ok
+1 - LogLevel numeric log levels map to correct logging values ... ok
+1 - LogLevel Logging values map to correct numeric log levels ... ok
+1 - LogLevel EMERGENCY level is correctly defined in logging module ... ok
+1 - LogLevel NOTICE level is correctly defined in logging module ... ok
+1 - LogLevel OFF level is correctly defined in logging module ... ok
+1 - LogLevel TRACE level is correctly defined in logging module ... ok
+1 - LogLevel ALERT level is correctly defined in logging module ... ok
+1 - Log after import is correctly configured ... ok
+1 - Logger class get log levels when Default ... ok
+1 - Logger class default initialization is correct ... ok
+1 - Logger class creates logging records correctly ... ok
+1 - Logger class creates logging records correctly ... ok
+1 - Logger class creates logging records correctly ... ok
+1 - Logger class set log levels to user-defined levels ... ok
+1 - Logger class set log levels to using Default from user-defined level ... ok
+1 - Logger class set log levels for valid inputs ... ok
+1 - Logger class Alert level logging ... ok
+1 - Logger class User-specified level logging ... ok
+1 - Logger class Critical level logging ... ok
+1 - Logger class Debug level logging ... ok
+1 - Logger class Emergency level logging ... ok
+1 - Logger class Error level logging ... ok
+1 - Logger class ErrorTrace logging with default priority ... ok
+1 - Logger class ErrorTrace logging with an invalid priority ... ok
+1 - Logger class Info level logging ... ok
+1 - Logger class Not So Type-safe logging ... ok
+1 - Logger class Not So Type-safe logging with invalid priority ... ok
+1 - Logger class Notice level logging ... ok
+1 - Logger class Trace level logging ... ok
+1 - Logger class Type-safe logging ... ok
+1 - Logger class Type-safe logging with invalid priority ... ok
+1 - Logger class Type-safe logging with no context or source ... ok
+1 - Logger class Warning level logging ... ok
+1 - Logger class XML logging ... ok
+1 - Log changes log batch size correctly ... ok
+1 - Log handles batch size greater than capacity correctly ... ok
+1 - Log handles lowest and highest immediate dispatch level correctly ... ok
+1 - Log initializes handlers correctly ... ok
+1 - Log handles invalid batch size correctly ... ok
+1 - Log handles invalid queue capacity correctly ... ok
+1 - Log sets log queue capacity correctly ... ok
+1 - Log sets default handlers levels correctly for valid inputs ... ok
+1 - Log handles invalid log levels correctly ... ok
+1 - Log sets immediate dispatch level correctly ... ok
+1 - Log handles undefined immediate dispatch level correctly ... ok
+1 - NoLoggerCheck logger search with no key ... ok
+1 - NoLoggerCheck logger search with non-existing key ... ok
+1 - OneLoggerCheck unnamed logger request ... ok
+1 - OneLoggerCheck unnamed logger found by search ... ok
+1 - OneLoggerCheck names list has unnamed logger when filtered by unnamed logger ... ok
+1 - PeriodicFlushCheck is correct and consistent after import. ... ok
+1 - PeriodicFlushCheck flushing thread start and stops correctly. ... ok
+1 - PeriodicFlushCheck only one thread is created if start is called twice. ... ok
+1 - PeriodicFlushCheck updates flush interval correctly ... ok
+1 - PeriodicFlushCheck flush thread stopped when invalid interval is set ... ok
+1 - SeveralLoggerCheck search with parent key ... ok
+1 - SeveralLoggerCheck search with the nested child's name as key ... ok
+1 - SeveralLoggerCheck search with part of an exising key ... ok
+1 - SeveralLoggerCheck Levels changes on all loggers using default level ... ok
+1 - SeveralLoggerCheck getLoggerNames returns all known loggers ... ok
+1 - SeveralLoggerCheck getLoggerNames returns correct logger names when requested with filtering ... ok
+1 - SeveralLoggerCheck Changing a logger's levels does not affect other loggers ... ok
+1 - SeveralLoggerCheck messages are logged only once for nested loggers ... ok
+1 - SeveralLoggerCheck Search with non-existing key ... ok
+1 - 
+1 - ----------------------------------------------------------------------
+1 - Ran xx tests in x.xxxs
+1 - 
+1 - OK

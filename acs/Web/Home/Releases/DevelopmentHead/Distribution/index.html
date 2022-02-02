@@ -1,0 +1,114 @@
+<!DOCTYPE doctype PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head>    
+  
+  
+  
+  <meta name="generator" content="HTML Tidy for Linux/x86 (vers 1st September 2004), see www.w3.org">
+  <title>ALMA Distribution</title>
+
+  
+
+  
+
+  
+  
+  
+  
+  <link rel="StyleSheet" href="Css/acs.css" type="text/css" media="screen">
+
+
+
+  
+  
+  
+<!--==========================================================================================-->
+<style type="text/css">
+<!--
+.style2 {
+	color: #FF0000;
+	font-weight: bold;
+}
+-->
+</style>
+</head>
+
+
+
+
+
+  <body class="Normal" style="background-color: rgb(255, 255, 255);" lang="EN-US" link="#0000ff" vlink="#800080">
+    <!--==========================================================================================-->
+  
+<h1 align="center"><i>ACS 2014.2 Distribution</i></h1>
+
+<p><b><i>Current official revision is: Linux ACS 2014.2 (RH 5.5 and RH6.5)<br></i></b></p>
+
+<p>The ACS Distribution for Linux is available in two versions: </p>
+<ul type="disc">
+  <li><EM>LGPL</EM> is publicly distributable according to the Lesser General Public Licence.</li>
+  <li><EM>NO-LGPL</EM> is only distributable inside ALMA and the partner organizations and contains few tools and extensions that cannot 
+    be freely re-distributed</li>
+</ul>
+  
+<h3><a href="../Docs/index.html">Online Documentation for this release is available here</a></h3>
+
+<h2> ACS Download:</h2>
+
+<h3>ftp server</h3>
+
+ACS is released by means of tar files
+<UL type="disc">
+<LI><EM>ACS-YYYY_n-ExtProd-dddd-aaaa-oo.tar.gz</EM>: (where YYYY_n is the ACS release name; dddd is the date of the build, aaaa is the architecture like i686, oo is the operating system) this archive contains the external product needed to run ACS.
+<LI><EM>ACS-YYYY_n-dddd-aaaa-oo.tar.gz</EM>: contains ACS executables and configurations i.e. ACSSW and acsdat
+</UL>
+
+To install ACS from the tars:
+<OL>
+	<LI>login as almamgr
+	<LI>go to the root foledr (/)
+	<LI>unpack both the tars preserving the attributes (tar xpzf....)
+	<LI>ensure to source the ACS bash profile (/alma/ACS-YYYY.n/ACSSW/config/.acs/.bash_profile.acs)
+</OL>
+ 
+The URL of the ftp server is <A href="ftp:://ftp.eso.org">ftp.eso.org</A>.
+Please drop us a email to get the username and password.  
+
+<h2>SVN mirror</h2>
+
+
+<p>ACS source and tools are kept under configuration control in a SVN archive.</p>
+
+<p>All parts of the ACS archive publicly available as LGPL are mirrored in read 
+  only mode in a publicly accessible SVN repository, while development is done on 
+  a separate SVN, that contains also some developments and tools that 
+  we cannot publicly distribute. The mirror is updated once a week.</p>
+
+<P>SVN repository URL is http://svnhq36.hq.eso.org/p36.<BR> 
+Login with username anonymous and password anonymous.</P>
+
+<P>The following URL are available in the repository:
+<UL>
+	<LI>[/trunk/ACS]
+
+	<LI>[/branches/2014-01-ACS-B/ACS]
+	<LI>[/branches/2014-02-ACS-B/ACS]
+	<LI>[/branches/ACS-10_1-B/ACS]
+	<LI>[/branches/ACS-10_2-B/ACS]
+	<LI>[/branches/ACS-11_0-B/ACS]
+	<LI>[/branches/ACS-11_1-B/ACS]
+	<LI>[/branches/ACS-12_0-B/ACS]
+	<LI>[/branches/ACS-12_1-B/ACS]
+	<LI>[/branches/ACS-12_2-B/ACS]
+	<LI>[/branches/ACS-12_3-B/ACS]
+</UL>
+
+<P>eclipse users should configure the repository with the full URL like for example http://svnhq36.hq.eso.org/p36/trunk/ACS
+ 
+<h2><a name="RTOSInstallation"></a>RTOS Installation</h2>
+
+<p>RTOS support requires a proper Linux kernel with Real Time patches
+and libraries. The procedures to install the kernel and the real time
+support are described here: <a href="http://almasw.hq.eso.org/almasw/bin/view/ITS/RTOSInstallationManual">here</a>.</p>
+
+<!--==========================================================================================-->
+</body></html>

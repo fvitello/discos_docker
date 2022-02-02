@@ -1,0 +1,39 @@
+# User specific environment and startup programs
+
+# Change this when you update ACS
+acsversion=6.0
+
+export SOURCE=/acs_build
+export PATH=${SOURCE}/bin:/usr/local/bin:/bin:/usr/bin:/usr/X11R6/bin:/root/bin
+
+unset USERNAME
+# local bash profile with ACSROOT=INTROOT  and ACSDATA customized
+# Now sets Initial environment for testing ACS
+# and load the configuration profile
+#
+export ACS_RETAIN=1
+
+export ACSDATA=/diska/alma_tmp/acsdata
+export ACSROOT=/introot/vltuser8
+export INTROOT=$ACSROOT
+
+source /alma/ACS-$acsversion/ACSSW/config/.acs/.bash_profile.acs
+
+# Add $SOURCE/modules to $PYTHONPATH
+export PYTHONPATH=${PYTHONPATH}:$SOURCE/modules
+
+if [ "X$ACSDATA" != "X" ]
+then
+   rm -rf $ACSDATA.*
+fi
+
+export LINUX_HOME=$ALMASW_ROOTDIR/$ALMASW_RELEASE/rtlinux
+export RTAI_HOME=$ALMASW_ROOTDIR/$ALMASW_RELEASE/rtai
+#export LD_ASSUME_KERNEL=2.4.19
+
+
+alias ll='/bin/ls -lrt'
+
+# To use programs like piechart
+export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:$SOURCE/lib
+

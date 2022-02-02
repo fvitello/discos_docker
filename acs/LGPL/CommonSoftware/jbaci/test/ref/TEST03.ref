@@ -1,0 +1,30 @@
+1 - === Starting BuildingTest JUnit test
+1 -  --endorsed -- alma.acsexmplBuilding.BuildingTest
+1 - ----------T--:--:--.--- INFO [acsStartJava] Starting Java application: alma.acsexmplBuilding.BuildingTest
+1 - Initializing CORBA...
+1 - ----------T--:--:--.--- TRACE [alma.acs.logging.config.LogConfig] ACS.log.minlevel.namedloggers not defined.
+1 - ----------T--:--:--.--- DELOUSE [alma.acs.logging.config.LogConfig] Logging configuration has been initialized, but not from CDB settings.
+1 - ----------T--:--:--.--- INFO [alma.acs.logging] Logger jacorb created with custom log levels local=Info, remote=Info to avoid log jams due to careless default log level settings.
+1 - CORBA initialized.
+1 - Resolving manager reference 'corbaloc::xxxxxxx:yyyy/Manager'.
+1 - Manager reference successfully resolved.
+1 - Logging to the manager...
+1 - Logged in to the manager.
+1 - All initialization done.
+1 - Version: 1.0
+1 - ----------T--:--:--.--- (working) Value: 1.0
+1 - ----------T--:--:--.--- (working) Value: 1.0
+1 - ----------T--:--:--.--- (working) Value: 1.0
+1 - ----------T--:--:--.--- (working) Value: 1.0
+1 - ----------T--:--:--.--- (working) Value: 1.0
+1 - ----------T--:--:--.--- (working) Value: 1.0
+1 - ----------T--:--:--.--- (working) Value: 1.0
+1 - ----------T--:--:--.--- (working) Value: 1.0
+1 - ----------T--:--:--.--- (working) Value: 1.0
+1 - ----------T--:--:--.--- (working) Value: 1.0
+1 - ----------T--:--:--.--- (done) Value: 1.0
+1 - Logging out from the manager...
+1 - Logged out from the manager.
+1 - Finalizing CORBA...
+1 - CORBA finalized.
+1 - === dispatchAction BuildingTest test completed

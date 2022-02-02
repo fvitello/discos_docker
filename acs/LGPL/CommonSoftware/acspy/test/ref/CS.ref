@@ -1,0 +1,6 @@
+1 - {'_ContainerServices__cdb_access': <Acspy.Common.CDBAccess.CDBaccess object at 0xXXXX>, '_ContainerServices__contname': None, '_ContainerServices__handle': None, '_ContainerServices__logger': None, '_ContainerServices__name': None, '_ContainerServices__token': None, 'activateOffShootMethod': None}
+1 - 
+1 - {'_ContainerServices__cdb_access': <Acspy.Common.CDBAccess.CDBaccess object at 0xXXXX>, '_ContainerServices__contname': None, '_ContainerServices__handle': None, '_ContainerServices__logger': <Logger blar (NOTSET)>, '_ContainerServices__name': 'blar', '_ContainerServices__token': None, 'activateOffShootMethod': <function dummie at 0xXXXX>}
+1 - 
+1 - Thread:  <Thread(dummie thread, initial daemon)>
+1 - Done...

@@ -1,0 +1,114 @@
+include ../Makefile.conf
+
+LINKS= gtar gunzip gzip ACSsources.tar.gz PRODUCTS README FOOTER.html
+
+STARTUPDIR = $(shell pwd)
+
+ACS_TAR_GZ:=Unknown
+REDHAT_RELEASE := $(shell cat /etc/redhat-release)
+
+#
+# Basic binary dirs, always distributed
+#
+ACS_BINARY_DIRS:=   $(PREF)/ACSSW \
+                    $(PREF)/acsdata \
+                    $(PREF)/ant \
+                    $(PREF)/JacORB \
+                    $(PREF)/mico \
+                    $(PREF)/Python \
+                    $(PREF)/TAO \
+                    $(PREF)/tcltk 
+
+#
+# RH-9 distribution for ACS 6.0 includes
+# gnu tools, tcltk and java, but not RTAI
+#
+ifeq ("$(REDHAT_RELEASE)","Red Hat Linux release 9 (Shrike)")
+   ACS_TAR_GZ:=ACS-vw-RH9.tar.gz
+   ACS_BINARY_DIRS:=   $(ACS_BINARY_DIRS) \
+                       $(PREF)/gnu \
+                       $(PREF)/java
+endif
+
+ifeq ("$(REDHAT_RELEASE)","Red Hat Enterprise Linux WS release 4 (Nahant Update 1)")
+   ACS_TAR_GZ:=ACS-vw.tar.gz
+   ACS_BINARY_DIRS:=   $(ACS_BINARY_DIRS) \
+                       $(PREF)/rtai  $(PREF)/rtlinux
+   ifdef VX-WORKS
+      ACS_BINARY_DIRS:=   $(ACS_BINARY_DIRS) $(PREF)/CCSLite $(PREF)/tcltk
+   endif
+endif
+
+ifeq ("$(ACS_TAR_GZ)","Unknown")
+   REDHAT_RELEASE:=Unknown release: $(REDHAT_RELEASE). Behaving as RH Enterprise
+   ACS_TAR_GZ:=ACS-vw.tar.gz
+   ACS_BINARY_DIRS:=   $(ACS_BINARY_DIRS) \
+                       $(PREF)/rtai  $(PREF)/rtlinux
+   ifdef VX-WORKS
+      ACS_BINARY_DIRS:=   $(ACS_BINARY_DIRS) $(PREF)/CCSLite $(PREF)/tcltk
+   endif
+endif
+
+all: LinuxVx-ACS LinuxVx-install LinuxVx-links LinuxVx-vw LinuxVx-ACSSW-vw
+	@echo "... done!"
+
+build: Build-ACS
+
+clean: clean_links
+	rm -rf INSTALL  INSTALL.tar.gz *~
+	@echo "... done!"
+
+clean_links:
+	rm $(LINKS)
+
+LinuxVx-ACS: check-vx
+	@echo "Building tar file $(ACS_TAR_GZ) (Linux + NO-LGPL + VxWorks)"
+	@echo "Release: $(REDHAT_RELEASE)"
+	@echo "File   : $(ACS_TAR_GZ)"
+	@acsdataClean 
+	@cd $(SOURCE);  \
+         if [ ! -f $(PREF)/ACSSW/include/slalib.h ]; then \
+			echo ERROR: This is not an NO-LGPL ACS installation! ;\
+			echo        ACS Linux distributions are built from an NO-LGPL + RTOS installation! ;\
+                        exit 2 ;\
+         fi; \
+         if [ ! -h $(PREF)/rtai ]; then \
+			echo ERROR: This is not an NO-LGPL + RTOS ACS installation! ;\
+			echo        ACS Linux distributions are built from an NO-LGPL + RTOS installation! ;\
+                        exit 2 ;\
+         fi; \
+         gtar -czf $(STARTUPDIR)/$(ACS_TAR_GZ) \
+                 $(ACS_BINARY_DIRS); 
+
+LinuxVx-install:
+	@echo "Building installation files (Linux-VxWorks)"
+	@mkdir -p INSTALL
+	@cp ../Scripts/0_InstallACS.LinuxVx INSTALL
+	@chmod ug+x INSTALL/0_InstallACS.LinuxVx
+	@cp -r $(ACSROOT)/config/.acs INSTALL
+	@chmod -R oug+r .
+	@gtar -czf INSTALL.tar.gz INSTALL
+
+
+LinuxVx-links: $(LINKS)
+
+LinuxVx-vw:
+	@echo "VxWorks binaries"
+	@cd $(SOURCE)/$(PREF); \
+         gtar -czf $(STARTUPDIR)/vw5.5.tar.gz vw5.5
+
+LinuxVx-ACSSW-vw:
+	@echo "VxWorks ACS binaries"
+	@cd $(SOURCE); \
+         gtar -czf $(STARTUPDIR)/ACSSW-vw.tar.gz \
+                 $(PREF)/ACSSW/vw
+
+LINKS_MASTER = \
+	$(foreach ff, $(LINKS, $(DEST_MASTER_NO-LGPL)/$(ff))
+$(LINKS) : $(LINK_MASTER)
+	@if [ ! -h $@ ]; then \
+           echo "== Linking: $(DEST_MASTER_NO-LGPL)/$@ to $@"; \
+           ln -s $(DEST_MASTER_NO-LGPL)/$@ $@; \
+        fi
+
+# __oOo__

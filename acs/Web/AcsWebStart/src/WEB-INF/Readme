@@ -1,0 +1,22 @@
+
+
+mschilli (Apr 2006)
+
+
+===== Some Explanations =====
+
+The setup described by the deployment descriptor web.xml now looks like this:
+
+a) requests to jnlp.html from Standard/Advanced section (via the ComboBoxes)
+request example:  jnlp.html ? file=cdbBrowser.jnlp & host=localhost & acsinstance=0
+processed by: ConstantsFilter<=>ReqParamsFilter<=>GetFileServlet<=>JnlpServlet
+
+b) requests directly to a jnlp file from a regular html-link
+request example: CommandCenter.jnlp
+processed by: ConstantsFilter<=>JnlpServlet
+
+
+The Filters will expand variables ($$MyVar) in the Jnlp files to values:
+- The ReqParamsFilter will use the values coming with the Http-Request itself (e.g. submitted by an Html-Form)
+- The ConstantsFilter will use the values defined in file StringConstants.properties
+

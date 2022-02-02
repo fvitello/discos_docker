@@ -1,0 +1,13 @@
+Local file logger: Cache saved to
+^$
+Logging to ACS log server.
+Running the container with these arguments
+Manager hostname obtained via command line
+ManagerReference obtained via command line
+multicast
+cdbChannelConfigExists
+getCDB
+Bootstrap ORB
+More events came in from the NC than the receiver processed
+unknown error on resolveNotificationFactory logName
+Consumer couldn't reinitialize the connection to the channel NamedCh

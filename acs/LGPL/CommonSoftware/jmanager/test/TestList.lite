@@ -1,0 +1,15 @@
+SOURCE jmanagerTATEnvironment
+PROLOGUE jmanagerTATPrologue
+
+1 ManagerImplTest "acsStartJava -Dmanager.debug.rememberOldHandles alma.acs.testsupport.tat.NoDotJUnitRunner com.cosylab.acs.maci.test.ManagerImplTest"
+2 ManagerImplSerializationTest "acsStartJava -DACS.noExit=true alma.acs.testsupport.tat.NoDotJUnitRunner com.cosylab.acs.maci.test.ManagerImplSerializationTest"
+3 ManagerPrevaylerTest "acsStartJava alma.acs.testsupport.tat.NoDotJUnitRunner com.cosylab.acs.maci.test.ManagerPrevaylerTest"
+
+EPILOGUE jmanagerTATEpilogue
+
+4 HandleDataStoreTest "acsutilTATTestRunner acsStartJava alma.acs.testsupport.tat.NoDotJUnitRunner com.cosylab.acs.maci.test.HandleDataStoreTest"
+5 IntArrayTest "acsutilTATTestRunner acsStartJava alma.acs.testsupport.tat.NoDotJUnitRunner com.cosylab.acs.maci.test.IntArrayTest"
+6 MACIModelTest "acsutilTATTestRunner acsStartJava alma.acs.testsupport.tat.NoDotJUnitRunner com.cosylab.acs.maci.test.MACIModelTest"
+7 WildcharMatcherTest "acsutilTATTestRunner acsStartJava alma.acs.testsupport.tat.NoDotJUnitRunner com.cosylab.acs.maci.test.WildcharMatcherTest"
+8 CURLHelperTest "acsutilTATTestRunner acsStartJava alma.acs.testsupport.tat.NoDotJUnitRunner com.cosylab.acs.maci.test.CURLHelperTest"
+9 PrevaylerSerializationTest "acsStartJava alma.acs.testsupport.tat.NoDotJUnitRunner com.cosylab.acs.maci.test.PrevaylerSerializationTest"

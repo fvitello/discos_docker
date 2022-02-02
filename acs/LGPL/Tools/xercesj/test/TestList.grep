@@ -1,0 +1,6 @@
+instantiating session factory with properties
+^1 - ,.*}$
+\[acsStartJava\]
+^. - [jJ]ava
+^. - OpenJDK
+^. - openjdk

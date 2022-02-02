@@ -1,0 +1,10 @@
+1 - TestAcsDaemonUtils::testLogDirectory : OK
+1 - TestAcsDaemonUtils::testLogDirectoryForPlainContainer : OK
+1 - TestAcsDaemonUtils::testLogDirectoryForHierarchicalContainer : OK
+1 - TestAcsDaemonUtils::testTimestamp : OK
+1 - TestAcsDaemonUtils::testSimpleContainerName[containerName]
+1 -  : OK
+1 - TestAcsDaemonUtils::testWritePermission : OK
+1 - TestAcsDaemonUtils::testWritePermissionForContainer : OK
+1 - 
+1 - OK (7)

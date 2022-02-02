@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<Components  xmlns="urn:schemas-cosylab-com:Components:1.0"
+       xmlns:cdb="urn:schemas-cosylab-com:CDB:1.0" 
+       xmlns:baci="urn:schemas-cosylab-com:BACI:1.0" 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <e Name="SUP1"		Code="acsncSupplierCompImpl"
+      Type="IDL:alma/demo/SupplierComp:1.0"
+      Container="bilboContainer" ImplLang="cpp" />
+
+<e Name="IL_SUP1"		Code="acsncSupplierILCompImpl"      Type="IDL:alma/demo/SupplierComp:1.0"			Container="bilboContainer" ImplLang="cpp" />
+
+<e Name="IL_CON1"		Code="acsncConsumerILCompImpl"  	  Type="IDL:alma/demo/ConsumerComp:1.0"			Container="bilboContainer" ImplLang="cpp" />
+
+<e Name="NamedCh_SUP1"		Code="acsncSupplierNamedChCompImpl"      Type="IDL:alma/demo/SupplierComp:1.0"			Container="bilboContainer" ImplLang="cpp" />
+<e Name="NamedCh_SUP2"		Code="acsncSupplierNamedChCompImpl"      Type="IDL:alma/demo/SupplierComp:1.0"			Container="bilboContainer" ImplLang="cpp" />
+<e Name="NamedCh_SUP3"		Code="acsncSupplierNamedChCompImpl"      Type="IDL:alma/demo/SupplierComp:1.0"			Container="bilboContainer" ImplLang="cpp" />
+<e Name="NamedCh_SUP4"		Code="acsncSupplierNamedChCompImpl"      Type="IDL:alma/demo/SupplierComp:1.0"			Container="bilboContainer" ImplLang="cpp" />
+<e Name="NamedCh_SUP5"		Code="acsncSupplierNamedChCompImpl"      Type="IDL:alma/demo/SupplierComp:1.0"			Container="bilboContainer" ImplLang="cpp" />
+<e Name="NamedCh_SUP6"		Code="acsncSupplierNamedChCompImpl"      Type="IDL:alma/demo/SupplierComp:1.0"			Container="bilboContainer" ImplLang="cpp" />
+<e Name="NamedCh_SUP7"		Code="acsncSupplierNamedChCompImpl"      Type="IDL:alma/demo/SupplierComp:1.0"			Container="bilboContainer" ImplLang="cpp" />
+<e Name="NamedCh_SUP8"		Code="acsncSupplierNamedChCompImpl"      Type="IDL:alma/demo/SupplierComp:1.0"			Container="bilboContainer" ImplLang="cpp" />
+<e Name="NamedCh_SUP9"		Code="acsncSupplierNamedChCompImpl"      Type="IDL:alma/demo/SupplierComp:1.0"			Container="bilboContainer" ImplLang="cpp" />
+<e Name="NamedCh_SUP10"		Code="acsncSupplierNamedChCompImpl"      Type="IDL:alma/demo/SupplierComp:1.0"			Container="bilboContainer" ImplLang="cpp" />
+<e Name="NamedCh_SUP11"		Code="acsncSupplierNamedChCompImpl"      Type="IDL:alma/demo/SupplierComp:1.0"			Container="bilboContainer" ImplLang="cpp" />
+<e Name="NamedCh_SUP12"		Code="acsncSupplierNamedChCompImpl"      Type="IDL:alma/demo/SupplierComp:1.0"			Container="bilboContainer" ImplLang="cpp" />
+<e Name="NamedCh_SUP13"		Code="acsncSupplierNamedChCompImpl"      Type="IDL:alma/demo/SupplierComp:1.0"			Container="bilboContainer" ImplLang="cpp" />
+<e Name="NamedCh_SUP14"		Code="acsncSupplierNamedChCompImpl"      Type="IDL:alma/demo/SupplierComp:1.0"			Container="bilboContainer" ImplLang="cpp" />
+<e Name="NamedCh_SUP15"		Code="acsncSupplierNamedChCompImpl"      Type="IDL:alma/demo/SupplierComp:1.0"			Container="bilboContainer" ImplLang="cpp" />
+<e Name="NamedCh_SUP16"		Code="acsncSupplierNamedChCompImpl"      Type="IDL:alma/demo/SupplierComp:1.0"			Container="bilboContainer" ImplLang="cpp" />
+<e Name="NamedCh_SUP17"		Code="acsncSupplierNamedChCompImpl"      Type="IDL:alma/demo/SupplierComp:1.0"			Container="bilboContainer" ImplLang="cpp" />
+<e Name="NamedCh_SUP18"		Code="acsncSupplierNamedChCompImpl"      Type="IDL:alma/demo/SupplierComp:1.0"			Container="bilboContainer" ImplLang="cpp" />
+<e Name="NamedCh_SUP19"		Code="acsncSupplierNamedChCompImpl"      Type="IDL:alma/demo/SupplierComp:1.0"			Container="bilboContainer" ImplLang="cpp" />
+<e Name="NamedCh_SUP20"		Code="acsncSupplierNamedChCompImpl"      Type="IDL:alma/demo/SupplierComp:1.0"			Container="bilboContainer" ImplLang="cpp" />
+<e Name="NamedCh_SUP21"		Code="acsncSupplierNamedChCompImpl"      Type="IDL:alma/demo/SupplierComp:1.0"			Container="bilboContainer" ImplLang="cpp" />
+
+<e Name="NamedCh_CON1"		Code="acsncConsumerNamedChCompImpl"  	  Type="IDL:alma/demo/ConsumerComp:1.0"			Container="bilboContainer" ImplLang="cpp" />
+<e Name="CON_COMP_1"		Code="acsncConCompImpl"  	  Type="IDL:alma/demo/ConComp:1.0"			Container="bilboContainer" ImplLang="cpp" />
+<e Name="CON_COMP_2"		Code="acsncConCompImpl"  	  Type="IDL:alma/demo/ConComp:1.0"			Container="bilboContainer" ImplLang="cpp" />
+<e Name="CON_COMP_3"		Code="acsncConCompImpl"  	  Type="IDL:alma/demo/ConComp:1.0"			Container="bilboContainer" ImplLang="cpp" />
+<e Name="CON_COMP_4"		Code="acsncConCompImpl"  	  Type="IDL:alma/demo/ConComp:1.0"			Container="bilboContainer" ImplLang="cpp" />
+<e Name="CON_COMP_5"		Code="acsncConCompImpl"  	  Type="IDL:alma/demo/ConComp:1.0"			Container="bilboContainer" ImplLang="cpp" />
+<e Name="CON_COMP_6"		Code="acsncConCompImpl"  	  Type="IDL:alma/demo/ConComp:1.0"			Container="bilboContainer" ImplLang="cpp" />
+<e Name="CON_COMP_7"		Code="acsncConCompImpl"  	  Type="IDL:alma/demo/ConComp:1.0"			Container="bilboContainer" ImplLang="cpp" />
+<e Name="SUP_COMP_1"		Code="acsncSupCompImpl"  	  Type="IDL:alma/demo/SupComp:1.0"			Container="bilboContainer" ImplLang="cpp" />
+<e Name="SUP_MTH_COMP_1"		Code="acsncMThSupplierCompImpl"  	  Type="IDL:alma/demo/SupplierComp:1.0"			Container="bilboContainer" ImplLang="cpp" />
+
+      <e Name="RTSUP1"		Code="acsncRTSupplierCompImpl"    Type="IDL:alma/demo/SupplierComp:1.0"			Container="bilboContainer" ImplLang="cpp" />
+      <e Name="CON1"		Code="acsncConsumerCompImpl"  	  Type="IDL:alma/demo/ConsumerComp:1.0"			Container="bilboContainer" ImplLang="cpp" />
+      <e Name="ARCHIVECON1"     Code="acsncArchiveConsumerCompImpl"  	  Type="IDL:alma/demo/ConsumerComp:1.0"	Container="bilboContainer" ImplLang="cpp" />
+      <e Name="TEST_PS_1"    Code="acsexmplPowerSupplyImpl"
+                             Type="IDL:alma/PS/PowerSupply:1.0"
+                             Container="archiveContainer" ImplLang="cpp" />
+      <e Name="CDB_PROPS"    Code="testCDBProps"  	  Type="IDL:alma/demo/ConsumerComp:1.0"	Container="bilboContainer" ImplLang="cpp" />
+
+<e Name="NC_Reliability"		Code="acsncSupplierReliabilityCompImpl"      Type="IDL:alma/demo/SupplierComp:1.0"			Container="bilboContainer" ImplLang="cpp" />
+</Components>

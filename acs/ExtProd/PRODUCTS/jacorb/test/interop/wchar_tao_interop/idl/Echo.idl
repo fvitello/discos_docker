@@ -1,0 +1,19 @@
+module test
+{
+module interop
+{
+module wchar_tao_interop {
+        
+        interface GoodDay {
+            
+            string hello_simple();
+            
+            wstring hello_wide( in wstring msg );            
+            
+            exception WStringException { wstring why; };
+
+            void test() raises (WStringException);
+        };
+};
+};
+};

@@ -1,0 +1,220 @@
+
+
+Hello, if YOU find something that should be in this readme file: ADD IT!
+
+
+======================================
+Updating to a new version
+======================================
+
+
+
+(o) change version info in the following files
+----------------------------------------------
+
+./html/index.html
+./WEB-INF/StringConstants.properties
+./livetest/AvailabilityTest.ref
+
+Better grep over all files to ensure you haven't missed one,
+in case this Readme is outdated.
+
+
+
+(o) update the file html/release_notes.html
+--------------------------------------------
+
+Sometimes there are differences between AcsWebStart and the standard release
+when jars need to be patched or different versions of jars need to be shipped.
+
+
+
+(o) update jar-references in ACS.jnlp and the other jnlp-files
+---------------------------------------------------------------
+
+This is the hardest and most annoying part of upgrading to a new Acs: Finding out
+which jars are needed by the applications that you want to have web-startable.
+
+Those jars needed by more than one Acs application, you should add to jnlp/ACS.jnlp.
+If a jar is only needed by one application, add it to the application's own jnlp file.
+
+If you add too many jar-references the download time will be long.
+If you add too few jar-references the applications won't work.
+Note: In that case you would normally have to redo the complete procedure from here.
+      In "test the installation" below there's a description how to spare that.
+
+
+
+(o) build and install
+----------------------
+
+(o) make clean all
+
+this will create the publishable content in ../web
+the script wsAssistant.py will look at the jar-references in the jnlp-files and
+collect the jars
+
+
+(o) move the content of ../web to the servlethost arena.hq.eso.org, under
+   /home/web/server/apache/catalina.alma.arena/alma/AcsWebStart/latest
+   (note: this location is beside the tomcat webapp dir, not inside)
+
+example: ../web/index.html must end up as <tomcat>/alma/AcsWebStart/latest/index.html
+
+at last, you need to ensure the files can be served at all by chmod'ing the permissions
+in my (mschilli) case, for instance:
+
+TRG=/home/web/server/apache/catalina.alma.arena/alma/AcsWebStart/latest
+cd ../web
+rm -rf  $TRG/*
+cp -r * $TRG/
+chmod -R 775 $TRG
+chgrp -R w3tomcat $TRG
+
+
+(o) tell tomcat to reload the "AcsWebStart/latest" application
+
+You can either go to the Html-Frontend of the Tomcat Web Application Manager at
+    http://arena:8280/tcmanager/html
+or you use the script
+    tomca.sh
+
+
+
+
+
+(o) test the installation
+---------------------------
+
+go to www.eso.org/project/alma/AcsWebStart and check that all works well
+
+when an application cannot start because a class is missing, you can patch
+the running jnlp files:
+
+  1) find the jar containing the class: acsJarsearch MissingClass $ACSROOT/lib
+  2) MISS=xyz.jar
+  3) add a jar-entry to the jnlp file belonging to the application
+  4) cp $ACSROOT/lib/$MISS  $TRG/lib/
+  5) jarsigner -signedjar $TRG/lib/$MISS \
+             -keystore EsoKeystore \
+             -storepass 2Garch1ng \
+             $ACSROOT/lib/$MISS \
+             eso
+
+Once you have figured out all missing jar-entries, do not forget to insert
+them in the original jnlp file, and redo the build and install described above.
+To find all the ad-hoc patches you did, it's a good idea to do:
+   diff . $TRG
+
+
+(o) duplicate the installation
+------------------------------
+
+the latest version of ACS should always be available in two places (example):
+
+i) "www.eso.org/projects/alma/AcsWebStart/latest"
+this is the standard location that always holds the latest version.
+
+ii) "www.eso.org/projects/alma/AcsWebStart/5.1"
+this is a mirror that denotes a particular version, this is desirable for later reference.
+
+
+this may be possible to accomplish through file system links, but that didn't work when i
+tried it, and thus i use to copy the installation physically.
+
+
+cd $TRG/..
+cp -r latest 5.1
+chgrp -R w3tomcat 5.1
+
+
+
+
+(o) install the "mirror" webapp, reload latest
+------------------------------------------
+
+It's nice to see the tomcat log when doing this:
+   e.g. tail -f /home/web/server/apache/catalina.alma.arena/logs/localhost_log.2006-04-27.txt
+
+We will deal with the Tomcat Web Application Manager, that we can
+either access through its web interface or using the "tomca.sh" helper script
+
+  a) Web Interface
+
+    i) Visit the Tomcat Web Application Manager and reload the "AcsWebStart/latest" application
+    ii) In the "Install" section put in the following:
+       Context Path (optional)    : /projects/alma/AcsWebStart/5.1
+       XML Configuration file URL :
+       WAR or Directory URL       : file:/home/web/server/apache/catalina.alma.arena/alma/AcsWebStart/5.1
+    
+
+  b) Through the "tomca.sh" script
+
+    i) tomca.sh reload AcsWebstart/latest
+    ii) tomca.sh install AcsWebstart/5.1
+    iii) tomca.sh list AcsWebStart
+
+
+Sanity check: In the Tomcat Web Application Manager, the following web apps must be running
+  i) the new acs you just installed (say 5.1): explained above
+  ii) the previous acs (say 5.0): explained above
+  iii) the latest (a copy of 5.1): explained above
+  iv) the acs webstart intro (needed to serve the introductory html-files)
+      /projects/alma/AcsWebStart
+      file:/home/web/server/apache/catalina.alma.arena/alma/AcsWebStart
+
+
+
+Then, you should add the new version to the list of "Known versions" in AcsWebStart/choice.html
+
+
+
+(o) If the update takes you longer than expected, activate the
+    commented out "under construction" picture in the index.html page
+
+
+
+(o) save your changes in CVS because that will be the basis for the next update
+
+
+
+================================
+Troubleshooting
+================================
+
+1) in case jars are missing and the build of modules fails:
+Makefile: add -include statement to invocation of wsAssistant.py
+
+2) variables in jnlpfiles: a name must not be the prefix of another name (like in $$host and $$hostname)
+
+
+==================================
+Automated Testing
+==================================
+
+In the "livetest" directory, there is a test to check the availability of the servlets/filters needed
+for AcsWebStart in the test directory. It checks that a certain jnlp file that has variables
+inside is delivered correctly.
+The test exits with 0 if all goes well, otherwise it prints some info to stderr and exits with 1.
+The diff of the most recent run can always be found in ./livetest/results/
+
+It's easy to run this in a cronjob on the servlet host:
+
+15 8,14 * * * cd /home/mschilli/public_html/webapps/AcsWebStart/latest/livetest ; ./AvailabilityTest.sh || echo "See http://www.eso.org/projects/alma/AcsWebStart/latest/livetest/results/" | mail -s "AcsWebStart AvailabilityTest Failure" mschilli@eso.org
+
+This cronjob runs twice a day (at 8.15 and 14.15), and sends a mail if something went wrong
+
+==================================
+Certificate for Jar Signing
+==================================
+
+Rarely, but still, it becomes necessary to generate a new certificate.
+jarsigner starts complaining about the certificate 6 months before it expires.
+
+
+mv EsoKeystore EsoKeystore.old
+keytool -genkey \
+        -keystore EsoKeystore -alias eso \
+        -dname "CN=Alma Group, O=ESO, L=Garching(Munich), C=DE" \
+        -validity 365 \
+        -storepass xyz

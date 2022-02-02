@@ -1,0 +1,15 @@
+java -classpath
+^. - [jJ]ava
+JUnit version
+ACS.log.minlevel.namedloggers
+Set named logger levels from property
+^1 - Time: 
+TRACE
+DELOUSE
+DEBUG \[ContainerLoggingAlarmTest
+DEBUG \[acsStartJava\]
+FINE
+Using endorsed jar files in:
+OpenJDK
+openjdk
+Archived non-system classes are disabled because the java.system.class.loader

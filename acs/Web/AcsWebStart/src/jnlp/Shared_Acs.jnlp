@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<jnlp 
+  spec="1.0+" 
+  codebase="$$codebase"
+  href="ACS.jnlp"> 
+  
+  <information> 
+    <title>$$acs_version Acs Libraries</title> 
+    <homepage href="http://www.eso.org/projects/alma/AcsWebStart"/>
+
+    <vendor>ESO, Alma Common Software</vendor> 
+    <description>Acs Libraries shared by Acs applications</description> 
+    <offline-allowed/>
+  </information> 
+
+  <security> 
+    <all-permissions/> 
+  </security> 
+
+
+  <!-- all jars in this jnlp file are signed by ESO -->
+
+  <resources> 
+    <j2se version="1.6+"/> 
+
+    <jar href="lib/orbproperties.jar"             part="ACS"/>
+
+    <jar href="lib/acscommandcenter.jar"          part="ACS"/> 
+    <jar href="lib/JavaOnlyAcsConfig.jar"         part="ACS"/> 
+    <jar href="lib/abeansACSPlug.jar"             part="ACS"/> 
+    <jar href="lib/abeansBaciModel.jar"           part="ACS"/> 
+    <jar href="lib/abeansR2Components.jar"        part="ACS"/> 
+    <jar href="lib/acscomponent.jar"              part="ACS"/> 
+    <jar href="lib/acscommon.jar"                 part="ACS"/> 
+    <jar href="lib/acserr.jar"                    part="ACS"/> 
+    <jar href="lib/acslog.jar"                    part="ACS"/> 
+    <jar href="lib/acsnc.jar"                     part="ACS"/> 
+    <jar href="lib/acsjlog.jar"                   part="ACS"/>
+    <jar href="lib/acssamp.jar"                   part="ACS"/> 
+    <jar href="lib/acstime.jar"                   part="ACS"/> 
+    <jar href="lib/baci.jar"                      part="ACS"/> 
+    <jar href="lib/commons-logging.jar"           part="ACS"/> 
+    <jar href="lib/jACSCommon.jar"                part="ACS"/> 
+    <jar href="lib/jACSUtil.jar"                  part="ACS"/> 
+    <jar href="lib/jcont.jar"                     part="ACS"/> 
+    <jar href="lib/acsContainerServices.jar"      part="ACS"/> 
+    <jar href="lib/jcontnc.jar"                   part="ACS"/> 
+    <jar href="lib/maci.jar"                      part="ACS"/> 
+    <jar href="lib/CDB.jar"                       part="ACS"/> 
+    <jar href="lib/cdbDAL.jar"                    part="ACS"/> 
+    <jar href="lib/cdbjDAL.jar"                   part="ACS"/>
+    <jar href="lib/HelloDemo.jar"                 part="ACS"/> 
+    <jar href="lib/acserrj.jar"                   part="ACS"/> 
+    <jar href="lib/maciErrType.jar"               part="ACS"/> 
+    <jar href="lib/JavaContainerError.jar"        part="ACS"/>
+    <jar href="lib/maciSchemaBindings.jar"        part="ACS"/>
+    <jar href="lib/cdbErrType.jar"                part="ACS"/>
+    <jar href="lib/objexpErrType.jar"             part="ACS"/>
+
+    <jar href="lib/ACSErrTICS.jar"                part="ACS"/> 
+    <jar href="lib/ACSErrTicsTCorr.jar"           part="ACS"/> 
+    <jar href="lib/ACSErrTypeAlarm.jar"           part="ACS"/> 
+    <jar href="lib/ACSErrTypeCommon.jar"          part="ACS"/> 
+    <jar href="lib/ACSErrTypeCORBA.jar"           part="ACS"/> 
+    <jar href="lib/ACSErrTypeCppNative.jar"       part="ACS"/> 
+    <jar href="lib/ACSErrTypeDevIO.jar"           part="ACS"/> 
+    <jar href="lib/ACSErrTypeJavaNative.jar"      part="ACS"/> 
+    <jar href="lib/ACSErrTypeMonitor.jar"         part="ACS"/> 
+    <jar href="lib/ACSErrTypeOK.jar"              part="ACS"/> 
+    <jar href="lib/ACSErrTypePythonNative.jar"    part="ACS"/> 
+    <jar href="lib/ACSTimeError.jar"              part="ACS"/> 
+    <jar href="lib/jmanagerErrType.jar"           part="ACS"/> 
+
+    <jar href="lib/systementities.jar"            part="ACS"/> 
+    <jar href="lib/acsTestEntities.jar"           part="ACS"/> 
+    <jar href="lib/archive_xmlstore_if.jar"       part="ACS"/> 
+    <jar href="lib/xmlentity.jar"                 part="ACS"/> 
+    <jar href="lib/xmlidl.jar"                    part="ACS"/> 
+    <jar href="lib/xmljbind.jar"                  part="ACS"/>
+    <jar href="lib/castor.jar"                    part="ACS"/>
+    <jar href="lib/xercesImpl.jar"                part="ACS"/>  
+    <jar href="lib/saxpath.jar"                   part="ACS"/>	 
+    <jar href="lib/jaxen-core.jar"                part="ACS"/>
+    <jar href="lib/jaxen-jdom.jar"                part="ACS"/> 
+
+    <!-- third-party jars -->
+    
+    <jar href="lib/jacorb.jar"                    part="ACS"/>
+    <jar href="lib/idl.jar"                       part="ACS"/>
+    <jar href="lib/antlr-2.7.2.jar"               part="ACS"/>
+    <jar href="lib/avalon-framework-4.1.5.jar"    part="ACS"/>
+    <jar href="lib/backport-util-concurrent.jar"  part="ACS"/>
+    <jar href="lib/logkit-1.2.jar"                part="ACS"/>
+    <jar href="lib/picocontainer-1.2.jar"         part="ACS"/>
+    <jar href="lib/wrapper-3.1.0.jar"             part="ACS"/>
+    <jar href="lib/activation.jar"                part="ACS"/> 
+    <jar href="lib/concurrent.jar"                part="ACS"/> 
+    <jar href="lib/cosyframework-core.jar"        part="ACS"/> 
+    <jar href="lib/cosyframework-gui.jar"         part="ACS"/> 
+    <jar href="lib/cosyicons.jar"                 part="ACS"/> 
+    <jar href="lib/icons.jar"                     part="ACS"/> 
+    <jar href="lib/infobus.jar"                   part="ACS"/> 
+    <jar href="lib/jakarta-oro-2.0.5.jar"         part="ACS"/> 
+    <jar href="lib/jakarta-regexp-1.2.jar"        part="ACS"/> 
+    <jar href="lib/jnlp.jar"                      part="ACS"/> 
+    <jar href="lib/junit.jar"                     part="ACS"/> 
+    <jar href="lib/prevayler-1.02.001.jar"        part="ACS"/> 
+    <jar href="lib/tablelayout.jar"               part="ACS"/>
+    <jar href="lib/mail.jar"                      part="ACS"/>
+    
+  </resources>
+
+
+  <component-desc>
+     <!-- this jnlp file is a library of jars -->
+  </component-desc>
+
+</jnlp> 
+
+
+
+
+
+
+
+

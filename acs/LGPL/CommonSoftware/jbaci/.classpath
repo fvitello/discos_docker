@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="lib" path="lib/MCtestComponent.jar"/>
+	<classpathentry kind="lib" path="lib/MyTestComponent.jar"/>
+	<classpathentry kind="lib" path="lib/testjBaciEnumProp.jar"/>
+	<classpathentry kind="lib" path="lib/testPrimTestingComponent.jar"/>
+	<classpathentry kind="lib" path="lib/testSeqTestingComponent.jar"/>
+	<classpathentry kind="lib" path="lib/testSimpleMasterComponent.jar"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry excluding="CDB/|ref/" kind="src" path="test"/>
+	<classpathentry kind="con" path="acs.INTROOT_CONTAINER/INTROOT/jar,zip"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="acs.ACSROOT_CONTAINER/ACS-2015.4/jar,zip"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/ACS-FEB2017"/>
+	<classpathentry kind="output" path="object"/>
+</classpath>

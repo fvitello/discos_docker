@@ -1,0 +1,69 @@
+#!/bin/bash
+#*******************************************************************************
+# ALMA - Atacama Large Millimiter Array
+# Copyright (c) National Astronomical Observatory of Japan, 2017 
+# 
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License, or (at your option) any later version.
+# 
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+# 
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307  USA
+#
+
+#
+# This is the wrapper script to launch Java version of
+# bulkDataNTGenSender.
+#
+
+SCRIPTDIR=$(cd $(dirname $0) && pwd)
+SCRIPTNAME=$(basename $0)
+
+. ${SCRIPTDIR}/bulkDataNTJavaEnv
+
+# "-ea" flag enables the assertion. Because this program is supposed to be
+# used by a developer, not in ALMA operation, this script enables the
+# assertion.
+JVM_FLAGS="-ea"
+
+# Set the command name for the command line usage.
+JVM_FLAGS="${JVM_FLAGS} -Dalma.acs.bulkdata.gen_sender.command_name=${SCRIPTNAME}"
+
+# This is the debugging option for the developer of BulkDataNTGenSenderJava,
+# which makes it read the specified logging properties file to override the
+# logging option for the development.
+ADD_OPTS="-g ../config/bulkDataNTGenSenderJava_debug_logging.properties"
+
+# This is the production option for the users of BulkDataNTGenSernderJava.,
+# which does not output debug logs to the console.
+#ADD_OPTS="-g ../config/bulkDataNTGenSenderJava_logging.properties"
+
+# Main class of BulkDataNTGenSender in Java.
+MAIN_CLASS=alma.acs.bulkdata.BulkDataNTGenSender
+
+acsStartJava -jvmFlags ${JVM_FLAGS} ${MAIN_CLASS} "$@" ${ADD_OPTS}
+
+# acsStartJava has a bug; it cannot handle quoted command line arguments
+# passed to acsStartJava were not correctly processed. It seems that 
+# quotation is simply ignored. For example, the command line shown below
+# is not correctly processed.
+#
+#   acsStartJava ... -f "1 -b" 10
+# 
+# In this example case, acsStartJava considers that there are 4 arguments
+# (-f, 1, -b and 10) and passes them to JVM while this example command
+# line is normally considered as having 3 arguments (-f, "1 -b" and 10).
+
+# 
+# Developer's note:
+#  The following is the minimal arguments to launch bulkDataNTGenSenderJava.
+#
+#java -classpath "${ACSROOT}/lib/jACSUtil.jar:${ALMASW_INSTDIR}/RTI/ndds.5.1.0/class/nddsjava.jar" "-Djava.endorsed.dirs=/alma/ACS-FEB2017/JacORB/lib/endorsed:" -Dalma.acs.bulkdata.gen_sender.command_name=bulkDataNTGenSenderJava -Djava.system.class.loader=alma.acs.classloading.AcsSystemClassLoader -Dacs.system.classpath.jardirs="../lib:${ACSROOT}/lib" -ea alma.acs.bulkdata.BulkDataNTGenSender "$@"
+# 

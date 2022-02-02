@@ -1,0 +1,129 @@
+1 -  -D ACS.noExit=true -- alma.acs.testsupport.tat.NoDotJUnitRunner com.cosylab.acs.maci.test.ManagerImplSerializationTest
+1 - ----------T--:--:--.--- INFO [alma.acs.logging] Logger jacorb created with custom log levels local=Info, remote=Info to avoid log jams due to careless default log level settings.
+1 - ----------T--:--:--.--- INFO [Manager] Initializing Manager.
+1 - ----------T--:--:--.--- INFO [Manager] Connecting to CORBA Naming Service with reference 'iiop://172.18.0.2:3001/'...
+1 - Recovering system state...
+1 - ----------T--:--:--.--- INFO [Manager] Connecting to DAL 'corbaloc::xxxxxxx:yyyy/CDB'...
+1 - ----------T--:--:--.--- INFO [Manager] Found 15 component entries in the configuration database.
+1 - ----------T--:--:--.--- INFO [Manager] Manager initialized with state persistence disabled.
+1 - ----------T--:--:--.--- INFO [Manager] Manager activated with IOR:000000000000001C49444C3A696A732E73692F6D6163692F4D616E616765723A312E3000000000010000000000000074000102000000000B3137322E31382E302E3200000BB80000000000164F52422F4D616E61676572504F412F4D616E616765720000000000020000000000000008000000004A41430000000001000000240000000000010001000000020001000F0501000100010109000000020501000100010100
+1 - ----------T--:--:--.--- INFO [Manager] All initializations done.
+1 - ----------T--:--:--.--- INFO [Manager] AcsManagerStatusMessage_ManagerStarted Manager Application initialized.
+1 - 
+1 - ----------T--:--:--.--- INFO [Manager] 'Manager' requested component 'curl:///Log'.
+1 - ----------T--:--:--.--- WARNING [Manager] No list of services daemons available in the CDB. In an operational environment using ACS daemons, this is a severe error!! It is OK only if you run the system without using these daemons. 
+1 - ----------T--:--:--.--- INFO [Manager] Component 'curl:///Log' provided to 'Manager'.
+1 - ----------T--:--:--.--- INFO [Manager] Client 'testClient' logged in.
+1 - ----------T--:--:--.--- INFO [Manager] Successfully logged in to the Manager.
+1 - Recovering system state...
+1 - Creating or loading recovery file
+1 - Creating or loading recovery file
+1 - ----------T--:--:--.--- INFO [Manager] Client 'testClient' logged out.
+1 - ----------T--:--:--.--- INFO [Manager] Successfully logged out from the Manager.
+1 - Recovering system state...
+1 - Creating or loading recovery file
+1 - Creating or loading recovery file
+1 - ----------T--:--:--.--- INFO [Manager] Destroying Manager.
+1 - ----------T--:--:--.--- INFO [Manager] Manager is shutting down.
+1 - ----------T--:--:--.--- ALERT [ManagerContainerServices] Alarm sent: &lt;Manager,Prevayler,2&gt; TERMINATE
+1 - ----------T--:--:--.--- INFO [Manager] Manager shutdown completed.
+1 - ----------T--:--:--.--- INFO [Manager] Initializing Manager.
+1 - ----------T--:--:--.--- INFO [Manager] Connecting to CORBA Naming Service with reference 'iiop://172.18.0.2:3001/'...
+1 - ----------T--:--:--.--- INFO [Manager] Connecting to DAL 'corbaloc::xxxxxxx:yyyy/CDB'...
+1 - Recovering system state...
+1 - ----------T--:--:--.--- INFO [Manager] Found 15 component entries in the configuration database.
+1 - ----------T--:--:--.--- INFO [Manager] Manager initialized with state persistence disabled.
+1 - ----------T--:--:--.--- INFO [Manager] Manager activated with IOR:000000000000001C49444C3A696A732E73692F6D6163692F4D616E616765723A312E3000000000010000000000000074000102000000000B3137322E31382E302E3200000BB80000000000164F52422F4D616E61676572504F412F4D616E616765720000000000020000000000000008000000004A41430000000001000000240000000000010001000000020001000F0501000100010109000000020501000100010100
+1 - ----------T--:--:--.--- INFO [Manager] AcsManagerStatusMessage_ManagerStarted Manager Application initialized.
+1 - ----------T--:--:--.--- INFO [Manager] All initializations done.
+1 - ----------T--:--:--.--- WARNING [Manager] No list of services daemons available in the CDB. In an operational environment using ACS daemons, this is a severe error!! It is OK only if you run the system without using these daemons. 
+1 - 
+1 - ----------T--:--:--.--- INFO [Manager] 'Manager' requested component 'curl:///Log'.
+1 - ----------T--:--:--.--- INFO [Manager] Component 'curl:///Log' provided to 'Manager'.
+1 - ----------T--:--:--.--- INFO [Manager] Client 'testClient' logged in.
+1 - ----------T--:--:--.--- INFO [Manager] Successfully logged in to the Manager.
+1 - Recovering system state...
+1 - Creating or loading recovery file
+1 - Creating or loading recovery file
+1 - ----------T--:--:--.--- ALERT [ManagerContainerServices] Alarm sent: &lt;Manager,Prevayler,2&gt; TERMINATE
+1 - ----------T--:--:--.--- INFO [Manager] Client 'testClient' [Handle (xxxxxxx) = { type = CLIENT, key = (xxxxxxx), id = (xxxxxxx) }] is unreachable, logging it out.
+1 - ----------T--:--:--.--- INFO [Manager] Client 'testClient' logged out.
+1 - Recovering system state...
+1 - Creating or loading recovery file
+1 - Creating or loading recovery file
+1 - ----------T--:--:--.--- INFO [Manager] Destroying Manager.
+1 - ----------T--:--:--.--- INFO [Manager] Manager is shutting down.
+1 - ----------T--:--:--.--- INFO [Manager] Manager shutdown completed.
+1 - ----------T--:--:--.--- INFO [Manager] Initializing Manager.
+1 - ----------T--:--:--.--- INFO [Manager] Connecting to CORBA Naming Service with reference 'iiop://172.18.0.2:3001/'...
+1 - ----------T--:--:--.--- INFO [Manager] Connecting to DAL 'corbaloc::xxxxxxx:yyyy/CDB'...
+1 - Recovering system state...
+1 - ----------T--:--:--.--- INFO [Manager] Found 15 component entries in the configuration database.
+1 - ----------T--:--:--.--- INFO [Manager] Manager initialized with state persistence disabled.
+1 - ----------T--:--:--.--- INFO [Manager] Manager activated with IOR:000000000000001C49444C3A696A732E73692F6D6163692F4D616E616765723A312E3000000000010000000000000074000102000000000B3137322E31382E302E3200000BB80000000000164F52422F4D616E61676572504F412F4D616E616765720000000000020000000000000008000000004A41430000000001000000240000000000010001000000020001000F0501000100010109000000020501000100010100
+1 - ----------T--:--:--.--- INFO [Manager] AcsManagerStatusMessage_ManagerStarted Manager Application initialized.
+1 - ----------T--:--:--.--- INFO [Manager] All initializations done.
+1 - ----------T--:--:--.--- WARNING [Manager] No list of services daemons available in the CDB. In an operational environment using ACS daemons, this is a severe error!! It is OK only if you run the system without using these daemons. 
+1 - 
+1 - ----------T--:--:--.--- INFO [Manager] 'Manager' requested component 'curl:///Log'.
+1 - ----------T--:--:--.--- INFO [Manager] Component 'curl:///Log' provided to 'Manager'.
+1 - ----------T--:--:--.--- INFO [Manager] Container 'testClient' logged in.
+1 - ----------T--:--:--.--- INFO [Manager] Container 'testClient' startup statistics: 0 components queued to be activated.
+1 - Recovering system state...
+1 - Creating or loading recovery file
+1 - Creating or loading recovery file
+1 - ----------T--:--:--.--- INFO [Manager] Container 'testClient' startup statistics: 0 of 0 components activated.
+1 - ----------T--:--:--.--- ALERT [ManagerContainerServices] Alarm sent: &lt;Manager,Prevayler,2&gt; TERMINATE
+1 - com.cosylab.acs.maci.RemoteTransientException: Failed to invoke 'tagged_message()' method due to transient exception.
+1 - 	at com.cosylab.acs.maci.plug.ClientProxy.taggedmessage(ClientProxy.java:289)
+1 - 	at com.cosylab.acs.maci.manager.ManagerImpl$ClientMessageTask.run(ManagerImpl.java:5530)
+1 - 	at com.cosylab.acs.maci.manager.ManagerImpl$1ClientQueuMessageTask.run(ManagerImpl.java:5595)
+1 - 	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
+1 - 	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+1 - 	at java.base/java.lang.Thread.run(Thread.java:834)
+1 - Caused by: org.omg.CORBA.TRANSIENT: Retries exceeded, couldn't reconnect to 172.18.0.2:12121
+1 - 	at org.jacorb.orb.iiop.ClientIIOPConnection.connect(ClientIIOPConnection.java:224)
+1 - 	at org.jacorb.orb.giop.GIOPConnection.sendMessage(GIOPConnection.java:1074)
+1 - 	at org.jacorb.orb.giop.GIOPConnection.sendRequest(GIOPConnection.java:1019)
+1 - 	at org.jacorb.orb.giop.ClientConnection.sendRequest(ClientConnection.java:309)
+1 - 	at org.jacorb.orb.Delegate.invoke_oneway(Delegate.java:1585)
+1 - 	at org.jacorb.orb.Delegate._invoke_internal(Delegate.java:1349)
+1 - 	at org.jacorb.orb.Delegate.invoke_internal(Delegate.java:1210)
+1 - 	at org.jacorb.orb.Delegate.invoke(Delegate.java:1197)
+1 - 	at org.omg.CORBA.portable.ObjectImpl._invoke(ObjectImpl.java:80)
+1 - 	at si.ijs.maci._ContainerStub.taggedmessage(_ContainerStub.java:1710)
+1 - 	at com.cosylab.acs.maci.plug.ClientProxy.taggedmessage(ClientProxy.java:281)
+1 - 	... 5 more
+1 - com.cosylab.acs.maci.RemoteTransientException: Failed to invoke 'tagged_message()' method due to transient exception.
+1 - 	at com.cosylab.acs.maci.plug.ClientProxy.taggedmessage(ClientProxy.java:289)
+1 - 	at com.cosylab.acs.maci.manager.ManagerImpl$ClientMessageTask.run(ManagerImpl.java:5530)
+1 - 	at com.cosylab.acs.maci.manager.ManagerImpl$1ClientQueuMessageTask.run(ManagerImpl.java:5595)
+1 - 	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
+1 - 	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+1 - 	at java.base/java.lang.Thread.run(Thread.java:834)
+1 - Caused by: org.omg.CORBA.TRANSIENT: Retries exceeded, couldn't reconnect to 172.18.0.2:12121
+1 - 	at org.jacorb.orb.iiop.ClientIIOPConnection.connect(ClientIIOPConnection.java:224)
+1 - 	at org.jacorb.orb.giop.GIOPConnection.sendMessage(GIOPConnection.java:1074)
+1 - 	at org.jacorb.orb.giop.GIOPConnection.sendRequest(GIOPConnection.java:1019)
+1 - 	at org.jacorb.orb.giop.ClientConnection.sendRequest(ClientConnection.java:309)
+1 - 	at org.jacorb.orb.Delegate.invoke_oneway(Delegate.java:1585)
+1 - 	at org.jacorb.orb.Delegate._invoke_internal(Delegate.java:1349)
+1 - 	at org.jacorb.orb.Delegate.invoke_internal(Delegate.java:1210)
+1 - 	at org.jacorb.orb.Delegate.invoke(Delegate.java:1197)
+1 - 	at org.omg.CORBA.portable.ObjectImpl._invoke(ObjectImpl.java:80)
+1 - 	at si.ijs.maci._ContainerStub.taggedmessage(_ContainerStub.java:1710)
+1 - 	at com.cosylab.acs.maci.plug.ClientProxy.taggedmessage(ClientProxy.java:281)
+1 - 	... 5 more
+1 - ----------T--:--:--.--- ALERT [ManagerContainerServices] Alarm sent: &lt;Manager,testClient,1&gt; ACTIVE
+1 - ----------T--:--:--.--- INFO [Manager] Client 'testClient' [Handle (xxxxxxx) = { type = CONTAINER, key = (xxxxxxx), id = (xxxxxxx) }] is unreachable, logging it out.
+1 - ----------T--:--:--.--- INFO [Manager] Container 'testClient' logged out.
+1 - Recovering system state...
+1 - Creating or loading recovery file
+1 - Creating or loading recovery file
+1 - ----------T--:--:--.--- INFO [Manager] Destroying Manager.
+1 - ----------T--:--:--.--- INFO [Manager] Manager is shutting down.
+1 - ----------T--:--:--.--- INFO [Manager] Manager shutdown completed.
+1 - 
+1 - 
+1 - OK (3 tests)
+1 - 

@@ -1,0 +1,4 @@
+#!/bin/bash
+
+acsStartJava -D cdb_rdb.plugins.configuration=alma.archive.database.helpers.ArchiveHibernateWDALConfigurationPlugin -endorsed alma.acs.tmcdb.utils.MonitoringSyncTool $@
+

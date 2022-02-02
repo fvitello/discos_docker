@@ -1,0 +1,56 @@
+#!/usr/bin/vmware
+config.version = "8"
+virtualHW.version = "4"
+scsi0.present = "TRUE"
+scsi0.virtualDev = "lsilogic"
+memsize = "748"
+ide0:0.present = "TRUE"
+ide0:0.fileName = "hda.vmdk"
+ide1:0.present = "TRUE"
+ide1:0.fileName = "/dev/cdrom"
+ide1:0.deviceType = "atapi-cdrom"
+floppy0.startConnected = "FALSE"
+floppy0.fileName = "/dev/fd0"
+Ethernet0.present = "TRUE"
+Ethernet0.connectionType = "nat"
+sound.present = "FALSE"
+displayName = "RHEL4"
+guestOS = "rhel4"
+priority.grabbed = "normal"
+priority.ungrabbed = "normal"
+powerType.powerOff = "hard"
+powerType.powerOn = "hard"
+powerType.suspend = "hard"
+powerType.reset = "hard"
+
+ide0:1.present = "TRUE"
+ide0:1.fileName = "hdb.vmdk"
+floppy0.present = "FALSE"
+usb.present = "FALSE"
+
+Ethernet0.addressType = "generated"
+uuid.location = "56 4d 28 5c 60 50 8a c2-a3 c6 ba e6 44 b1 bb 4f"
+uuid.bios = "56 4d 28 5c 60 50 8a c2-a3 c6 ba e6 44 b1 bb 4f"
+ethernet0.generatedAddress = "00:0c:29:b1:bb:4f"
+ethernet0.generatedAddressOffset = "0"
+
+tools.remindInstall = "TRUE"
+
+ide1:0.startConnected = "TRUE"
+
+tools.syncTime = "FALSE"
+
+ide1:1.present = "FALSE"
+ide1:1.fileName = "hdb.vmdk"
+
+ide0:1.mode = "independent-persistent"
+
+ide0:0.redo = ""
+ide0:1.redo = ""
+nvram = "RHEL4.nvram"
+ide0:0.deviceType = "disk"
+ide0:1.deviceType = "disk"
+
+snapshot.disabled = "TRUE"
+
+checkpoint.vmState = ""

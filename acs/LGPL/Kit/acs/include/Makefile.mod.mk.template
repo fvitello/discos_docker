@@ -1,0 +1,6 @@
+MAKEID:=acs
+MOD_NAME:=$(notdir $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST))))))
+MOD_PATH:=..
+MAKEDIRTMP:=$(if $(wildcard ../include/InclusiveMakefile.mk),..,$(shell searchFile include/InclusiveMakefile.mk))
+$(if $(filter $(MAKEDIRTMP),#error#),,$(eval include $(MAKEDIRTMP)/include/InclusiveMakefile.mk))
+$(eval $(call genModule,$(MOD_NAME),$(MOD_PATH)))

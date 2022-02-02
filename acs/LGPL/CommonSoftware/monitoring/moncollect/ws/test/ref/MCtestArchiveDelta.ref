@@ -1,0 +1,20 @@
+1 - Test preparation with SUCCESS
+1 - RESULTS FROM TEST CASE1: Verify static configuration of archive delta parameter
+1 - Perform manual verification of delta archival interval for properties according to MC_TEST_COMPONENT3.xml:
+1 -  - doubleSeqProp: 2
+1 -  - doubleProp:    2
+1 -  - longProp:      20
+1 -  - longSeqProp:   10
+1 -  - patternProp:   4
+1 - Number of Devices: 1
+1 - MC_TEST_COMPONENT3 
+1 - 	MC_TEST_COMPONENT3:doubleSeqProp ::: ['12124']
+1 - Great! All values match the incremental pattern
+1 - 	MC_TEST_COMPONENT3:doubleProp ::: ['3432535']
+1 - Great! All values match the incremental pattern
+1 - 	MC_TEST_COMPONENT3:longProp ::: ['1232535']
+1 - Great! All values match the incremental pattern
+1 - 	MC_TEST_COMPONENT3:longSeqProp ::: ['34535']
+1 - Great! All values match the incremental pattern
+1 - 	MC_TEST_COMPONENT3:patternProp ::: []
+1 - Great! All values match the incremental pattern

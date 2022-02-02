@@ -1,0 +1,182 @@
+#! /bin/sh
+
+#*******************************************************************************
+# AcsUpdateTe4
+#
+# "@(#) $Id: AcsUpdateTe4,v 1.1 2006/09/28 10:36:52 gchiozzi Exp $"
+#
+# who       when      what
+# --------  --------  ----------------------------------------------
+# gchiozzi  2005-04-22 created
+#
+
+#************************************************************************
+#   NAME
+# 
+#   SYNOPSIS
+# 
+#   DESCRIPTION
+#
+#   FILES
+#
+#   ENVIRONMENT
+#
+#   RETURN VALUES
+#
+#   CAUTIONS
+#
+#   EXAMPLES
+#
+#   SEE ALSO
+#
+#   BUGS     
+#
+#------------------------------------------------------------------------
+#
+
+######################################
+# Directories names and assumptions  #
+######################################
+
+# Assumes a standard ACS installation in /alma
+# and a standard ACS environment configuration
+# Uses gchiozzi CVS account and not almamgr
+# Extracts from CVS the NO-LGPL heald
+
+# ACS Garching repository directory
+# for the built binary distributions
+BIN_DIR=/alma_te4/ACS_BUILD_BIN
+
+# Full name for the binary dostribution file
+BIN_FILE=$BIN_DIR/ACS_BIN.tar.gz
+
+# Installation destination root directory
+DEST_DIR=/alma_te4
+
+# Commands used (so that I can disable them here for debugging
+CMD_RM="rm -rf"
+CMD_MV="mv"
+CMD_GTAR="gtar"
+
+#CMD_RM="echo rm -rf"
+#CMD_MV="echo mv"
+#CMD_GTAR="echo gtar"
+
+# String to control file redirection for logs
+# REDIR="2>&1 >/dev/null
+REDIR=""
+
+##############
+
+echo "===> Install distribution file in $DEST_DIR/alma/$ALMASW_RELEASE !"
+
+########################
+# Sanity checks        #
+########################
+
+if [ X"$ACSROOT" = X ]
+then
+    echo "ERROR - ACSROOT undefined. Cannot continue!"
+    exit -1
+fi
+
+if [ ! -d $BIN_DIR ]
+then
+    echo "ERROR: $BIN_DIR does not exist. Not a standard machine"
+    echo "Installation aborted"
+    exit -1
+fi
+
+if [ ! -d $DEST_DIR ]
+then
+    echo "ERROR: $DEST_DIR does not exist. Not a standard machine"
+    echo "Installation aborted"
+    exit -1
+fi
+
+
+########################################
+# Backup current installation
+# Keep just the last 2 installations
+########################################
+
+###############
+#-- ACSSW
+ 
+echo "===> Backup current installation of ACSROOT"
+if [  -d $DEST_DIR/alma/$ALMASW_RELEASE/ACSSW.2 ]
+then
+        $CMD_RM  $DEST_DIR/alma/$ALMASW_RELEASE/ACSSW.2  $REDIR
+        if [ $? != 0 ]
+        then
+            echo "cannot remove $DEST_DIR/alma/$ALMASW_RELEASE/ACSSW.5; please check the permissions of the directory."
+        fi
+fi
+
+if [  -d $DEST_DIR/alma/$ALMASW_RELEASE/ACSSW.1 ]
+then
+        $CMD_MV $DEST_DIR/alma/$ALMASW_RELEASE/ACSSW.1   $DEST_DIR/alma/$ALMASW_RELEASE/ACSSW.2  $REDIR
+        if [ $? != 0 ]
+        then
+            echo "cannot move $DEST_DIR/alma/$ALMASW_RELEASE/ACSSW.4 in $DEST_DIR/alma/$ALMASW_RELEASE/ACSSW.5; please check the permissions of the directory."
+        fi
+fi
+
+if [  -d $DEST_DIR/alma/$ALMASW_RELEASE/ACSSW ]
+then
+        echo ""
+        echo "WARNING!"
+        echo "The file $DEST_DIR/alma/$ALMASW_RELEASE/ACSSW already exist"
+        echo "it will be moved under $DEST_DIR/alma/$ALMASW_RELEASE/ACSSW.1"
+        $CMD_MV $DEST_DIR/alma/$ALMASW_RELEASE/ACSSW $DEST_DIR/alma/$ALMASW_RELEASE/ACSSW.1 $REDIR
+        if [ $? != 0 ]
+        then
+            echo "cannot move ACS; please check the permissions of the directory."
+        fi
+fi
+
+###############
+#-- acsdata
+ 
+echo "===> Backup current installation of acsdata"
+if [  -d $DEST_DIR/alma/$ALMASW_RELEASE/acsdata.2 ]
+then
+        $CMD_RM $DEST_DIR/alma/$ALMASW_RELEASE/acsdata.2  $REDIR
+        if [ $? != 0 ]
+        then
+            echo "cannot remove $DEST_DIR/alma/$ALMASW_RELEASE/acsdata.5; please check the permissions of the directory."
+        fi
+fi
+if [  -d $DEST_DIR/alma/$ALMASW_RELEASE/acsdata.1 ]
+then
+        $CMD_MV $DEST_DIR/alma/$ALMASW_RELEASE/acsdata.1   $DEST_DIR/alma/$ALMASW_RELEASE/acsdata.2  $REDIR
+        if [ $? != 0 ]
+        then
+            echo "cannot move $DEST_DIR/alma/$ALMASW_RELEASE/acsdata.4 in $DEST_DIR/alma/$ALMASW_RELEASE/acsdata.5; please check the permissions of the directory."
+        fi
+fi
+
+if [  -d $DEST_DIR/alma/$ALMASW_RELEASE/acsdata ]
+then
+        echo ""
+        echo "WARNING!"
+        echo "The file $DEST_DIR/alma/$ALMASW_RELEASE/acsdata already exist"
+        echo "it will be moved under $DEST_DIR/alma/$ALMASW_RELEASE/acsdata.1"
+        $CMD_MV $DEST_DIR/alma/$ALMASW_RELEASE/acsdata $DEST_DIR/alma/$ALMASW_RELEASE/acsdata.1 $REDIR
+        if [ $? != 0 ]
+        then
+            echo "cannot move ACS; please check the permissions of the directory."
+        fi
+fi
+
+cd $DEST_DIR/alma/$ALMASW_RELEASE/
+echo "=================================================" >> AcsInstallLog.txt
+echo "ACS installation date:" >> AcsInstallLog.txt
+date >> AcsInstallLog.txt
+
+cd $DEST_DIR
+$CMD_GTAR -xpzf $BIN_FILE alma/$ALMASW_RELEASE/ACSSW alma/$ALMASW_RELEASE/acsdata
+
+echo "===> DONE"
+
+# ___oOo___

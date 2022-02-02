@@ -1,0 +1,21 @@
+1 -  -- alma.nctest.clients.FridgeConsumer
+2 - Making sure there is a fridge available...
+1 - ----------T--:--:--.--- INFO [FridgeConsumer] component 'FridgeConsumer' requested AdvancedContainerServices
+1 - Waiting for events...
+1 - The Java temperature difference is ---
+1 - The Java temperature difference is ---
+1 - The Java temperature difference is ---
+1 - The Java temperature difference is ---
+1 - The Java temperature difference is ---
+1 - Done...
+2 - ----------T--:--:--.--- Python Client initialized by user@host Main - Creating FridgeConsumer
+2 - ----------T--:--:--.--- fridge-Consumer addSubscription - temperatureDataBlockEvent
+2 - ----------T--:--:--.--- Python Client initialized by user@host Main - Waiting for events . . .
+2 - ----------T--:--:--.--- FridgeNCClient fridgeDataHandler - The Python temperature difference is ---
+2 - ----------T--:--:--.--- FridgeNCClient fridgeDataHandler - The Python temperature difference is ---
+2 - ----------T--:--:--.--- FridgeNCClient fridgeDataHandler - The Python temperature difference is ---
+2 - ----------T--:--:--.--- FridgeNCClient fridgeDataHandler - The Python temperature difference is ---
+2 - ----------T--:--:--.--- FridgeNCClient fridgeDataHandler - The Python temperature difference is ---
+2 - ----------T--:--:--.--- Python Client initialized by user@host Main - Events all done . . . exiting
+2 - ----------T--:--:--.--- Python Client initialized by user@host disconnect - Disconnect called for client
+2 - ----------T--:--:--.--- Python Client initialized by user@host disconnect - Disconnect called for client

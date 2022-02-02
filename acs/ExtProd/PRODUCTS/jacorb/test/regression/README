@@ -1,0 +1,111 @@
+
+  JacORB Test Suite Documentation
+  ===============================
+
+This directory tree holds the JacORB regression test suite.  It is not
+included in most releases of JacORB, because the test suite is not
+necessary for using the ORB.  The suite is always available from
+JacORB's public GIT repository, for everybody who wishes to run the
+tests or to improve them.  Many of the test cases are also good
+examples that illustrate how to use certain features of JacORB.
+
+Although the test suite is based on JUnit in a rather straightforward
+way, there are a few special mechanisms built into the regression test
+framework.  These include:
+
+  * a framework for testing the IDL compiler against arbitrary IDL
+    source, checking for proper error handling and verifying whether
+    the generated Java code can indeed be compiled.
+
+  * the ability to run end-to-end client/server tests.  In these
+    tests, the Java process that executes the tests under JUnit acts
+    as the client, and it automatically spawns a separate server
+    process with which the client side communicates.
+
+The test suite can also be executed under the EMMA coverage tool,
+which measures and reports the amount of coverage within the JacORB
+code that was achieved during the test.
+
+
+Building and running the Test Suite
+------------------------------------
+
+We assume that you obtain the regression suite code by checking all of
+JacORB out of the public GIT repository.  This means that you have a
+functioning, current JacORB version within which the test suite itself
+is located.
+
+Note that the test suite uses maven to resolve the dependencies
+so you must have used Maven to compile and install the top level.
+
+By default the top level pom will automatically invoke the regression tests
+unless skipTests=true is passed in (e.g. "mvn install -DskipTests=true").
+
+To run just the regression tests, from the regression test directory type
+
+mvn test
+
+Standard maven surefire parameters to run specific tests are possible. The results
+get written to the surefire-reports/surefire-reports-ssl directory. To get more logging
+when running the tests use
+
+mvn -Djacorb.test.verbose=true test
+
+
+There are various properties you can define when running the tests to
+change the behaviour (for example ant -Djacorb.test.coverage=on
+run-all-no-build).  The most important of these properties are:
+
+  jacorb.test.imr=true/false    run all client/server tests via the
+                                implementation repository
+
+  jacorb.test.coverage=true/false
+                                collect coverage data while running
+                                (see below for explanations)
+
+  jacorb.test.verbose=true/false
+                                additional informational output by the regression
+                                framework and the testcases.
+
+b) Running the tests from Eclipse
+
+You can run any test as a normal JUnit test from within Eclipse, which
+allows you to track down much more effectively which test cases
+failed, and why. To do this import the test/regression as a Maven project.
+You can
+then run any of the JacORB tests by selecting the TestCase
+class and clicking "Run As...".  Run it as a "JUnit Test Case".
+
+Note that some tests rely on jacorb-omgapi.jar being placed in the Xbootclasspath.
+
+
+Getting Coverage Reports
+------------------------
+
+Coverage is automatically run using Jacoco. The results may be seen by running
+
+mvn site
+
+Adding new tests
+----------------
+
+The following steps are necessary to add a new set of JUnit tests to
+the JacORB test suite.
+
+1. Write the tests using the JUnit framework. The sourcefile should be
+   named XYZTest.java (replace XYZ with an appropiate name). Tests
+   should be packaged using the same packaging as the source that is
+   being tested, but replacing 'org.jacorb' with 'org.jacorb.test'.
+   Any helper classes that can be used by tests in different packages
+   should be put in the package 'org.jacorb.test.harness'.  All source
+   code in the test hierarchy can be found under the 'src' directory.
+
+   For example, the DynAny source is in the package 'org.jacorb.orb.dynany'.
+   Therefore, the JUnit tests that test the DynAny source are in the package
+   'org.jacorb.test.orb.dynany'.  Many tests in the orb package and elsewhere
+   use a special client/server setup; this can be found under
+   org.jacorb.test.harness.
+
+
+2. Add any IDL files to the 'src/test/idl' directory in the test repository and
+   the appropriate invocations to the pom.xml if required.

@@ -1,0 +1,12 @@
+1) This directory contains the documentation for the Next ACS release
+   under development.
+   Therefore, the Makefile use the "HEAD" CVS TAG to identify the proper versions of the
+   files in the CVS archive.
+
+2) This directory contains many PDF files generated from MS Word
+   document.
+   See the .cvsignore file for a list of such files.
+
+3) Some documents come from external sources and whenever a new
+   version is available it needs to be updated from the original
+   source by archiving here the newer version available.

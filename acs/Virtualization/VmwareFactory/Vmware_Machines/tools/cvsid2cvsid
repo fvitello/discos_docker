@@ -1,0 +1,2 @@
+# Replace a CVS ID given as $1 with the ID given as $2
+find . -name Root -exec acsReplace $1 $2 {} \;

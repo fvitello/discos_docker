@@ -1,0 +1,102 @@
+#*******************************************************************************
+# ALMA - Atacama Large Millimiter Array
+# Copyright (c) National Astronomical Observatory of Japan, 2017 
+# 
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License, or (at your option) any later version.
+# 
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+# 
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307  USA
+#
+
+# 
+# This file is to be "sourced" by another shell script that launches
+# Java program that uses BulkData Java library. This script sets the
+# following environmental variables accordingly so that Java program
+# that uses BulkData Java library can correctly launch:
+
+#  LD_LIBRARY_PATH
+#
+# The following variables are set accordingly so that your shell
+# scripts can use these variables to launch JVM:
+#
+#  CLASSPATH
+#  JVM_FLAGS
+#
+
+# The following variables are expected to be already set by .bash_profile.acs.
+# If these variables are not set, the default values listed below will be
+# used.
+PATH_SEP=${PATH_SEP:-:}
+
+# Search RTI DDS Java libraries.
+if [ "${NDDSHOME:-UNDEF}" = "UNDEF" ]; then
+    echo "NDDSHOME environmental variable is undefined or empty." \
+	 "You may have forgotten to source .bash_profile.acs." 1>&2
+    exit 1
+fi
+
+if [ ! -f "${NDDSHOME}/class/nddsjava.jar" ]; then
+    echo "\${NDDSHOME}/class/nddsjava.jar does not exist. Check if" \
+	 "NDDSHOME environmental variable points to the correct directory" \
+	 "of RTI DDS distribution." 1>&2
+    exit 1
+fi
+CLASSPATH=${NDDSHOME}/class/nddsjava.jar${PATH_SEP}${CLASSPATH}
+
+# Include the libraries of RTI DDS to LD_LIBRARY_PATH. Currently, only
+# x86_64 and GCC version 4.4.5 are supported.
+RTIDDS_GCC_VER=4.4.5
+LD_LIBRARY_PATH=${NDDSHOME}/lib/x64Linux2.6gcc${RTIDDS_GCC_VER}jdk:${LD_LIBRARY_PATH}
+export LD_LIBRARY_PATH
+
+# List of required jar files that are distributed as a part of ACS.
+# The jar files must be separated by ${PATH_SEP}
+ACS_JAR_FILES="jACSUtil.jar${PATH_SEP}nddsjava.jar"
+
+which acsGetSpecificJars >/dev/null 2>&1
+RET=$?
+if [ ${RET} -ne 0 ]; then
+    echo "Command acsGetSpecificJars couldn't be found in the paths" \
+	 "specified by PATH environmental variable. You may have" \
+	 "forgotton to source .bash_profile.acs." 1>&2
+    exit 1
+fi
+CLASSPATH=$(acsGetSpecificJars ${PATH_SEP} ${ACS_JAR_FILES})${CLASSPATH}
+
+# setup jar file search path that will be fed to 
+# ACS class loader or to the acsGetSpecificJars seach script
+if [ ! $CL_JARPATH ] ; then
+
+    if [ -d ../lib ] ; then
+	CL_JARPATH="../lib${PATH_SEP}"
+    fi
+
+    if [ -d $INTROOT ] && [ $INTROOT ] ; then
+	CL_JARPATH="$CL_JARPATH$INTROOT/lib${PATH_SEP}"
+    fi
+
+    # Separation of dirs
+    item_list=`echo $INTLIST | sed s/:/\ /g`
+    for item in $item_list
+    do
+      if [ -d $item ] && [ $item ] ; then
+	  CL_JARPATH="$CL_JARPATH$item/lib${PATH_SEP}"
+      fi
+    done
+
+    if [ -d $ACSROOT ] && [ $ACSROOT ] ; then
+	CL_JARPATH="$CL_JARPATH$ACSROOT/lib"
+    fi
+fi
+
+# Use ACS class loader.
+JVM_FLAGS="-Djava.system.class.loader=alma.acs.classloading.AcsSystemClassLoader -Dacs.system.classpath.jardirs=${CL_JARPATH} -Dacs.system.path=${ACS_ROOT} -Djava.util.logging.manager=alma.acs.logging.AcsLogManager -Dalma.acs.logging.useAcsLogServiceExtensions=1 -Dorg.apache.commons.logging.LogFactory=alma.acs.logging.adapters.CommonsLoggingFactory"

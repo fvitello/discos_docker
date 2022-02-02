@@ -1,0 +1,34 @@
+1 - ErrorTrace initializes with provided data ... ok
+1 - ErrorTrace initializes with default ... ok
+1 - ErrorTraceHelper Print produces output for a single trace ... ok
+1 - ErrorTraceHelper Print produces no output for empty trace ... ok
+1 - ErrorTraceHelper Print produces output for a nested trace ... ok
+1 - ErrorTraceHelper errorTraceToString creates formatted message ... ok
+1 - ErrorTraceHelper getData returns expected value when matched ... ok
+1 - ErrorTraceHelper getData returns expected value for empty list ... ok
+1 - ErrorTraceHelper getData returns expected value for failed search ... ok
+1 - ErrorTraceHelper getData returns expected values for multiple match ... ok
+1 - ErrorTraceHelper getErrorTrace returns expected error trace when requested ... ok
+1 - ErrorTraceHelper getErrorTrace throws exception when no error_trace is defined ... ok
+1 - ErrorTraceHelper getNext returns expected value for nested error trace ... ok
+1 - ErrorTraceHelper getNext returns expected value for single error trace ... ok
+1 - ErrorTraceHelper isOK returns correct value for non-error report ... ok
+1 - ErrorTraceHelper isOK returns correct value for non-zero errorCode ... ok
+1 - ErrorTraceHelper isOK returns correct value for non-zero errorType ... ok
+1 - ErrorTraceHelper log records messages on stdout and ACS logger ... ok
+1 - ErrorTraceHelper log does nothing for empty error traces ... ok
+1 - ErrorTraceHelper initializes with default ... ok
+1 - ErrorTraceHelper initializes with provided trace ... ok
+1 - ErrorTraceHelper printET outputs formatted message ... ok
+1 - ErrorTraceHelper setData updates pair in a populated list ... ok
+1 - ErrorTraceHelper setData adds pair to empty list ... ok
+1 - ErrorTraceHelper setData adds pair to a populated list ... ok
+1 - ErrorTraceHelper setError sets error code and type ... ok
+1 - ErrorTraceHelper setError throws exception with default values ... ok
+1 - ErrorTraceHelper setError throws exception with undefined error code ... ok
+1 - ErrorTraceHelper setError throws exception with undefined error type ... ok
+1 - 
+1 - ----------------------------------------------------------------------
+1 - Ran xx tests in x.xxxs
+1 - 
+1 - OK

@@ -1,0 +1,8 @@
+Objective:
+
+    This example shows how to create and use DynamicAny objects. This
+    demonstrates many of the types including char, string, arrays, enum,
+    structs.
+
+How to compile and run:
+    mvn install

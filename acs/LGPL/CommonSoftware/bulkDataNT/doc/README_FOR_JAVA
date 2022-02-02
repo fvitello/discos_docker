@@ -1,0 +1,62 @@
+=======================
+BulkData Sender in Java
+=======================
+
+This is a quick tutorial about how to build, install and use BulkData Sender in Java.
+The procedure in this tutorial was tested in the following environment.
+
+ - CentOS 7.7.1908 (x86)
+ - ACS-2019DEC [/alma/ACS-2019DEC]
+ - RTI ndds.5.1.0 [/alma/RTI/ndds.5.1.0]
+ - OpenJDK 11.0.6
+
+------------------------
+Prepare your environment
+------------------------
+
+ $ export INTROOT=/alma/ACS-2019DEC/introot
+ $ source /alma/ACS-2019DEC/ACSSW/config/.acs/.bash_profile.acs
+ $ cd /alma/ACS-2019DEC
+ $ getTemplateForDirectory INTROOT introot
+
+------------------------
+How to build and install
+------------------------
+
+ $ cd /path/to/almasw/ACS/LGPL/CommonSoftware/bulkDataNT/src
+ $ make
+ $ make install
+
+As a consequence, both C/C++ and Java libraries are built and installed. JAR files can be found in /alma/ACS-2019DEC/introot/lib. Some programs to test the functionality of the libraries are installed in /alma/ACS-2019DEC/introot/bin.
+
+-------------------
+How to quickly test
+-------------------
+
+If you do not want to write your Java code, but you want to try out this Java library, you can use example programs. First, you need to launch ACS.
+
+ $ acsStart
+
+Then, you first need to launch a receiver which is implemented in C++ (there is no Java version).
+
+ $ bulkDataNTGenReceiver -s TestStream -f TestFlow
+
+"-s" option specifies the stream name and "-f" option specifies the flow name. The receiver is now waiting for data on TestFlow in TestStream. So, let's open a new terminal and start a sender implemented in Java.
+
+ $ export INTROOT=/alma/ACS-2019DEC/introot
+ $ source /alma/ACS-2019DEC/ACSSW/config/.acs/.bash_profile.acs
+ $ bulkDataNTGenSenderJava -s TestStream -f TestFlow
+
+The sender automatically connects to TestFlow in TestStream. Once a message like "press ENTER to send data (start/data/stop) to connected receivers ..." is shown, press ENTER. Then, the sender starts to send data to the receiver. Now you should be able to see some results on the receiver side.
+
+
+The usage of bulkDataNTGenSenderJava is the same as C++ version (bulkDataNTGenSender). The Java version implements the same command line options as the C++ version. To see more options, run it with "--help" option.
+
+-------------
+Documentation
+-------------
+
+ $ cd /path/to/almasw/ACS/LGPL/CommonSoftware/bulkDataNT/src
+ $ make javadoc
+
+Javadoc of Bulkdata Sender is generated under /path/to/almasw/ACS/LGPL/CommonSoftware/bulkDataNT/doc/api/html/. Example usage of this Java library can be found in the package summary of alma.acs.bulkdata.

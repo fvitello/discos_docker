@@ -1,0 +1,5 @@
+--endorsed -- alma.acs.testsupport.tat.TATJUnitRunner cl.SamplingSystemUIJUnitTest
+Starting Java application
+Using endorsed jar files in
+*** emergency shutdown complete, will exit... ***
+Archived non-system classes are disabled because the java.system.class.loader

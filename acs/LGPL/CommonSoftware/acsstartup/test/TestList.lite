@@ -1,0 +1,165 @@
+#*******************************************************************************
+# ALMA - Atacama Large Millimiter Array
+# (c) Associated Universities Inc., 2002 
+# (c) European Southern Observatory, 2002
+# Copyright by ESO (in the framework of the ALMA collaboration)
+# and Cosylab 2002, All rights reserved
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+# MA 02111-1307  USA
+#
+# "@(#) $Id: TestList.lite,v 1.19 2010/10/12 12:34:43 rbourtem Exp $"
+#
+# TestList
+#
+# who       when      what
+# --------  --------  ----------------------------------------------
+# dave 2003-08-13 converted to eccs test driver
+# 
+SOURCE acsstartupTATEnvironment
+PROLOGUE acsstartupTATPrologue
+0  testAcsInstance  "testAcsInstance.sh"
+1  T1  "acsStartORBSRVC -noloadIFR -b 9" "@SLEEP 30" "acsStop -b 9"
+2  T2  "acsStartORBSRVC -noloadIFR -b 9" "@SLEEP 30" "acsStartManager -b 9" "@SLEEP 3" "acsStop -b 9"
+3  T3  "acsStart -noloadifr -b 9" "@SLEEP 30" \
+       "acsStartContainer -java -b 9 jCont" "@SLEEP 2" \
+       "acsStartContainer -py -b 9 pyCont"  "@SLEEP 2" \
+       "acsStartContainer -cpp -b 9 TestContainer" "@SLEEP 2" \
+       "acsStop -b 9"
+
+4  T4  "acsStart -noloadifr -b 9" "@SLEEP 30" \
+       "acsStartContainer -java -b 9 jCont" "@SLEEP 2" \
+       "acsStartContainer -java -b 9 opCont" "@SLEEP 2" \
+       "acsstartupSetEnv -hide acsStopContainer -b 9 jCont"        "@SLEEP 16" \
+       "acsStartContainer -java -b 9 jCont" "@SLEEP 2"  "acsStop -b 9"
+
+5  T5  "acsStart -noloadifr -b 9" "@SLEEP 30" \
+       "acsStartContainer -java -b 9 jCont" "@SLEEP 2" \
+       "acsStartContainer -py -b 9 pyCont"  "@SLEEP 2" \
+       "acsStartContainer -cpp -b 9 TestContainer" "@SLEEP 2" \
+       "acsStart -noloadifr -b 8" "@SLEEP 30" \
+       "acsStartContainer -java -b 8 jCont" "@SLEEP 2" \
+       "acsStartContainer -py -b 8 pyCont"  "@SLEEP 2" \
+       "acsStartContainer -cpp -b 8 TestContainer" "@SLEEP 2" \
+       "acsStop -b 9"  "@SLEEP 30" "acsStop -b 8"
+
+6  T6  "acsStart -noloadifr -b 9" "@SLEEP 30" \
+       "acsStartContainer -java -b 9 jCont" "@SLEEP 2" \
+       "acsStartContainer -py -b 9 pyCont" "@SLEEP 2" \
+       "acsStartContainer -cpp -b 9 TestContainer" "@SLEEP 2" \
+       "acsStop -b 9" 
+
+7  T7  "acsStop -b 0"
+
+8  T8  "acsstartupTestLoadIFR.sh"
+
+10 testContainerPort "testContainerPort.sh"
+
+11 heapDumpOnOutOfMemoryErrorTest "heapDumpOnOutOfMemoryErrorTest" 
+
+12 testContainerPortLock "testContainerPortLock"
+
+13 testVmOptions "testVmOption.sh"
+
+14 testNotifyEventChannelFactorySuffix "acsNamingService -b 9 -s" "@SLEEP 2" \
+                                       "acsNotifyService -b 9 -s -w -n TESTNotifyEventChannelFactory" "@SLEEP 7" \
+                                       "acsstartupTest_nslist 3901" "@SLEEP 2" \
+                                       "acsNotifyService -b 9 -k -n TEST" "@SLEEP 2" \
+                                       "acsstartupTest_nslist 3901" "@SLEEP 2" \
+                                       "acsNamingService -b 9 -k"
+
+15 testNotifyServicePorts "acsNamingService -b 6 -s" "@SLEEP 2" \
+                          "acsNotifyService -b 6 -s -w -n TEST01" "@SLEEP 1"  \
+                          "acsNotifyService -b 6 -s -w -n TEST02" "@SLEEP 1"  \
+                          "acsNotifyService -b 6 -s -w -n TEST03" "@SLEEP 1"  \
+                          "acsNotifyService -b 6 -s -w -n TEST04" "@SLEEP 1"  \
+                          "acsNotifyService -b 6 -s -w -n TEST05" "@SLEEP 1"  \
+                          "acsNotifyService -b 6 -s -w -n TEST06" "@SLEEP 1"  \
+                          "acsNotifyService -b 6 -s -w -n TEST07" "@SLEEP 1"  \
+                          "acsNotifyService -b 6 -s -w -n TEST08" "@SLEEP 1"  \
+                          "acsNotifyService -b 6 -s -w -n TEST09" "@SLEEP 1"  \
+                          "acsNotifyService -b 6 -s -w -n TEST10" "@SLEEP 1"  \
+                          "acsNotifyService -b 6 -s -w -n TEST11" "@SLEEP 1"  \
+                          "acsNotifyService -b 6 -s -w -n TEST12" "@SLEEP 1"  \
+                          "acsNotifyService -b 6 -s -w -n TEST13" "@SLEEP 1"  \
+                          "acsNotifyService -b 6 -s -w -n TEST14" "@SLEEP 1"  \
+                          "acsNotifyService -b 6 -s -w -n TEST15" "@SLEEP 1"  \
+                          "acsNotifyService -b 6 -s -w -n TEST16" "@SLEEP 1"  \
+                          "acsNotifyService -b 6 -s -w -n TEST17" "@SLEEP 1"  \
+                          "acsNotifyService -b 6 -s -w -n TEST18" "@SLEEP 1"  \
+                          "acsNotifyService -b 6 -s -w -n TEST19" "@SLEEP 1"  \
+                          "acsNotifyService -b 6 -s -w -n TEST20" "@SLEEP 1"  \
+                          "acsNotifyService -b 6 -s -w -n TEST21" "@SLEEP 1"  \
+                          "acsNotifyService -b 6 -s -w -n TEST22" "@SLEEP 1"  \
+                          "acsNotifyService -b 6 -s -w -n TEST23" "@SLEEP 1"  \
+                          "acsNotifyService -b 6 -s -w -n TEST24" "@SLEEP 1"  \
+                          "acsNotifyService -b 6 -s -w -n TEST25" "@SLEEP 1"  \
+                          "acsNotifyService -b 6 -s -w -n TEST26" "@SLEEP 1"  \
+                          "acsNotifyService -b 6 -s -w -n TEST27" "@SLEEP 1"  \
+                          "acsNotifyService -b 6 -s -w -n TEST28" "@SLEEP 1"  \
+                          "acsNotifyService -b 6 -s -w -n TEST29" "@SLEEP 1"  \
+                          "acsNotifyService -b 6 -s -w -n TEST30" "@SLEEP 1"  \
+                          "acsNotifyService -b 6 -s -w -n TEST31" "@SLEEP 1" \
+                          "acsNotifyService -b 6 -s -w -n TEST32" "@SLEEP 1" \
+                          "acsNotifyService -b 6 -s -w -n TEST33" "@SLEEP 10" \
+                          "acsNotifyService -b 6 -k -n TEST01" "@SLEEP 1" \
+                          "acsNotifyService -b 6 -k -n TEST02" "@SLEEP 1" \
+                          "acsNotifyService -b 6 -k -n TEST03" "@SLEEP 1" \
+                          "acsNotifyService -b 6 -k -n TEST04" "@SLEEP 1" \
+                          "acsNotifyService -b 6 -k -n TEST05" "@SLEEP 1" \
+                          "acsNotifyService -b 6 -k -n TEST06" "@SLEEP 1" \
+                          "acsNotifyService -b 6 -k -n TEST07" "@SLEEP 1" \
+                          "acsNotifyService -b 6 -k -n TEST08" "@SLEEP 1" \
+                          "acsNotifyService -b 6 -k -n TEST09" "@SLEEP 1" \
+                          "acsNotifyService -b 6 -k -n TEST10" "@SLEEP 1" \
+                          "acsNotifyService -b 6 -k -n TEST11" "@SLEEP 1" \
+                          "acsNotifyService -b 6 -k -n TEST12" "@SLEEP 1" \
+                          "acsNotifyService -b 6 -k -n TEST13" "@SLEEP 1" \
+                          "acsNotifyService -b 6 -k -n TEST14" "@SLEEP 1" \
+                          "acsNotifyService -b 6 -k -n TEST15" "@SLEEP 1" \
+                          "acsNotifyService -b 6 -k -n TEST16" "@SLEEP 1" \
+                          "acsNotifyService -b 6 -k -n TEST17" "@SLEEP 1" \
+                          "acsNotifyService -b 6 -k -n TEST18" "@SLEEP 1" \
+                          "acsNotifyService -b 6 -k -n TEST19" "@SLEEP 1" \
+                          "acsNotifyService -b 6 -k -n TEST20" "@SLEEP 1" \
+                          "acsNotifyService -b 6 -k -n TEST21" "@SLEEP 1" \
+                          "acsNotifyService -b 6 -k -n TEST22" "@SLEEP 1" \
+                          "acsNotifyService -b 6 -k -n TEST23" "@SLEEP 1" \
+                          "acsNotifyService -b 6 -k -n TEST24" "@SLEEP 1" \
+                          "acsNotifyService -b 6 -k -n TEST25" "@SLEEP 1" \
+                          "acsNotifyService -b 6 -k -n TEST26" "@SLEEP 1" \
+                          "acsNotifyService -b 6 -k -n TEST27" "@SLEEP 1" \
+                          "acsNotifyService -b 6 -k -n TEST28" "@SLEEP 1" \
+                          "acsNotifyService -b 6 -k -n TEST29" "@SLEEP 1" \
+                          "acsNotifyService -b 6 -k -n TEST30" "@SLEEP 1" \
+                          "acsNotifyService -b 6 -k -n TEST31" "@SLEEP 1" \
+                          "acsNotifyService -b 6 -k -n TEST32" "@SLEEP 1" \
+                          "acsNotifyService -b 6 -k -n TEST33" "@SLEEP 2" \
+                          "acsNamingService -b 6 -k" \
+                          "acsstartupCatNotifyServicePorts"
+
+
+# Test that Name Service channels entries are cleared when Notify Services are stopped
+16 testRestartNotifyServices "acsNamingService -s -b 0" "@SLEEP 5" \
+                             "acsstartupNotifyServices START" "@SLEEP 10" \
+                             "acsstartupTest_nslist 3001" "@SLEEP 2" \
+                             "acsstartupCreateChannels 3001" "@SLEEP 5" \
+                             "acsstartupTest_nslist 3001" "@SLEEP 2" \
+                             "acsstartupNotifyServices STOP" "@SLEEP 10" \
+                             "acsstartupTest_nslist 3001" "@SLEEP 2" \
+                             "acsNamingService -k -b 0"
+
+
+EPILOGUE acsstartupTATEpilogue

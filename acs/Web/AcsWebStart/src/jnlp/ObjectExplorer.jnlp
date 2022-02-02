@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<jnlp 
+  spec="1.0+" 
+  codebase="$$codebase"> 
+  
+  <information> 
+    <title>$$acs_version Object Explorer ($$projectname)</title>
+    <homepage href="http://www.eso.org/projects/alma/AcsWebStart"/>
+	 
+    <vendor>ESO, Alma Common Software</vendor> 
+    <description>Object Explorer Web Start</description> 
+    <offline-allowed/>
+    <icon href="pictures/alma-icon.jpg"/>
+    <icon href="pictures/antennas-splash.jpg" kind="splash"/>
+ </information> 
+  
+  <security> 
+    <all-permissions/> 
+  </security> 
+  
+  <resources> 
+    <j2se version="1.6+"/> 
+
+    <jar href="lib/oe.jar"/> 
+    <jar href="lib/ObjectExplorerConfig.jar"/> 
+
+    <extension href="./Shared_Acs.jnlp">
+      <ext-download ext-part="ACS"/>
+    </extension>
+
+    <property name="org.omg.CORBA.ORBClass"           value="org.jacorb.orb.ORB"/> 
+    <property name="org.omg.CORBA.ORBSingletonClass"  value="org.jacorb.orb.ORBSingleton"/> 
+    
+    <property name="ACS.manager" value="corbaloc::$$manager_host:$$manager_port/Manager"/> 
+    <property name="ORBInitRef.NameService" value="corbaloc::$$naming_service_host:$$naming_service_port/NameService"/>
+    <property name="ACS.repository" value="corbaloc::$$interface_repository_host:$$interface_repository_port/InterfaceRepository"/> 
+    <property name="ACS.tmp" value="./"/> 
+    <property name="abeans.remotelogging" value="si.ijs.anka.abeans.pluggable.ACS.RemoteLoggerImpl"/> 
+
+  </resources>
+
+  <application-desc main-class="si.ijs.acs.objectexplorer.ObjectExplorer">
+    <argument>BACI</argument>
+  </application-desc> 
+  
+</jnlp> 
+
+
+
+
+
+
+
+

@@ -1,0 +1,194 @@
+/*
+ *    ALMA - Atacama Large Millimiter Array
+ *    (c) European Southern Observatory, 2002
+ *    Copyright by ESO (in the framework of the ALMA collaboration),
+ *    All rights reserved
+ *
+ *    This library is free software; you can redistribute it and/or
+ *    modify it under the terms of the GNU Lesser General Public
+ *    License as published by the Free Software Foundation; either
+ *    version 2.1 of the License, or (at your option) any later version.
+ *
+ *    This library is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *    Lesser General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Lesser General Public
+ *    License along with this library; if not, write to the Free Software
+ *    Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+ *    MA 02111-1307  USA
+ */
+
+#ifndef _XMLTEST_IDL_
+#define _XMLTEST_IDL_
+
+#include <acscommon.idl>
+#include <acscomponent.idl>
+#include <fakexmlentity.idl>
+
+#pragma prefix "alma"
+
+
+module xmltest
+{
+
+	/*********************************************************
+	 * typedefs for our entity objects
+	 *********************************************************/
+
+	typedef fakexmlentity::XmlEntityStruct ObsProposal; // entity typedef
+	typedef fakexmlentity::XmlEntityStruct SchedBlock; // entity typedef
+
+	typedef sequence <SchedBlock> SchedBlockSeq; // typedef of sequence of entity typedef
+
+	typedef SchedBlockSeq EvenMoreHiddenEntityClass; // typedef of typedef of sequence of entity typedef
+
+
+	/*********************************************************
+	 * example component
+	 *********************************************************/
+
+	interface NonXMLAcsComponent : ACS::ACSComponent
+	{
+		string sayHello();
+	};
+
+	interface NonXMLIndirectAcsComponent : NonXMLAcsComponent
+	{
+	};
+
+	interface XMLAcsComponent : ACS::ACSComponent
+	{
+		string sayHello();
+		ObsProposal createObsProposal();
+	};
+
+	interface XMLNonAcsComponent
+	{
+		string sayHello();
+		ObsProposal createObsProposal();
+	};
+
+
+	struct ObsProjectTree
+	{
+		ObsProposal prop;
+		SchedBlockSeq schedBlocks;
+	};
+
+	struct NonXmlStruct 
+	{
+		string mem1;
+		boolean mem2;
+	};
+	
+	interface MyBaseInterface;
+
+	interface ReturnInterface : ACS::ACSComponent
+	{
+		typedef sequence <ObsProjectTree> ProjectTreeSeq; // typedef of sequence of struct with entity typedef
+	
+		struct StructInsideInterfaceWithXmlViaMemberStruct 
+		{
+			NonXmlStruct normalStruct; // non-xml without typedef
+			ProjectTreeSeq projectTrees; // xml with typedef
+		};
+		
+		typedef NonXmlStruct NonXmlStructTypedef;
+		
+		struct StructInsideInterfaceWithXmlViaMemberStruct2 
+		{
+			NonXmlStructTypedef normalStruct; // non-xml with typedef
+			ObsProjectTree projectTree; // xml without typedef
+		};
+		
+		ObsProposal createObsProposal();
+		MyBaseInterface createBaseInterface(in long pippo);
+	};
+
+	// TODO: This interface is currently not recognized as being affected by XML
+//	interface XMLIndirectAcsComponent : ReturnInterface
+//	{
+//		string sayHello();
+//	};
+
+	interface MyBaseInterface
+	{
+		attribute float radius;
+		void someDumbMethod(in string stupidArg);
+	};
+
+
+	interface IFWithIndirectEntityUsage : ACS::ACSComponent
+	{
+		SchedBlockSeq methodWithEntitySequence();
+		void methodWithHiddenEntitySequence(out EvenMoreHiddenEntityClass outThing);
+	};
+
+
+	/* ------------- */
+	/* | Offshoots | */
+	/* ------------- */
+	interface NoXmlOffshoot : ACS::OffShoot
+	{
+		void getNothing();
+	};
+
+	interface XmlOffshoot : ACS::OffShoot
+	{
+		ObsProposal getObsProposal();
+		void setPreferedProposal(in ObsProposal proposal);
+		void setProjectTree(in ObsProjectTree tree);
+	};
+
+	typedef sequence <XmlOffshoot> XmlOffshootSeq; // typedef of sequence of interface
+	
+	
+	/* ------------------------------------ */
+	/* | Non-AcsComponent using Offshoots | */
+	/* ------------------------------------ */
+	interface NonComponentUsingXmlOffshoot {
+		XmlOffshoot getOffshoot();
+	};
+
+	/* --------------------------------- */
+	/* | AcsComponents using Offshoots | */
+	/* --------------------------------- */
+	interface NormalComponentUsingXmlOffshoot : ACS::ACSComponent {
+		XmlOffshoot getOffshoot();
+	};
+
+	
+	// forward-declare XmlOffshoot2 to test resolution of the interface definition.
+	interface XmlOffshoot2;
+	
+	interface XmlOffshootReferencingOffshoot : ACS::OffShoot {
+		void setOtherOffshoot(in XmlOffshoot2 off2);
+	};
+	
+	interface XmlOffshoot2 : ACS::OffShoot
+	{
+		ObsProposal getObsProposal();
+		
+		// two offshoots referencing each other is currently not allowed (gives IllegalArgumentException)
+		//void setOtherOffshoot(in XmlOffshootReferencingOffshoot off);
+	};
+
+
+	interface XmlComponentUsingXmlOffshoot : ACS::ACSComponent {
+		ObsProposal createObsProposal();
+		XmlOffshoot getOffshoot();
+	};
+
+	interface NormalComponentUsingNormalOffshoot : ACS::ACSComponent {
+		NoXmlOffshoot getOffshoot();
+	};
+
+	interface XmlComponentUsingNormalOffshoot : ACS::ACSComponent {
+		ObsProposal createObsProposal();
+		NoXmlOffshoot getOffshoot();
+	};
+};
+
+#endif

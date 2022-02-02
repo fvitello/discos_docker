@@ -1,0 +1,14 @@
+diff -Naur TAO.org/ACE_wrappers/ace/Countdown_Time_T.cpp TAO/ACE_wrappers/ace/Countdown_Time_T.cpp
+--- TAO.org/ACE_wrappers/ace/Countdown_Time_T.cpp	2017-04-20 04:52:06.744646655 -0300
++++ TAO/ACE_wrappers/ace/Countdown_Time_T.cpp	2018-09-12 09:48:27.283589158 -0300
+@@ -45,8 +45,8 @@
+       ACE_Time_Value const elapsed_time =
+           this->time_policy_ () - this->start_time_;
+ 
+-      if (elapsed_time >= ACE_Time_Value::zero &&
+-          this->max_wait_value_ > elapsed_time)
++      //ICT-12886: Removed check of negative elapsed time.
++      if (this->max_wait_value_ > elapsed_time)
+         {
+           *this->max_wait_time_ = this->max_wait_value_ - elapsed_time;
+         }

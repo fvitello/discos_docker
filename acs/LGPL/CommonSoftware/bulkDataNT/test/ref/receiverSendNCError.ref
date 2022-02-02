@@ -1,0 +1,9 @@
+1 - GenReceiver-Error flag set PASSED
+1 - GenReceiver-errorStatusSupplier_p created PASSED  
+1 - GenReceiver-got stop (BD_STOP) PASSED 
+1 - GenReceiver-TestStream has been destroyed PASSED 
+1 - GenSender-errorStatusConsumer_p->consumerReady() PASSED
+1 - GenSender-I got a BAD_RECEIVER event PASSED
+1 - GenSender-Destroyed the thread responsible for checking the status of the Notify Channel BD_ERR_PROP PASSED
+1 - GenSender-TestStream has been destroyed PASSED
+1 - >>>>>PASSED

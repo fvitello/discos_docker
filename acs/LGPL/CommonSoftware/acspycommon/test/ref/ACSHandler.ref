@@ -1,0 +1,34 @@
+1 - ACSFormatter initialized ... ok
+1 - ACSFormatter formats a log record with a data dictionary attribute correctly ... ok
+1 - ACSFormatter formats a log record with a data list attribute correctly ... ok
+1 - ACSFormatter formats a log record with an empty data dictionary attribute correctly ... ok
+1 - ACSFormatter formats a log record with an empty data list attribute correctly ... ok
+1 - ACSFormatter formats a log record that has no data attribute correctly ... ok
+1 - ACSFormatter formats a log record that has no data attribute correctly ... ok
+1 - ACSHandler initialized ... ok
+1 - ACSHandler initialized with no periodic flush thread ... ok
+1 - ACSHandler initialized when acsLogSvc not available ... ok
+1 - ACSHandler flushes buffer correctly ... ok
+1 - ACSHandler handles exceptions correctly when flushing buffer ... ok
+1 - ACSHandler flushes buffer when message priority greater than threshold arrives ... ok
+1 - ACSHandler writes log messages to a file ... ok
+1 - ACSHandler creates singleton file handler when necessary ... ok
+1 - ACSHandler drops new messages when pending message queue is full ... ok
+1 - ACSHandler drops low priority messages when message queue is full ... ok
+1 - ACSHandler returns cached CORBA logging service ... ok
+1 - ACSHandler reloads CORBA logging service when cache is empty ... ok
+1 - ACSHandler sends Log messages at the appropriate levels ... ok
+1 - ACSHandler sends errortrace messages at the appropriate levels ... ok
+1 - ACSHandler sends logWithAudience messages at the appropriate levels ... ok
+1 - ACSHandler sends logWithPriority messages at the appropriate levels ... ok
+1 - ACSHandler sends logWithPriority messages at the appropriate levels with bad context ... ok
+1 - ACSHandler sends logWithPriority messages at the appropriate levels without provided context or source ... ok
+1 - ACSHandler flushes when capacity is reached ... ok
+1 - ACSHandler flushes when high priority message is received ... ok
+1 - ACSLogRecord initialized with nested name ... ok
+1 - ACSLogRecord initialized with simple name ... ok
+1 - 
+1 - ----------------------------------------------------------------------
+1 - Ran xx tests in x.xxxs
+1 - 
+1 - OK

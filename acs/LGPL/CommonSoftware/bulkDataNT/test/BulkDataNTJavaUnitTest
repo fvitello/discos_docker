@@ -1,0 +1,12 @@
+#!/bin/sh
+
+TESTS="BulkDataNTSenderStreamTest BulkDataNTQosXmlSchemaTest BulkDataNTSenderStreamConfigurationDefaultTest BulkDataNTDdsLogVerbosityTest"
+for TEST_CLASS in $TESTS; do
+    echo "=== Starting ${TEST_CLASS} JUnit test"
+    # The command below uses TAT, which does not show the log to the console.
+    #        acsStartJava -endorsed alma.acs.testsupport.tat.TATJUnitRunner alma.acs.bulkdata.${TEST_CLASS}
+
+    # The command below does not use TAT, which shows the log to the console.
+    acsStartJava org.junit.runner.JUnitCore alma.acs.bulkdata.${TEST_CLASS}
+    echo "=== dispatchAction ${TEST_CLASS} completed"
+done
