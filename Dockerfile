@@ -1,10 +1,9 @@
-#Adapted from https://github.com/ACS-Community/ACS-Docker-Image
+FROM centos:centos7.9.2009
 
-FROM centos:centos7.9.2009 AS base
 # ================ Builder stage =============================================
 # we base our image on a vanilla Centos 7 image.
 
-ENV ACS_PREFIX=/alma ACS_VERSION="2020.8"
+ENV ACS_PREFIX=/alma ACS_VERSION="2021.12"
 
 ENV ACS_ROOT=$ACS_PREFIX/acs
 
@@ -69,13 +68,12 @@ RUN yum update -y && yum install -y deltarpm && \
     mkdir -pv /usr/java && \
     ln -sv /usr/lib/jvm/java-openjdk $JAVA_HOME
 
-# ============= Compiler Stage ===============================================
-FROM base AS dependency_builder
 
-COPY acs/ /acs
+
 
 RUN yum -y install  \
 	curl \
+    sudo \
 	git-lfs \
 	ksh \
 	mc \
@@ -87,10 +85,14 @@ RUN yum -y install  \
 	vim \
 	wget \
 	tree \
-	xterm && \
-	cd /acs/ExtProd/PRODUCTS && \
+	xterm 
 
-    ## Get missing (super old) libraries
+RUN cd / && git clone  --recursive https://bitbucket.alma.cl/scm/asw/acs.git
+RUN cd /acs && git checkout acs/2021DEC && git submodule update --init
+
+
+## Get missing (super old) libraries
+RUN cd /acs/ExtProd/PRODUCTS && \
     wget https://sourceforge.net/projects/gnuplot-py/files/Gnuplot-py/1.8/gnuplot-py-1.8.tar.gz/download -O gnuplot-py-1.8.tar.gz && \
     wget https://sourceforge.net/projects/pychecker/files/pychecker/0.8.17/pychecker-0.8.17.tar.gz/download -O pychecker-0.8.17.tar.gz && \
     wget https://sourceforge.net/projects/numpy/files/OldFiles/1.3.3/numarray-1.3.3.tar.gz && \
@@ -102,29 +104,30 @@ RUN yum -y install  \
     source /acs/LGPL/acsBUILD/config/.acs/.bash_profile.acs && \
     time make all && \
     find /alma -name "*.o" -exec rm -v {} \;
+
+
 # --------------------- Here external dependencies are built --------------
 
-FROM dependency_builder as acs_builder
-
-RUN cd /acs/ && \
-    source /acs/LGPL/acsBUILD/config/.acs/.bash_profile.acs && \
-    time make build
-
-
 # ============= Target image stage ===========================================
-FROM base
 
 WORKDIR /
 
 # Here we create the user almamgr
 RUN  groupadd -g 1000 almamgr && \
      useradd -g 1000 -u 1000 -d /home/almamgr -m -s /bin/bash almamgr && \
-     passwd -d almamgr && \
+     passwd -d almamgr 
+
+#User configuration
+RUN groupadd sudo
+RUN usermod -aG sudo almamgr
+RUN echo "%sudo	ALL=(ALL)	ALL" >> /etc/sudoers
+RUN echo "%sudo	ALL=(ALL)	NOPASSWD: ALL" >> /etc/sudoers
+
+
 # For conveniece we source the alma .bash_profile.acs in the user .bash_rc
 # and export JAVA_HOME
-     echo "source /alma/ACS-2020AUG/ACSSW/config/.acs/.bash_profile.acs" >> /home/almamgr/.bashrc && \
+ RUN    echo "source /alma/ACS-2021DEC/ACSSW/config/.acs/.bash_profile.acs" >> /home/almamgr/.bashrc && \
      echo "export JAVA_HOME=$JAVA_HOME" >> /home/almamgr/.bashrc
 
-COPY --from=acs_builder --chown=almamgr /alma /alma
 
 USER almamgr
