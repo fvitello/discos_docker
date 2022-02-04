@@ -1,7 +1,0 @@
-1 - === Running all ACS-independent JUnit tests of module acserr
-1 - openjdk version "xx.x.xxx"
-1 - OpenJDK Runtime Environment XX (build xx.xxx-xx)
-1 - OpenJDK 64-Bit Server VM XX (build xx.xxx-xx, ...)
-1 - TEST_RUNNER_REPORT success/total: 6/6
-1 - JUnit test run succeeded
-1 - === Done running independent acserr JUnit tests

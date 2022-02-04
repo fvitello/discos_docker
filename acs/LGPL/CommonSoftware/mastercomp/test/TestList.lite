@@ -1,5 +1,0 @@
-SOURCE mastercompTATEnvironment
-PROLOGUE mastercompTATPrologue
-junitNoACS
-junitWithACS
-EPILOGUE mastercompTATEpilogue

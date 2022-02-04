@@ -1,3 +1,0 @@
-echo "Setting world read permission to the whole directory tree...."
-chmod -R aug+r .
-echo "Done!"

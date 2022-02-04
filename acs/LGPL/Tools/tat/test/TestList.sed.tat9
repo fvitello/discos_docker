@@ -1,3 +1,0 @@
-s|/tmp/make.log.[0-9]*|/tmp/make.log |g
-s|in .* |in <dir_test> |
-s|Error|tat_error|g

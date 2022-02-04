@@ -1,8 +1,0 @@
-#if !defined BLUB
-#error "blub not defined"
-#endif
-
-struct foo
-{
-    long value;
-};

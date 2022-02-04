@@ -1,6 +1,0 @@
-#pragma prefix  "acme.com"
-
-module PragmaBug {
-   interface Test {
-   };
-};

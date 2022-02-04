@@ -1,4 +1,0 @@
-#!/bin/bash
-
-echo "----------------------------------------------"  >> $ACS_TMP/pyContainer.log
-acsutilTATTestRunner acsStartContainer -py pyContainer2

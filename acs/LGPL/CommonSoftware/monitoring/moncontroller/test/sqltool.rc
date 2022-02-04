@@ -1,4 +1,0 @@
-urlid tmcdb
-url jdbc:hsqldb:file:TMCDB/monitorTest;shutdown=true
-username sa
-password

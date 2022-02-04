@@ -1,4 +1,0 @@
-jnlp.jar:                    Java Web Start
-JavaOnlyAcsConfig:           needed for stand-alone jManager (replaces jManagerConfig.jar)
-trilead-ssh2-build213.jar:   ssh library for java
-

@@ -1,6 +1,0 @@
-SOURCE acscallbackTATEnvironment
-PROLOGUE acscallbackTATPrologue
-1 CallbacksTest "acsutilTATTestRunner CallbacksTest"
-EPILOGUE acscallbackTATEpilogue
-
-

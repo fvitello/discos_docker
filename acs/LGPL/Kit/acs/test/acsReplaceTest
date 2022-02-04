@@ -1,5 +1,0 @@
-#!/bin/sh
-cp acsReplaceTestfile.org acsReplaceTestfile
-acsReplace -nobackup -quiet "@REPLACEME" "one" acsReplaceTestfile
-diff acsReplaceTestfile.org acsReplaceTestfile
-rm -Rf acsReplaceTestfile

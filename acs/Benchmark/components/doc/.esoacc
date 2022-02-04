@@ -1,4 +1,0 @@
-IndexIgnore README.html *.dbm
-IndexOptions NameWidth=40
-HeaderName README.html
-AddDescription "Performance of the Bulk Data package" ComponentBulkDataPerf.html

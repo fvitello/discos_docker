@@ -1,2 +1,0 @@
-* persistent channels
-* persistent events

@@ -1,3 +1,0 @@
-mkdir -p $ACS_TMP/tmp
-acsutilTATPrologue --noloadifr
-rm -rf tmcdb  # to remove the hsqldb database if it exists

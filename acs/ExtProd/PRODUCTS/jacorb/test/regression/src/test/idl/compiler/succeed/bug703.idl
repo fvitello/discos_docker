@@ -1,7 +1,0 @@
-module bug703
-{
-    typedef struct Lime6
-    {
-        char WaterMelon6[13];
-    } Coconut6[15];
-};

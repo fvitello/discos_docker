@@ -1,4 +1,0 @@
-#! /bin/bash
-
-echo "ACS Centralized Logger is running"
-tcpBlocker $@

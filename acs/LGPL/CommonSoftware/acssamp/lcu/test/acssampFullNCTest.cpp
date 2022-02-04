@@ -1,1 +1,0 @@
-../../ws/test/acssampFullNCTest.cpp
