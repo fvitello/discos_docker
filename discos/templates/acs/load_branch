@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+export DISCOS_BRANCH=
+export CDB=
+export INTROOT=

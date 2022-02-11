@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+# Useful aliases
+# ==============
+alias l='ls'
+alias ll='ls -la'
+alias la='ls -A'
+alias lt='ls -lt | more'
+
+# Update the environment at every prompt
+# ======================================
+PROMPT_COMMAND='source /discos-sw/config/misc/prompt_command.sh'

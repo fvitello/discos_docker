@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+# Set the STATION
+# ===============
+if [ -f /discos-sw/config/misc/station ]; then
+    source /discos-sw/config/misc/station
+else
+    unset STATION
+fi
+
+# Variables to export
+# ===================
+export QTDIR=/usr/local/qt-4.5.2
+export QTLIB=$QTDIR/lib
+export QTINC=$QTDIR/include
+export qt_prefix=$QTLIB
+export PATH=$PATH:$QTDIR/bin:$HOME/bin
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib:/usr/lib64:$QTLIB
+export PYTHONSTARTUP=$HOME/.pyrc
+export EDITOR=vi
+
+# Load the environment at login
+# =============================
+
+# ACS Manager reference
+# =====================
+MNG_IP=localhost
+export MANAGER_REFERENCE=corbaloc::$MNG_IP:3000/Manager
+
