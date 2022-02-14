@@ -1,5 +1,6 @@
 FROM fvitello/acs202112
 USER root
+VOLUME  /discos-sw
 
 # ansible-> roles/user/task
 RUN mkdir /discos-sw  && \
@@ -46,7 +47,7 @@ COPY --chown=discos:almamgr --chmod=640 templates/acs/load_branch /discos-sw/con
 RUN touch /discos-sw/config/misc/branches && \ 
     chmod 640 /discos-sw/config/misc/branches && \ 
     chown discos:almamgr /discos-sw/config/misc/branches && \
-    echo "#!/usr/bin/env bash\n\nexport STATION=development" >> /discos-sw/config/misc/station && \
+    printf "#!/usr/bin/env bash\n\nexport STATION=development" >> /discos-sw/config/misc/station && \
     chmod 640 discos-sw/config/misc/station && \ 
     chown discos:almamgr discos-sw/config/misc/station  && \
     mkdir -p /discos-sw/discos/bin  && \
@@ -145,45 +146,91 @@ RUN ulimit -s 65532 && \
     sed -i 's/libpng15/libpng12/g' /tmp/dependencies/qt-x11-opensource-src-4.5.2/src/gui/Makefile && \
     sed -i 's/CXXFLAGS      =/CXXFLAGS      = -fpermissive/g' /tmp/dependencies/qt-x11-opensource-src-4.5.2/src/xmlpatterns/Makefile && \
     sed -i 's/CXXFLAGS      =/CXXFLAGS      =-fpermissive/g' /tmp/dependencies/qt-x11-opensource-src-4.5.2/src/3rdparty/webkit/WebCore/Makefile && \
-    sed -i 's/CXXFLAGS      =/CXXFLAGS      =-fpermissive/g' /tmp/dependencies/qt-x11-opensource-src-4.5.2/tools/porting/src/Makefile && \
-    cd /tmp/dependencies/qt-x11-opensource-src-4.5.2 && \
-    gmake && \
+    sed -i 's/CXXFLAGS      =/CXXFLAGS      =-fpermissive/g' /tmp/dependencies/qt-x11-opensource-src-4.5.2/tools/porting/src/Makefile
+
+RUN cd /tmp/dependencies/qt-x11-opensource-src-4.5.2 && \
+    gmake &> compile.log && \
     gmake install && \
     rm -rf /tmp/dependencies/*
 
-USER discos
+RUN chmod 777 /tmp/dependencies/
+
 
 #sip
 COPY  templates/dependencies/sip-4.19.2.tar.gz /tmp/dependencies/sip-4.19.2.tar.gz
 COPY  templates/dependencies/PyQt4_gpl_x11-4.12.tar.gz /tmp/dependencies/PyQt4_gpl_x11-4.12.tar.gz
 COPY  templates/dependencies/PyQwt-5.2.0.tar.gz /tmp/dependencies/PyQwt-5.2.0.tar.gz
 
-RUN source /discos-sw/config/misc/bash_profile && \
+SHELL ["/bin/bash", "-c"]
+
+RUN source /discos-sw/config/acs/.bash_profile.acs && \
     cd /tmp/dependencies/ && \
     tar xvzf sip-4.19.2.tar.gz && \
     cd /tmp/dependencies/sip-4.19.2 && \
-    python configure.py && \
+    python2 configure.py && \
     make && \
     make install  && \
     cd /tmp/dependencies/ && \
     tar xvzf PyQt4_gpl_x11-4.12.tar.gz && \
     cd /tmp/dependencies/PyQt4_gpl_x11-4.12 && \
-    python configure.py --confirm-license --qmake /usr/local/qt-4.5.2/bin/qmake  && \
+    python2 configure.py --confirm-license --qmake /usr/local/qt-4.5.2/bin/qmake  && \
     sed -i "s/^.*PrintCurrentPage.*$//g" /tmp/dependencies/PyQt4_gpl_x11-4.12/QtGui/sipAPIQtGui.h  && \
     sed -i "s/^.*PrintCurrentPage.*$//g" /tmp/dependencies/PyQt4_gpl_x11-4.12/QtGui/sipQtGuiQAbstractPrintDialog.cpp && \
     sed -i "s/^.*PrintCurrentPage.*$//g" /tmp/dependencies/PyQt4_gpl_x11-4.12/sip/QtGui/qabstractprintdialog.sip && \
     cd /tmp/dependencies/PyQt4_gpl_x11-4.12 && \
     make && \
-    make install  && \
+    make install 
+
+
+RUN cd /tmp/dependencies/ && \
+    git clone https://github.com/PyQwt/PyQwt5.git 
+
+COPY  templates/dependencies/qwt-5.2.zip /tmp/dependencies/PyQwt5/qwt-5.2.zip
+
+RUN source /discos-sw/config/acs/.bash_profile.acs && \
     cd /tmp/dependencies/ && \
     tar xvzf PyQwt-5.2.0.tar.gz && \
     cd /tmp/dependencies/PyQwt-5.2.0/configure && \
-    python configure.py -Q ../qwt-5.2 && \
+    python2 configure.py -Q ../qwt-5.2 && \
     make && \
-    make install
+    make install && \
+    #Install some third-party Python packages
+    pip2 install wheel && \
+    pip2 install pbr mock==1.1.1 jinja2 subprocess32 d2to1 stsci.distutils pyfits  prospector==0.12.11 && \
+    pip2 cache purge && \
+    rm -rf /tmp/dependencies/*
 
+COPY --chown=discos:almamgr --chmod=755  templates/dependencies/SlaLibrary.tar.gz /discos-sw/SlaLibrary.tar.gz
+RUN tar xvzf /discos-sw/SlaLibrary.tar.gz && \
+    rm -rf /discos-sw/SlaLibrary.tar.gz
 
-# RUN rm -rf /tmp/dependencies/*
+USER discos
+RUN source /discos-sw/config/acs/.bash_profile.acs && \
+    ipython2 profile create
 
+COPY --chown=discos:almamgr --chmod=644  templates/acs/ipython_startup_01.py /discos-sw/discos/.ipython/profile_default/startup/01.py
+# ansible-> roles/acs/task/receivers_monitor
+USER root
+#Create the /service/receivers directory
+RUN mkdir /service/Receivers && \
+    chmod 755 /service/Receivers && \ 
+    chown discos:almamgr /service/Receivers && \
+    printf "\n######## Receivers monitoring ########\nif [ -f /discos-sw/introots/default/bin/receiversmonitor.py ]; then\n\trunuser -l discos -c 'python2 receiversmonitor.py &'\nfi\n" >>  /etc/rc.local && \
+    printf "#discos-logrotate\n59 23 * * * /usr/sbin/logrotate -f /discos-sw/config/misc/discos-logrotate" >>  /var/spool/cron/discos && \
+    mkdir /service/events && \
+    chmod 755 /service/events && \
+    chown discos:almamgr /service/events
 
+USER discos     
+RUN mkdir /archive/data && \
+    mkdir /archive/extraData && \
+    mkdir /archive/events && \
+    mkdir /archive/logs && \
+    mkdir /archive/schedules && \
+    chmod 710 /archive/data && \
+    chmod 710 /archive/extraData && \
+    chmod 750 /archive/events && \
+    chmod 750 /archive/logs && \
+    chmod 710 /archive/schedules 
 
+COPY --chown=discos:almamgr --chmod=644  templates/manager/discos-logrotate /discos-sw/config/misc/discos-logrotate
