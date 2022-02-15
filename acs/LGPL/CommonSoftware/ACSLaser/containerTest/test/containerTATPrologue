@@ -1,7 +1,0 @@
-#! /bin/bash
-
-acsutilTATPrologue --noloadifr -l
-
-echo " Starting Test Containers"
-acsutilAwaitContainerStart -java unthrottledJavaContainer
-acsutilAwaitContainerStart -java throttledJavaContainer

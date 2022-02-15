@@ -1,4 +1,0 @@
-GENERATE_LATEX         = YES
-LATEX_OUTPUT           = latex
-EXTRA_PACKAGES         = times
-LATEX_BATCHMODE        = YES

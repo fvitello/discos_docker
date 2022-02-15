@@ -1,4 +1,0 @@
-SOURCE archiveeventsTATEnvironment
-PROLOGUE acsutilTATPrologue
-1 testArchiveSupplier "acsutilTATTestRunner testArchiveSupplier"
-EPILOGUE acsutilTATEpilogue

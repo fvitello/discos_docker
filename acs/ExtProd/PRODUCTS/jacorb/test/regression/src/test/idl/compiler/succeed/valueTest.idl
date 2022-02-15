@@ -1,8 +1,0 @@
-module test
-{
-    valuetype ValueTest
-    {
-        private string member1;
-        public  string member2;
-    };
-};

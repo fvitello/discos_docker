@@ -1,5 +1,0 @@
-export ACS_TMP=../test
-
-acsStartJava -endorsed alma.acs.testsupport.tat.NoDotJUnitRunner alma.acs.logging.AcsLoggerStatisticsTest
-
-LOCATION=TST-STE acsStartJava -endorsed alma.acs.testsupport.tat.NoDotJUnitRunner alma.acs.logging.AcsLoggerStatisticsTest

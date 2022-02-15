@@ -1,6 +1,0 @@
-1 - === Starting AlarmTest JUnit test
-1 -  --endorsed -- alma.acs.testsupport.tat.TATJUnitRunner jbaci.test.PropertyAlarmTest
-1 - ----------T--:--:--.--- INFO [acsStartJava] Starting Java application: alma.acs.testsupport.tat.TATJUnitRunner jbaci.test.PropertyAlarmTest
-1 - TEST_RUNNER_REPORT success/total: 1/1
-1 - JUnit test run succeeded
-1 - === dispatchAction AlarmTest completed

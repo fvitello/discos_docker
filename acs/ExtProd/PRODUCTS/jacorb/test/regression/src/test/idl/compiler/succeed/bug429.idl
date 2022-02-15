@@ -1,6 +1,0 @@
-module test
-{
-  typedef sequence<string> StringSeq;
-
-  valuetype BoxedStringSeq StringSeq;
-};

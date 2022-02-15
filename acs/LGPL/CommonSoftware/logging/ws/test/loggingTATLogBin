@@ -1,2 +1,0 @@
-set ACS_LOG_BIN true
-set env(ACS_LOG_BIN) $ACS_LOG_BIN

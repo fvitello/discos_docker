@@ -1,1 +1,0 @@
-../../ws/src/loggingXMLElement.cpp

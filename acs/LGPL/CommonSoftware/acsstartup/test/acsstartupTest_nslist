@@ -1,3 +1,0 @@
-#! /bin/bash
-
-$ACE_ROOT/TAO/utils/nslist/tao_nslist -ORBInitRef NameService=corbaloc::$HOST:$1/NameService

@@ -1,5 +1,0 @@
-#
-# tat121
-#
-tatDummy
-find $VLTDATA/ENVIRONMENTS/$ws12/DB -print | grep tat12

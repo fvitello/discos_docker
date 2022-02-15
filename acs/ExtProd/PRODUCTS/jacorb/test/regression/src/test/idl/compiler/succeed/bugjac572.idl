@@ -1,7 +1,0 @@
-struct S
-{
-  long l;
-};
-
-typedef S anArray[1];
-typedef S otherArray[1];
