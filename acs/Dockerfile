@@ -80,5 +80,39 @@ RUN cd /acs/ExtProd/PRODUCTS && \
     wget https://sourceforge.net/projects/gnuplot-py/files/Gnuplot-py/1.8/gnuplot-py-1.8.tar.gz/download -O gnuplot-py-1.8.tar.gz && \
     wget https://sourceforge.net/projects/pychecker/files/pychecker/0.8.17/pychecker-0.8.17.tar.gz/download -O pychecker-0.8.17.tar.gz && \
     wget https://sourceforge.net/projects/numpy/files/OldFiles/1.3.3/numarray-1.3.3.tar.gz && \
+    # some versions for python dependencies have changed.
+    # Also we removed the *bulkDataNT* and *bulkData* modules from the Makefile
+    # as we don't have the properietary version of DDS and don't use this modules.
+    # sed -i '185 a execute_build_script "buildDDS" ./buildDDS &&  echo_success || echo_failure' /acs/ExtProd/INSTALL/buildTools  && \
     cd /acs/ExtProd/INSTALL && \
-    source /acs/LGPL/acsBUILD/config/.acs/.bash_profile.acs 
+    source /acs/LGPL/acsBUILD/config/.acs/.bash_profile.acs && \
+    time make all && \
+    find /alma -name "*.o" -exec rm -v {} \;
+# build opendds
+    cd /acs/ExtProd/INSTALL && \
+    source /acs/LGPL/acsBUILD/config/.acs/.bash_profile.acs  && \
+    sed -i 's/rm -rf $ALMASW_INSTDIR/DDS//g' /acs/Makefile && \
+    ./buildDDS
+
+# --------------------- Here external dependencies are built, then delete build folder --------------
+RUN cd /acs && \
+    source /acs/LGPL/acsBUILD/config/.acs/.bash_profile.acs && \
+    time make build && \
+    rm -rf /acs
+
+WORKDIR /
+# Here we create and configure the user almamgr
+RUN groupadd -g 1000 almamgr && \
+    useradd -g 1000 -u 1000 -d /home/almamgr -m -s /bin/bash almamgr && \
+    passwd -d almamgr   && \
+    groupadd sudo  && \
+    usermod -aG sudo almamgr  && \
+    echo "%sudo	ALL=(ALL)	ALL" >> /etc/sudoers  && \
+    echo "%sudo	ALL=(ALL)	NOPASSWD: ALL" >> /etc/sudoers  && \
+    chown -R almamgr:almamgr /alma
+# For conveniece we source the alma .bash_profile.acs in the user .bash_rc
+# and export JAVA_HOME
+RUN    echo "source /alma/ACS-2021DEC/ACSSW/config/.acs/.bash_profile.acs" >> /home/almamgr/.bashrc && \
+       echo "export JAVA_HOME=$JAVA_HOME" >> /home/almamgr/.bashrc
+
+USER almamgr
