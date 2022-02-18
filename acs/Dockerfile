@@ -89,14 +89,20 @@ RUN cd /acs/ExtProd/PRODUCTS && \
     time make all && \
     find /alma -name "*.o" -exec rm -v {} \;
 # build opendds
-    cd /acs/ExtProd/INSTALL && \
+RUN cd /acs/ExtProd/INSTALL && \
     source /acs/LGPL/acsBUILD/config/.acs/.bash_profile.acs  && \
-    sed -i 's/rm -rf $ALMASW_INSTDIR/DDS//g' /acs/Makefile && \
+    sed -i 's/xerces3       = 0/xerces3       = 1/g' /alma/ACS-2021DEC/TAO/ACE_wrappers/bin/MakeProjectCreator/config/global.features && \
+    sed -i '58 a pushd $ACE_ROOT/ace' /acs/ExtProd/INSTALL/buildDDS && \
+    sed -i '59 a XERCESCROOT=$ALMASW_INSTDIR\/ExternalDependencies make -j $NUM_CPU' /acs/ExtProd/INSTALL/buildDDS && \
+    sed -i '60 a popd' /acs/ExtProd/INSTALL/buildDDS && \
+    sed -i 's/rm -rf $ALMASW_INSTDIR\/DDS//g' /acs/ExtProd/INSTALL/buildDDS && \
+    sed -i '62 a cd $DDS_ROOT/dds/DCPS/QOS_XML_Handler' /acs/ExtProd/INSTALL/buildDDS && \
     ./buildDDS
 
 # --------------------- Here external dependencies are built, then delete build folder --------------
 RUN cd /acs && \
     source /acs/LGPL/acsBUILD/config/.acs/.bash_profile.acs && \
+    sed -i 's/bulkDataNT/bulkDataNTOpenDDS/g' /acs/Makefile && \  
     time make build && \
     rm -rf /acs
 
