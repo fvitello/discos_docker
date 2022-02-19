@@ -6,7 +6,7 @@ ACS container is is adapted from https://github.com/ACS-Community/ACS-Docker-Ima
 
 ## Build Container
 
-docker build -t fvitello/acs202112  .
+`docker build -t fvitello/acs202112  .`
 
 # Discos
 
@@ -28,12 +28,11 @@ To build the discos container please add in `discos/templates/dependencies` the 
 
 ## Build Container
 
-docker build -t fvitello/discos  .
+`docker build -t fvitello/discos  .`
 
 ## Run Container
 
-docker run --rm -it -e DISPLAY=host.docker.internal:0 --mount type=volume,source=discos-sw,destination=/discos-sw fvitello/discos
-
+`docker run --rm -it -e DISPLAY=host.docker.internal:0 --mount type=volume,source=discos-sw,destination=/discos-sw fvitello/discos`
 
 # Note for x11 on mac
 
