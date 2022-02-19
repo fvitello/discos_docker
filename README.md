@@ -1,7 +1,8 @@
 
-This work is adapted from https://github.com/ACS-Community/ACS-Docker-Image
-
 # ACS 2021DEC
+
+ACS container is is adapted from https://github.com/ACS-Community/ACS-Docker-Image
+
 
 ## Build Container
 
