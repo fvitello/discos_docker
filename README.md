@@ -1,7 +1,7 @@
 
 This work is adapted from https://github.com/ACS-Community/ACS-Docker-Image
 
-# ACS DEC2021
+# ACS 2021DEC
 
 ## Build Container
 
