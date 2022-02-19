@@ -12,7 +12,7 @@ docker build -t fvitello/acs202112  .
 
 ## Prerequisites
 
-To build the discos container please add in discos/templates/dependencies the following prerequisites:
+To build the discos container please add in `discos/templates/dependencies` the following prerequisites:
 - SlaLibrary.tar.gz
 - sip-4.19.2.tar.gz
 - qwt-5.2.zip
