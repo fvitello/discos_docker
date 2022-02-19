@@ -202,7 +202,8 @@ RUN source /discos-sw/config/acs/.bash_profile.acs && \
 
 COPY --chown=discos:almamgr --chmod=755  templates/dependencies/SlaLibrary.tar.gz /tmp/dependencies/SlaLibrary.tar.gz
 RUN mkdir /discos-sw/SlaLibrary/ && \
-    tar xvzf /tmp/dependencies/SlaLibrary.tar.gz --directory /discos-sw/SlaLibrary/
+    tar xvzf /tmp/dependencies/SlaLibrary.tar.gz --directory /discos-sw/SlaLibrary/ && \
+    chown discos:almamgr SlaLibrary
 
 USER discos
 RUN source /discos-sw/config/acs/.bash_profile.acs && \
