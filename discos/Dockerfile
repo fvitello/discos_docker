@@ -203,7 +203,7 @@ RUN source /discos-sw/config/acs/.bash_profile.acs && \
 COPY --chown=discos:almamgr --chmod=755  templates/dependencies/SlaLibrary.tar.gz /tmp/dependencies/SlaLibrary.tar.gz
 RUN mkdir /discos-sw/SlaLibrary/ && \
     tar xvzf /tmp/dependencies/SlaLibrary.tar.gz --directory /discos-sw/SlaLibrary/ && \
-    chown discos:almamgr SlaLibrary
+    chown -R discos:almamgr /discos-sw/SlaLibrary/
 
 USER discos
 RUN source /discos-sw/config/acs/.bash_profile.acs && \
@@ -220,7 +220,9 @@ RUN mkdir /service/Receivers && \
     printf "#discos-logrotate\n59 23 * * * /usr/sbin/logrotate -f /discos-sw/config/misc/discos-logrotate" >>  /var/spool/cron/discos && \
     mkdir /service/events && \
     chmod 755 /service/events && \
-    chown discos:almamgr /service/events
+    chown discos:almamgr /service/events && \
+# Defaulting python 2.7.16
+    echo "2.7.16" > /alma/ACS-2021DEC/pyenv/version
 
 USER discos
 WORKDIR /discos-sw/discos    
