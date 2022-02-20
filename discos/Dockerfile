@@ -5,15 +5,15 @@ VOLUME  /discos-sw
 # ansible-> roles/user/task
 RUN mkdir /discos-sw  && \
     chmod 755 /discos-sw && \
-#Add the users
+    #Add the users
     groupadd -g 1002 projects && \
     useradd -g 1000 -G 1002 -u 3060 -d /discos-sw/discos -m -s /bin/bash discos && \
     passwd -d discos && \
-#Tune the /discos-sw directory ownership
+    #Tune the /discos-sw directory ownership
     chown -R discos:almamgr /discos-sw && \
-#Give administrator permissions
+    #Give administrator permissions
     usermod -aG sudo discos && \
-#Create the DISCOS archive directory
+    #Create the DISCOS archive directory
     mkdir /archive && \
     chmod 755 /archive  && \
     chown -R discos:projects /archive
@@ -47,7 +47,7 @@ COPY --chown=discos:almamgr --chmod=640 templates/acs/load_branch /discos-sw/con
 RUN touch /discos-sw/config/misc/branches && \ 
     chmod 640 /discos-sw/config/misc/branches && \ 
     chown discos:almamgr /discos-sw/config/misc/branches && \
-    printf "#!/usr/bin/env bash\n\nexport STATION=development" >> /discos-sw/config/misc/station && \
+    printf "#!/usr/bin/env bash\n\nexport STATION=development\n" >> /discos-sw/config/misc/station && \
     chmod 640 discos-sw/config/misc/station && \ 
     chown discos:almamgr discos-sw/config/misc/station  && \
     mkdir -p /discos-sw/discos/bin  && \
@@ -72,7 +72,7 @@ USER discos
 # ansible-> roles/acs/task/acs
 # Copy the .acs dir from /alma to /discos-sw/config
 RUN cp -r /alma/ACS-2021DEC/ACSSW/config/.acs/. /discos-sw/config/acs && \
-#Create the acstmp directory    
+    #Create the acstmp directory    
     mkdir -p /service/acstmp/discos-manager
 #Copy the acsStartContainer with debugger
 COPY --chown=discos:almamgr --chmod=755 templates/acs/acsStartContainerGdb /alma/ACS-2021DEC/ACSSW/bin/acsStartContainerGdb
@@ -136,13 +136,13 @@ RUN ulimit -s 65532 && \
     tar xvzf /tmp/dependencies/qt-x11-opensource-src-4.5.2.tar.gz && \
     cd /tmp/dependencies/qt-x11-opensource-src-4.5.2 && \
     sed -i 's/OPT_CONFIRM_LICENSE=no/OPT_CONFIRM_LICENSE=yes/g' /tmp/dependencies/qt-x11-opensource-src-4.5.2/configure && \
-#Install Qt 
+    #Install Qt 
     yum install -y libX11-devel libXrender-devel libXext-devel libpng12-devel && \
     rm /usr/lib64/libpng.so && \
     ln -s /usr/lib64/libpng12.so /usr/lib64/libpng.so && \
     cd /tmp/dependencies/qt-x11-opensource-src-4.5.2 && \
     ./configure -no-openssl -opensource --prefix=/usr/local/qt-4.5.2 && \
-#PATCH to use libpng12 and fpermissive
+    #PATCH to use libpng12 and fpermissive
     sed -i 's/libpng15/libpng12/g' /tmp/dependencies/qt-x11-opensource-src-4.5.2/src/gui/Makefile && \
     sed -i 's/CXXFLAGS      =/CXXFLAGS      = -fpermissive/g' /tmp/dependencies/qt-x11-opensource-src-4.5.2/src/xmlpatterns/Makefile && \
     sed -i 's/CXXFLAGS      =/CXXFLAGS      =-fpermissive/g' /tmp/dependencies/qt-x11-opensource-src-4.5.2/src/3rdparty/webkit/WebCore/Makefile && \
@@ -200,9 +200,10 @@ RUN source /discos-sw/config/acs/.bash_profile.acs && \
     pip2 cache purge && \
     rm -rf /tmp/dependencies/*
 
-COPY --chown=discos:almamgr --chmod=755  templates/dependencies/SlaLibrary.tar.gz /discos-sw/SlaLibrary.tar.gz
-RUN tar xvzf /discos-sw/SlaLibrary.tar.gz && \
-    rm -rf /discos-sw/SlaLibrary.tar.gz
+COPY --chown=discos:almamgr --chmod=755  templates/dependencies/SlaLibrary.tar.gz /tmp/dependencies/SlaLibrary.tar.gz
+RUN mkdir /discos-sw/SlaLibrary/ && \
+    tar xvzf /tmp/dependencies/SlaLibrary.tar.gz --directory /discos-sw/SlaLibrary/ && \
+    chown -R discos:almamgr /discos-sw/SlaLibrary/
 
 USER discos
 RUN source /discos-sw/config/acs/.bash_profile.acs && \
@@ -219,9 +220,13 @@ RUN mkdir /service/Receivers && \
     printf "#discos-logrotate\n59 23 * * * /usr/sbin/logrotate -f /discos-sw/config/misc/discos-logrotate" >>  /var/spool/cron/discos && \
     mkdir /service/events && \
     chmod 755 /service/events && \
-    chown discos:almamgr /service/events
+    chown discos:almamgr /service/events && \
+# Defaulting python 2.7.16
+    echo "2.7.16" > /alma/ACS-2021DEC/pyenv/version
 
-USER discos     
+USER discos
+WORKDIR /discos-sw/discos    
+
 RUN mkdir /archive/data && \
     mkdir /archive/extraData && \
     mkdir /archive/events && \
@@ -234,3 +239,5 @@ RUN mkdir /archive/data && \
     chmod 710 /archive/schedules 
 
 COPY --chown=discos:almamgr --chmod=644  templates/manager/discos-logrotate /discos-sw/config/misc/discos-logrotate
+
+
