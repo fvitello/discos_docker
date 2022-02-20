@@ -223,6 +223,9 @@ RUN mkdir /service/Receivers && \
     chown discos:almamgr /service/events && \
 # Defaulting python 2.7.16
     echo "2.7.16" > /alma/ACS-2021DEC/pyenv/version
+#for some reason generic .so file is missing, only versioned .so is present
+RUN ln -s /usr/lib64/libboost_thread-mt.so.1.53.0 /usr/lib64/libboost_thread-mt.so
+
 
 USER discos
 WORKDIR /discos-sw/discos    
