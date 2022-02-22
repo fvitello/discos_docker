@@ -80,6 +80,10 @@ RUN cd /acs/ExtProd/PRODUCTS && \
     wget https://sourceforge.net/projects/gnuplot-py/files/Gnuplot-py/1.8/gnuplot-py-1.8.tar.gz/download -O gnuplot-py-1.8.tar.gz && \
     wget https://sourceforge.net/projects/pychecker/files/pychecker/0.8.17/pychecker-0.8.17.tar.gz/download -O pychecker-0.8.17.tar.gz && \
     wget https://sourceforge.net/projects/numpy/files/OldFiles/1.3.3/numarray-1.3.3.tar.gz && \
+    # some versions for python dependencies have changed.
+    # Also we removed the *bulkDataNT* and *bulkData* modules from the Makefile
+    # as we don't have the properietary version of DDS and don't use this modules.
+    # sed -i '185 a execute_build_script "buildDDS" ./buildDDS &&  echo_success || echo_failure' /acs/ExtProd/INSTALL/buildTools  && \
     cd /acs/ExtProd/INSTALL && \
     source /acs/LGPL/acsBUILD/config/.acs/.bash_profile.acs && \
 #patch cppunit and doxygen
@@ -87,12 +91,20 @@ RUN cd /acs/ExtProd/PRODUCTS && \
     sed -i 's/.\/configure/.\/configure --build=aarch64-unknown-linux-gnu /g' /acs/ExtProd/PRODUCTS/acs-ext/doxygen/src/Makefile && \
     time make all
 
+
+    time make all && \
 # build opendds
 RUN cd /acs/ExtProd/INSTALL && \
     source /acs/LGPL/acsBUILD/config/.acs/.bash_profile.acs  && \
+    sed -i 's/xerces3       = 0/xerces3       = 1/g' /alma/ACS-2021DEC/TAO/ACE_wrappers/bin/MakeProjectCreator/config/global.features && \
+    sed -i '58 a pushd $ACE_ROOT/ace' /acs/ExtProd/INSTALL/buildDDS && \
+    sed -i '59 a XERCESCROOT=$ALMASW_INSTDIR\/ExternalDependencies make -j $NUM_CPU' /acs/ExtProd/INSTALL/buildDDS && \
+    sed -i '60 a popd' /acs/ExtProd/INSTALL/buildDDS && \
     sed -i 's/rm -rf $ALMASW_INSTDIR\/DDS//g' /acs/ExtProd/INSTALL/buildDDS && \
-    ./buildDDS  && \
-    find /alma -name "*.o" -exec rm -v {} \;
+    sed -i '62 a cd $DDS_ROOT/dds/DCPS/QOS_XML_Handler' /acs/ExtProd/INSTALL/buildDDS && \
+    ./buildDDS && \
+        find /alma -name "*.o" -exec rm -v {} \;
+
 
 # --------------------- Here external dependencies are built, then delete build folder --------------
 RUN cd /acs && \
@@ -100,7 +112,7 @@ RUN cd /acs && \
     sed -i 's/bulkDataNT/bulkDataNTOpenDDS/g' /acs/Makefile && \
     time make build && \
     rm -rf /acs
-    
+
 WORKDIR /
 # Here we create and configure the user almamgr
 RUN groupadd -g 1000 almamgr && \
