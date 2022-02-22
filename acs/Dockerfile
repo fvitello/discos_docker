@@ -94,7 +94,13 @@ RUN cd /acs/ExtProd/INSTALL && \
     ./buildDDS  && \
     find /alma -name "*.o" -exec rm -v {} \;
 
-
+# --------------------- Here external dependencies are built, then delete build folder --------------
+RUN cd /acs && \
+    source /acs/LGPL/acsBUILD/config/.acs/.bash_profile.acs && \
+    sed -i 's/bulkDataNT/bulkDataNTOpenDDS/g' /acs/Makefile && \
+    time make build && \
+    rm -rf /acs
+    
 WORKDIR /
 # Here we create and configure the user almamgr
 RUN groupadd -g 1000 almamgr && \
