@@ -48,11 +48,11 @@ RUN touch /discos-sw/config/misc/branches && \
     chmod 640 /discos-sw/config/misc/branches && \ 
     chown discos:almamgr /discos-sw/config/misc/branches && \
     printf "#!/usr/bin/env bash\n\nexport STATION=development\n" >> /discos-sw/config/misc/station && \
-    chmod 640 discos-sw/config/misc/station && \ 
-    chown discos:almamgr discos-sw/config/misc/station  && \
+    chmod 640 /discos-sw/config/misc/station && \ 
+    chown discos:almamgr /discos-sw/config/misc/station  && \
     mkdir -p /discos-sw/discos/bin  && \
     chmod 700 /discos-sw/discos/bin && \ 
-    chown discos:almamgr discos-sw/discos/bin
+    chown discos:almamgr /discos-sw/discos/bin
 #Render the discos-get template
 COPY --chown=discos:almamgr --chmod=500 templates/acs/discos-get /discos-sw/discos/bin/discos-get
 #Render the discos-set template
@@ -120,7 +120,7 @@ RUN cd /tmp/dependencies/ && \
     make && \
     cp f2c.h /usr/local/include && \
     cp f2c /usr/local/bin && \
-    rm -rf /tmp/dependencies/
+    rm -rf /tmp/dependencies/*
 
 #######################
 # QT AND PYQT LIBRARIES
@@ -182,10 +182,10 @@ RUN source /discos-sw/config/acs/.bash_profile.acs && \
     make install 
 
 
-RUN cd /tmp/dependencies/ && \
-    git clone https://github.com/PyQwt/PyQwt5.git 
+#RUN cd /tmp/dependencies/ && \
+#    git clone https://github.com/PyQwt/PyQwt5.git 
 
-COPY  templates/dependencies/qwt-5.2.zip /tmp/dependencies/PyQwt5/qwt-5.2.zip
+#COPY  templates/dependencies/qwt-5.2.zip /tmp/dependencies/PyQwt5/qwt-5.2.zip
 
 RUN source /discos-sw/config/acs/.bash_profile.acs && \
     cd /tmp/dependencies/ && \
